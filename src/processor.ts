@@ -7,14 +7,18 @@ import {
 import { lookupArchive } from "@subsquid/archive-registry";
 import { Account, HistoricalBalance } from "./model";
 import { BalancesTransferEvent } from "./types/events";
+import logger from './mappings/utils/logger'
 
 const processor = new SubstrateProcessor("snek_nft");
 
 // processor.setTypesBundle("basilisk");
 processor.setBatchSize(500);
+const archive = process.env.ARCHIVE_URL ?? lookupArchive("basilisk")[0].url
+
+logger.note("Welcome to the Processor!", archive);
 
 processor.setDataSource({
-  archive: lookupArchive("basilisk")[0].url,
+  archive,
   chain: "wss://basilisk-kodadot.hydration.cloud",
 });
 
