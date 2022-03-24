@@ -8,21 +8,21 @@ import { lookupArchive } from "@subsquid/archive-registry";
 import { Account, HistoricalBalance } from "./model";
 import { BalancesTransferEvent } from "./types/events";
 
-const processor = new SubstrateProcessor("kusama_balances");
+const processor = new SubstrateProcessor("snek_nft");
 
-processor.setTypesBundle("kusama");
+processor.setTypesBundle("basilisk");
 processor.setBatchSize(500);
 
 processor.setDataSource({
-  archive: lookupArchive("kusama")[0].url,
-  chain: "wss://kusama-rpc.polkadot.io",
+  archive: lookupArchive("basilisk")[0].url,
+  chain: "wss://basilisk-kodadot.hydration.cloud",
 });
 
 processor.addEventHandler("balances.Transfer", async (ctx) => {
   const transfer = getTransferEvent(ctx);
   const tip = ctx.extrinsic?.tip || 0n;
-  const from = ss58.codec("kusama").encode(transfer.from);
-  const to = ss58.codec("kusama").encode(transfer.to);
+  const from = ss58.codec("basilisk").encode(transfer.from);
+  const to = ss58.codec("basilisk").encode(transfer.to);
 
   const fromAcc = await getOrCreate(ctx.store, Account, from);
   fromAcc.balance = fromAcc.balance || 0n;
