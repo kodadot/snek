@@ -18,15 +18,17 @@
     "@subsquid/graphql-server": "^0.1.4",
     "@subsquid/ss58": "^0.0.4",
     "@subsquid/substrate-processor": "^0.3.0",
+    "axios": "^0.26.1",
     "dotenv": "^10.0.0",
     "pg": "^8.7.1",
+    "signale": "^1.4.0",
     "typeorm": "^0.2.41"
   },
   "devDependencies": {
     "@subsquid/substrate-metadata-explorer": "^0.0.7",
     "@subsquid/substrate-typegen": "^0.2.1",
     "@types/node": "^16.11.17",
-    "typescript": "~4.5.4",
+    "@types/signale": "^1.4.4",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-typescript": "^12.3.1",
@@ -34,6 +36,7 @@
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-type-graphql": "^0.3.2"
+    "eslint-plugin-type-graphql": "^0.3.2",
+    "typescript": "~4.5.4"
   }
 }
