@@ -58,3 +58,6 @@ release TAG:
 
 kill TAG:
 	npx sqd squid:kill "snek@{{TAG}}"
+
+exec:
+	docker exec -it snek-db-1 psql -U postgres -d squid
