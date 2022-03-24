@@ -1,5 +1,5 @@
 {
-  "name": "kusama-balances",
+  "name": "@kodadot1/snek",
   "private": true,
   "scripts": {
     "build": "rm -rf lib && tsc",
