@@ -10,7 +10,7 @@ import { BalancesTransferEvent } from "./types/events";
 
 const processor = new SubstrateProcessor("snek_nft");
 
-processor.setTypesBundle("basilisk");
+// processor.setTypesBundle("basilisk");
 processor.setBatchSize(500);
 
 processor.setDataSource({
