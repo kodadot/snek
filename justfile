@@ -30,8 +30,8 @@ ksmVersion: explore
 
 explore:
 	npx squid-substrate-metadata-explorer \
-		--chain wss://kusama-rpc.polkadot.io \
-		--archive https://kusama.indexer.gc.subsquid.io/v4/graphql \
+		--chain wss://basilisk-kodadot.hydration.cloud \
+		--archive http://localhost:4010/v1/graphql \
 		--out kusamaVersions.json
 
 bug: down up
