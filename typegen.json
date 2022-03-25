@@ -3,7 +3,11 @@
   "chainVersions": "kusamaVersions.json",
   "typesBundle": "kusama",
   "events": [
-    "balances.Transfer"
+    "nft.ClassCreated",
+    "nft.InstanceMinted",
+    "nft.InstanceTransferred",
+    "nft.InstanceBurned",
+    "nft.ClassDestroyed"
   ],
   "calls": []
 }
