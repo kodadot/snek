@@ -1,0 +1,14 @@
+export enum Interaction {
+  MINT = "MINT",
+  MINTNFT = "MINTNFT",
+  LIST = "LIST",
+  BUY = "BUY",
+  SEND = "SEND",
+  CONSUME = "CONSUME",
+  DESTROY = "DESTROY",
+  OFFER = "OFFER",
+  ACCEPT_OFFER = "ACCEPT_OFFER",
+  REJECT_OFFER = "REJECT_OFFER",
+  PAY_ROYALTY = "PAY_ROYALTY",
+  ROYALTY = "ROYALTY",
+}
