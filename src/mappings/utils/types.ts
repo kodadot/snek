@@ -1,6 +1,7 @@
 import { Interaction } from '../../model/generated/_interaction'
 import { Attribute } from '../../model/generated/_attribute'
 import {EventHandlerContext } from '@subsquid/substrate-processor'
+import { nanoid } from 'nanoid'
 
 export type BaseCall = {
   caller: string;
@@ -95,6 +96,8 @@ export type SanitizerFunc = (url: string) => string
 export function ensure<T>(value: any): T {
   return value as T
 }
+
+export const eventId = (id: string, event: Interaction) => `${id}-${event}-${nanoid()}`
 
 export type TokenMetadata = {
   name?: string
