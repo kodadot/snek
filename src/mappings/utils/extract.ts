@@ -26,4 +26,5 @@ export function unwrap<T>(ctx: Context, unwrapFn: UnwrapFunc<T>): CallWith<T> {
   return { ...baseCall, ...unwrapped };
 }
 
+export const createTokenId = (collection: string, id: string) => `${collection}-${id}`
 
