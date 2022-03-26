@@ -1,7 +1,8 @@
-import { Attribute, Interaction } from '../../model/generated'
+import { Interaction } from '../../model/generated/_interaction'
+import { Attribute } from '../../model/generated/_attribute'
 import {EventHandlerContext } from '@subsquid/substrate-processor'
 
-export interface BaseCall {
+export type BaseCall = {
   caller: string;
   blockNumber: string;
   timestamp: Date;
@@ -50,56 +51,50 @@ export interface RmrkInteraction {
   metadata?: string;
 }
 
-export interface Collection {
-  version: string;
-  name: string;
-  max: number;
-  issuer: string;
-  symbol: string;
+export type BaseCollectionEvent = {
   id: string;
-  _id: string;
-  metadata: string;
-  blockNumber?: number;
+  caller: string;
 }
 
-export interface NFT {
-  name: string;
-  instance: string;
-  transferable: number;
-  collection: string;
+export type OptionalMeta = {
+  metadata?: string;
+}
+
+export type CreateCollectionEvent = BaseCollectionEvent & OptionalMeta
+
+export type CreateTokenEvent = {
+  collectionId: string;
+  caller: string;
+  metadata?: string;
   sn: string;
-  _id: string;
-  id: string;
-  metadata: string;
-  currentOwner: string;
-  price?: string;
-  disabled?: boolean;
-  blockNumber?: number;
 }
 
-
-export interface RMRK {
-  event: Interaction;
-  view: RmrkType;
+export type TransferTokenEvent = {
+  collectionId: string;
+  sn: string;
+  caller: string;
+  to: string;
 }
+
+export type BurnTokenEvent = CreateTokenEvent
+
+export type DestroyCollectionEvent = BaseCollectionEvent
+
+export type CallWith<T> = BaseCall & T
 
 export type EntityConstructor<T> = {
   new (...args: any[]): T;
 };
 
-
-export type RmrkType = Collection | NFT | RmrkInteraction
-
-export type BatchArg = {
-  args: Record<string, any>,
-  callIndex: string,  
-}
-
 export type SomethingWithMeta = {
   metadata: string
 }
-
+export type UnwrapFunc<T> = (ctx: Context) => T
 export type SanitizerFunc = (url: string) => string
+
+export function ensure<T>(value: any): T {
+  return value as T
+}
 
 export type TokenMetadata = {
   name?: string
