@@ -1,5 +1,5 @@
 import { createTokenId, unwrap } from './utils/extract'
-import { Context, ensure, Optional, TokenMetadata, attributeFrom, Interaction, eventFrom, eventId } from './utils/types'
+import { Context, ensure, Optional, TokenMetadata, attributeFrom, Interaction, eventFrom, eventId, BaseCall } from './utils/types'
 import { getBurnTokenEvent, getCreateCollectionEvent, getCreateTokenEvent, getDestroyCollectionEvent, getTransferTokenEvent } from './utils/getters'
 import { create, get } from './utils/entity'
 import { CollectionEntity as CE, NFTEntity as NE, MetadataEntity as Metadata, Event } from '../model'
@@ -108,14 +108,14 @@ export async function handleTokenBurn(context: Context): Promise<void> {
   await context.store.save(entity)
 }
 
-// async function createEvent(final: NE, interaction: Interaction, remark: RemarkResult, meta: string, store: Store) {
-//   try {
-//     const newEventId = eventId(final.id, interaction)
-//     const event = create<Event>(Event, newEventId, eventFrom(interaction, remark, meta))
-//     event.nft = final
-//     await store.save(event)
-//   } catch (e) {
-//     logError(e, (e) => logger.warn(`[[${interaction}]]: ${final.id} Reason: ${e.message}`))
-//   }
+async function createEvent(final: NE, interaction: Interaction, call: BaseCall, meta: string, store: Store) {
+  try {
+    const newEventId = eventId(final.id, interaction)
+    const event = create<Event>(Event, newEventId, eventFrom(interaction, call, meta))
+    event.nft = final
+    await store.save(event)
+  } catch (e) {
+    logError(e, (e) => logger.warn(`[[${interaction}]]: ${final.id} Reason: ${e.message}`))
+  }
   
-// }
+}
