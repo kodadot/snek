@@ -8,8 +8,9 @@ type CollectionEntity @entity {
   issuer: String!
   meta: MetadataEntity
   metadata: String
-  # name: String will be derived from metadata
+  name: String
   nfts: [NFTEntity!] @derivedFrom(field: "collection")
+  updatedAt: DateTime!
 }
 
 type NFTEntity @entity {
@@ -24,7 +25,7 @@ type NFTEntity @entity {
   issuer: String!
   meta: MetadataEntity
   metadata: String
-  # name: String
+  name: String
   price: BigInt!
   sn: String!
   updatedAt: DateTime!
@@ -61,7 +62,7 @@ type Event implements EventType @entity {
   blockNumber: BigInt
   timestamp: DateTime!
   caller: String!
-  currentOwner: String # currentOwner
+  currentOwner: String! # currentOwner
   interaction: Interaction!
   meta: String!
   nft: NFTEntity!
