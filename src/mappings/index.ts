@@ -107,7 +107,6 @@ export async function handleTokenCreate(context: Context): Promise<void> {
   canOrElseError<CE>(exists, collection, true)
   // TODO: check how the token is created when it was bured before
   const final = create<NE>(NE, id, {})
-  // TODO: Finish
   final.id = id
   final.hash = md5(id)
   final.issuer = event.caller
