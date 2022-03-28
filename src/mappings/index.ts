@@ -2,10 +2,12 @@ import { Store } from '@subsquid/substrate-processor'
 import md5 from 'md5'
 import {
   CollectionEntity as CE,
+  CollectionEvent,
   Event,
   MetadataEntity as Metadata,
   NFTEntity as NE,
 } from '../model'
+import { canOrElseError, exists } from './utils/consolidator'
 import { create, get } from './utils/entity'
 import { createTokenId, unwrap } from './utils/extract'
 import {
@@ -15,11 +17,14 @@ import {
   getDestroyCollectionEvent,
   getTransferTokenEvent,
 } from './utils/getters'
+import { isEmpty } from './utils/helper'
 import logger, { logError } from './utils/logger'
 import { fetchMetadata } from './utils/metadata'
 import {
   attributeFrom,
   BaseCall,
+  collectionEventFrom,
+  CollectionInteraction,
   Context,
   ensure,
   eventFrom,
@@ -39,9 +44,9 @@ async function handleMetadata(
   }
 
   const metadata = await fetchMetadata<TokenMetadata>({ metadata: id })
-  // if (isEmpty(metadata)) {
-  //   return null
-  // }
+  if (isEmpty(metadata)) {
+    return null
+  }
 
   const partial: Partial<Metadata> = {
     id,
@@ -58,14 +63,28 @@ async function handleMetadata(
 }
 
 export async function handleCollectionCreate(context: Context): Promise<void> {
-  const collectionEvent = unwrap(context, getCreateCollectionEvent)
-  const entity = await get<CE>(context.store, CE, collectionEvent.id)
-  const final = create<CE>(CE, collectionEvent.id, {})
+  const event = unwrap(context, getCreateCollectionEvent)
+  // const entity = await get<CE>(context.store, CE, event.id)
+  // TODO: check if collection exists and is burned
+  const final = create<CE>(CE, event.id, {})
+  final.id = event.id
+  final.issuer = event.caller
+  final.currentOwner = event.caller
+  final.blockNumber = BigInt(event.blockNumber)
+  final.metadata = event.metadata
+  final.burned = false
+  final.createdAt = event.timestamp
+  final.updatedAt = event.timestamp
 
-  // TODO: Finish
-  // final.blockNumber = collectionEvent.blockNumber
+  if (final.metadata) {
+    const metadata = await handleMetadata(final.metadata, context.store)
+    final.meta = metadata
+    final.name = metadata?.name
+  }
+
   logger.success(`[COLLECTION] ${final.id}`)
   await context.store.save(final)
+  await createCollectionEvent(final, Interaction.MINT, event, '', context.store)
 }
 
 export async function handleCollectionDestroy(context: Context): Promise<void> {
@@ -82,7 +101,10 @@ export async function handleCollectionDestroy(context: Context): Promise<void> {
 export async function handleTokenCreate(context: Context): Promise<void> {
   const event = unwrap(context, getCreateTokenEvent)
   const id = createTokenId(event.collectionId, event.sn)
-  const entity = await get<NE>(context.store, NE, id)
+  const collection = ensure<CE>(
+    await get<CE>(context.store, CE, event.collectionId)
+  )
+  canOrElseError<CE>(exists, collection, true)
   // TODO: check how the token is created when it was bured before
   const final = create<NE>(NE, id, {})
   // TODO: Finish
@@ -102,7 +124,7 @@ export async function handleTokenCreate(context: Context): Promise<void> {
   if (final.metadata) {
     const metadata = await handleMetadata(final.metadata, context.store)
     final.meta = metadata
-    // final.name = metadata?.name || ''
+    final.name = metadata?.name
   }
 
   logger.success(`[MINT] ${final.id}`)
@@ -145,6 +167,29 @@ async function createEvent(
       eventFrom(interaction, call, meta)
     )
     event.nft = final
+    await store.save(event)
+  } catch (e) {
+    logError(e, (e) =>
+      logger.warn(`[[${interaction}]]: ${final.id} Reason: ${e.message}`)
+    )
+  }
+}
+
+async function createCollectionEvent(
+  final: CE,
+  interaction: CollectionInteraction,
+  call: BaseCall,
+  meta: string,
+  store: Store
+) {
+  try {
+    const newEventId = eventId(final.id, interaction)
+    const event = create<CollectionEvent>(
+      CollectionEvent,
+      newEventId,
+      collectionEventFrom(interaction, call, meta)
+    )
+    event.collection = final
     await store.save(event)
   } catch (e) {
     logError(e, (e) =>
