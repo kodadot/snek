@@ -38,6 +38,12 @@ export class CollectionEntity {
   @Column_("text", {nullable: true})
   metadata!: string | undefined | null
 
+  @Column_("text", {nullable: true})
+  name!: string | undefined | null
+
   @OneToMany_(() => NFTEntity, e => e.collection)
   nfts!: NFTEntity[]
+
+  @Column_("timestamp with time zone", {nullable: false})
+  updatedAt!: Date
 }

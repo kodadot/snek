@@ -46,6 +46,9 @@ export class NFTEntity {
   @Column_("text", {nullable: true})
   metadata!: string | undefined | null
 
+  @Column_("text", {nullable: true})
+  name!: string | undefined | null
+
   @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
   price!: bigint
 
