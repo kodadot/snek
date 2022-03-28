@@ -11,17 +11,18 @@ export type BaseCall = {
 
 export { Interaction }
 
+export type CollectionInteraction = Interaction.MINT | Interaction.DESTROY
 
-
-export function collectionEventFrom(interaction: Interaction.MINT | Interaction.DESTROY,  basecall: BaseCall, meta: string): IEvent {
+export function collectionEventFrom(interaction: CollectionInteraction,  basecall: BaseCall, meta: string): IEvent {
   return eventFrom(interaction, basecall, meta)
 }
 
-export function eventFrom(interaction: Interaction,  { blockNumber, caller, timestamp }: BaseCall, meta: string): IEvent {
+export function eventFrom(interaction: Interaction,  { blockNumber, caller, timestamp }: BaseCall, meta: string, currentOwner?: string): IEvent {
   return {
     interaction,
     blockNumber: BigInt(blockNumber),
     caller,
+    currentOwner: currentOwner ?? caller,
     timestamp,
     meta
   }
@@ -43,6 +44,7 @@ export interface IEvent {
   interaction: Interaction;
   blockNumber: bigint,
   caller: string,
+  currentOwner: string,
   timestamp: Date,
   meta: string;
 }
