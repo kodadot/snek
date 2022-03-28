@@ -61,3 +61,6 @@ kill TAG:
 
 exec:
 	docker exec -it snek-db-1 psql -U postgres -d squid
+
+deps:
+	npx npm-check-updates -u
