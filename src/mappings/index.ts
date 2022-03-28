@@ -1,12 +1,33 @@
-import { createTokenId, unwrap } from './utils/extract'
-import { Context, ensure, Optional, TokenMetadata, attributeFrom, Interaction, eventFrom, eventId, BaseCall } from './utils/types'
-import { getBurnTokenEvent, getCreateCollectionEvent, getCreateTokenEvent, getDestroyCollectionEvent, getTransferTokenEvent } from './utils/getters'
-import { create, get } from './utils/entity'
-import { CollectionEntity as CE, NFTEntity as NE, MetadataEntity as Metadata, Event } from '../model'
-import logger, { logError } from './utils/logger'
-import md5 from 'md5'
 import { Store } from '@subsquid/substrate-processor'
+import md5 from 'md5'
+import {
+  CollectionEntity as CE,
+  Event,
+  MetadataEntity as Metadata,
+  NFTEntity as NE,
+} from '../model'
+import { create, get } from './utils/entity'
+import { createTokenId, unwrap } from './utils/extract'
+import {
+  getBurnTokenEvent,
+  getCreateCollectionEvent,
+  getCreateTokenEvent,
+  getDestroyCollectionEvent,
+  getTransferTokenEvent,
+} from './utils/getters'
+import logger, { logError } from './utils/logger'
 import { fetchMetadata } from './utils/metadata'
+import {
+  attributeFrom,
+  BaseCall,
+  Context,
+  ensure,
+  eventFrom,
+  eventId,
+  Interaction,
+  Optional,
+  TokenMetadata,
+} from './utils/types'
 
 async function handleMetadata(
   id: string,
@@ -45,7 +66,6 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
   // final.blockNumber = collectionEvent.blockNumber
   logger.success(`[COLLECTION] ${final.id}`)
   await context.store.save(final)
-
 }
 
 export async function handleCollectionDestroy(context: Context): Promise<void> {
@@ -53,15 +73,16 @@ export async function handleCollectionDestroy(context: Context): Promise<void> {
   const entity = await ensure<CE>(get(context.store, CE, collectionEvent.id))
   // canOrElseError<CE>(exists, nft, true)
   entity.burned = true
-  logger.success(`[DESTROY] ${collectionEvent.id} from ${collectionEvent.caller}`)
+  logger.success(
+    `[DESTROY] ${collectionEvent.id} from ${collectionEvent.caller}`
+  )
   await context.store.save(entity)
-
 }
 
 export async function handleTokenCreate(context: Context): Promise<void> {
   const event = unwrap(context, getCreateTokenEvent)
   const id = createTokenId(event.collectionId, event.sn)
-  const entity = await get<NE>(context.store, NE, id) 
+  const entity = await get<NE>(context.store, NE, id)
   // TODO: check how the token is created when it was bured before
   const final = create<NE>(NE, id, {})
   // TODO: Finish
@@ -83,7 +104,7 @@ export async function handleTokenCreate(context: Context): Promise<void> {
     final.meta = metadata
     // final.name = metadata?.name || ''
   }
-  
+
   logger.success(`[MINT] ${final.id}`)
   await context.store.save(final)
   // await createEvent(final, Interaction.MINTNFT, remark, '', store)
@@ -94,10 +115,11 @@ export async function handleTokenTransfer(context: Context): Promise<void> {
   const id = createTokenId(tokenEvent.collectionId, tokenEvent.sn)
   const entity = await ensure<NE>(get(context.store, NE, id))
   entity.currentOwner = tokenEvent.to
-  logger.success(`[TRANSFER] ${id} from ${tokenEvent.caller} to ${tokenEvent.to}`)
+  logger.success(
+    `[TRANSFER] ${id} from ${tokenEvent.caller} to ${tokenEvent.to}`
+  )
   await context.store.save(entity)
 }
-
 
 export async function handleTokenBurn(context: Context): Promise<void> {
   const tokenEvent = unwrap(context, getBurnTokenEvent)
@@ -108,14 +130,25 @@ export async function handleTokenBurn(context: Context): Promise<void> {
   await context.store.save(entity)
 }
 
-async function createEvent(final: NE, interaction: Interaction, call: BaseCall, meta: string, store: Store) {
+async function createEvent(
+  final: NE,
+  interaction: Interaction,
+  call: BaseCall,
+  meta: string,
+  store: Store
+) {
   try {
     const newEventId = eventId(final.id, interaction)
-    const event = create<Event>(Event, newEventId, eventFrom(interaction, call, meta))
+    const event = create<Event>(
+      Event,
+      newEventId,
+      eventFrom(interaction, call, meta)
+    )
     event.nft = final
     await store.save(event)
   } catch (e) {
-    logError(e, (e) => logger.warn(`[[${interaction}]]: ${final.id} Reason: ${e.message}`))
+    logError(e, (e) =>
+      logger.warn(`[[${interaction}]]: ${final.id} Reason: ${e.message}`)
+    )
   }
-  
 }
