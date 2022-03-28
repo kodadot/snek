@@ -1,4 +1,3 @@
-import { RmrkInteraction } from './types'
 import { CollectionEntity, NFTEntity } from '../../model/generated'
 // import { decodeAddress } from '@polkadot/util-crypto'
 type Entity = CollectionEntity | NFTEntity
@@ -21,6 +20,10 @@ export function entityOf(entity: Entity): string {
   }
 
   return ''
+}
+
+export function existButBurned(entity: Entity): boolean {
+  return exists(entity) && isBurned(entity)
 }
 
 export function canOrElseError<T extends Entity>(callback: (arg: T) => boolean, entity: T, negation?: boolean) {
