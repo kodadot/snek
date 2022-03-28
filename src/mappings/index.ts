@@ -89,7 +89,7 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
 
 export async function handleCollectionDestroy(context: Context): Promise<void> {
   const collectionEvent = unwrap(context, getDestroyCollectionEvent)
-  const entity = await ensure<CE>(get(context.store, CE, collectionEvent.id))
+  const entity = ensure<CE>(await get(context.store, CE, collectionEvent.id))
   // canOrElseError<CE>(exists, nft, true)
   entity.burned = true
   logger.success(
@@ -113,7 +113,7 @@ export async function handleTokenCreate(context: Context): Promise<void> {
   final.issuer = event.caller
   final.currentOwner = event.caller
   final.blockNumber = BigInt(event.blockNumber)
-  // final.collection = collection
+  final.collection = collection
   final.sn = event.sn
   final.metadata = event.metadata
   final.price = BigInt(0)
@@ -129,27 +129,30 @@ export async function handleTokenCreate(context: Context): Promise<void> {
 
   logger.success(`[MINT] ${final.id}`)
   await context.store.save(final)
-  // await createEvent(final, Interaction.MINTNFT, remark, '', store)
+  await createEvent(final, Interaction.MINTNFT, event, '', context.store)
 }
 
 export async function handleTokenTransfer(context: Context): Promise<void> {
-  const tokenEvent = unwrap(context, getTransferTokenEvent)
-  const id = createTokenId(tokenEvent.collectionId, tokenEvent.sn)
-  const entity = await ensure<NE>(get(context.store, NE, id))
-  entity.currentOwner = tokenEvent.to
+  const event = unwrap(context, getTransferTokenEvent)
+  const id = createTokenId(event.collectionId, event.sn)
+  const entity = ensure<NE>(await get(context.store, NE, id))
+  const currentOwner = entity.currentOwner
+  entity.currentOwner = event.to
   logger.success(
-    `[TRANSFER] ${id} from ${tokenEvent.caller} to ${tokenEvent.to}`
+    `[SEND] ${id} from ${event.caller} to ${event.to}`
   )
   await context.store.save(entity)
+  await createEvent(entity, Interaction.SEND, event, event.to || '', context.store, currentOwner)
 }
 
 export async function handleTokenBurn(context: Context): Promise<void> {
-  const tokenEvent = unwrap(context, getBurnTokenEvent)
-  const id = createTokenId(tokenEvent.collectionId, tokenEvent.sn)
-  const entity = await ensure<NE>(get(context.store, NE, id))
+  const event = unwrap(context, getBurnTokenEvent)
+  const id = createTokenId(event.collectionId, event.sn)
+  const entity = ensure<NE>(await get(context.store, NE, id))
   entity.burned = true
-  logger.success(`[BURN] ${id} by ${tokenEvent.caller}}`)
+  logger.success(`[BURN] ${id} by ${event.caller}}`)
   await context.store.save(entity)
+  await createEvent(entity, Interaction.CONSUME, event, '', context.store)
 }
 
 async function createEvent(
@@ -157,14 +160,15 @@ async function createEvent(
   interaction: Interaction,
   call: BaseCall,
   meta: string,
-  store: Store
+  store: Store,
+  currentOwner?: string
 ) {
   try {
     const newEventId = eventId(final.id, interaction)
     const event = create<Event>(
       Event,
       newEventId,
-      eventFrom(interaction, call, meta)
+      eventFrom(interaction, call, meta, currentOwner)
     )
     event.nft = final
     await store.save(event)
