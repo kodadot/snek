@@ -26,6 +26,10 @@ export function existButBurned(entity: Entity): boolean {
   return exists(entity) && isBurned(entity)
 }
 
+export function remint(entity: Entity): boolean {
+  return existButBurned(entity) || !exists(entity)
+}
+
 export function canOrElseError<T extends Entity>(callback: (arg: T) => boolean, entity: T, negation?: boolean) {
   const entityName = entityOf(entity)
   if (negation ? !callback(entity) : callback(entity)) {

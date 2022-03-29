@@ -8,7 +8,7 @@ import {
   NFTEntity as NE,
 } from '../model'
 import { CollectionType } from '../model/generated/_collectionType'
-import { canOrElseError, exists } from './utils/consolidator'
+import { canOrElseError, exists, remint } from './utils/consolidator'
 import { create, get } from './utils/entity'
 import { createTokenId, unwrap } from './utils/extract'
 import {
@@ -65,7 +65,10 @@ async function handleMetadata(
 
 export async function handleCollectionCreate(context: Context): Promise<void> {
   const event = unwrap(context, getCreateCollectionEvent)
-  // const entity = await get<CE>(context.store, CE, event.id)
+  const collection = ensure<CE>(
+    await get<CE>(context.store, CE, event.id)
+  )
+  canOrElseError<CE>(remint, collection)
   // TODO: check if collection exists and is burned
   const final = create<CE>(CE, event.id, {})
   final.id = event.id
@@ -77,6 +80,8 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
   final.createdAt = event.timestamp
   final.updatedAt = event.timestamp
   final.type = event.type as CollectionType // unsafe
+
+  logger.info(`collection: ${JSON.stringify(final, null, 2)}`)
 
   if (final.metadata) {
     const metadata = await handleMetadata(final.metadata, context.store)
@@ -108,7 +113,9 @@ export async function handleTokenCreate(context: Context): Promise<void> {
   const collection = ensure<CE>(
     await get<CE>(context.store, CE, event.collectionId)
   )
+  const token = ensure<NE>(await get(context.store, NE, id))
   canOrElseError<CE>(exists, collection, true)
+  // canOrElseError<NE>(remint, token)
   // TODO: check how the token is created when it was bured before
   const final = create<NE>(NE, id, {})
   final.id = id
