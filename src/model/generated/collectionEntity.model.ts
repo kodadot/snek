@@ -3,6 +3,7 @@ import * as marshal from "./marshal"
 import {CollectionEvent} from "./collectionEvent.model"
 import {MetadataEntity} from "./metadataEntity.model"
 import {NFTEntity} from "./nftEntity.model"
+import {CollectionType} from "./_collectionType"
 
 @Entity_()
 export class CollectionEntity {
@@ -46,4 +47,7 @@ export class CollectionEntity {
 
   @Column_("timestamp with time zone", {nullable: false})
   updatedAt!: Date
+
+  @Column_("varchar", {length: 15, nullable: false})
+  type!: CollectionType
 }

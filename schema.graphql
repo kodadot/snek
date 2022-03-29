@@ -11,6 +11,7 @@ type CollectionEntity @entity {
   name: String
   nfts: [NFTEntity!] @derivedFrom(field: "collection")
   updatedAt: DateTime!
+  type: CollectionType!
 }
 
 type NFTEntity @entity {
@@ -29,6 +30,7 @@ type NFTEntity @entity {
   price: BigInt!
   sn: String!
   updatedAt: DateTime!
+  # type: ClassType!
 }
 
 type MetadataEntity @entity {
@@ -92,6 +94,14 @@ enum Interaction {
   REJECT_OFFER # OFFER
   PAY_ROYALTY
   ROYALTY
+}
+
+enum CollectionType {
+  Marketplace
+  LiquidityMining
+  Redeemable
+  Auction
+  HydraHeads
 }
 
 # Implement in the later stages 
