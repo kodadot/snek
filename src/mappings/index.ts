@@ -8,8 +8,8 @@ import {
   NFTEntity as NE,
 } from '../model'
 import { CollectionType } from '../model/generated/_collectionType'
-import { canOrElseError, exists, remint } from './utils/consolidator'
-import { create, get } from './utils/entity'
+import { plsBe, plsNotBe, real, remintable } from './utils/consolidator'
+import { create, get, getOrCreate } from './utils/entity'
 import { createTokenId, unwrap } from './utils/extract'
 import {
   getBurnTokenEvent,
@@ -65,12 +65,9 @@ async function handleMetadata(
 
 export async function handleCollectionCreate(context: Context): Promise<void> {
   const event = unwrap(context, getCreateCollectionEvent)
-  const collection = ensure<CE>(
-    await get<CE>(context.store, CE, event.id)
-  )
-  canOrElseError<CE>(remint, collection)
-  // TODO: check if collection exists and is burned
-  const final = create<CE>(CE, event.id, {})
+  const final = await getOrCreate<CE>(context.store, CE, event.id, {})
+  plsBe(remintable, final)
+
   final.id = event.id
   final.issuer = event.caller
   final.currentOwner = event.caller
@@ -97,7 +94,8 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
 export async function handleCollectionDestroy(context: Context): Promise<void> {
   const event = unwrap(context, getDestroyCollectionEvent)
   const entity = ensure<CE>(await get(context.store, CE, event.id))
-  canOrElseError<CE>(exists, entity, true)
+  plsBe(real, entity)
+
   entity.burned = true
   logger.success(
     `[DESTROY] ${event.id} by ${event.caller}`
@@ -113,11 +111,10 @@ export async function handleTokenCreate(context: Context): Promise<void> {
   const collection = ensure<CE>(
     await get<CE>(context.store, CE, event.collectionId)
   )
-  const token = ensure<NE>(await get(context.store, NE, id))
-  canOrElseError<CE>(exists, collection, true)
-  // canOrElseError<NE>(remint, token)
-  // TODO: check how the token is created when it was bured before
-  const final = create<NE>(NE, id, {})
+  const final = await getOrCreate<NE>(context.store, NE, id, {})
+  plsBe(real, collection)
+  plsBe(remintable, final)
+
   final.id = id
   final.hash = md5(id)
   final.issuer = event.caller
@@ -146,6 +143,8 @@ export async function handleTokenTransfer(context: Context): Promise<void> {
   const event = unwrap(context, getTransferTokenEvent)
   const id = createTokenId(event.collectionId, event.sn)
   const entity = ensure<NE>(await get(context.store, NE, id))
+  plsBe(real, entity)
+
   const currentOwner = entity.currentOwner
   entity.currentOwner = event.to
   logger.success(
@@ -159,6 +158,8 @@ export async function handleTokenBurn(context: Context): Promise<void> {
   const event = unwrap(context, getBurnTokenEvent)
   const id = createTokenId(event.collectionId, event.sn)
   const entity = ensure<NE>(await get(context.store, NE, id))
+  plsBe(real, entity)
+
   entity.burned = true
   logger.success(`[BURN] ${id} by ${event.caller}}`)
   await context.store.save(entity)

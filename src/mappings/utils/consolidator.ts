@@ -2,12 +2,16 @@ import { CollectionEntity, NFTEntity } from '../../model/generated'
 // import { decodeAddress } from '@polkadot/util-crypto'
 type Entity = CollectionEntity | NFTEntity
 
-export function exists<T>(entity: T | undefined): boolean {
+export function real<T>(entity: T | undefined): boolean {
   return !!entity
 }
 
-export function isBurned({ burned }: Entity): boolean {
+export function burned({ burned }: Entity): boolean {
   return burned
+}
+
+export function created(entity: Entity): boolean {
+  return Object.keys(entity).length === 1 && entity.id !== undefined
 }
 
 export function entityOf(entity: Entity): string {
@@ -22,17 +26,21 @@ export function entityOf(entity: Entity): string {
   return ''
 }
 
-export function existButBurned(entity: Entity): boolean {
-  return exists(entity) && isBurned(entity)
+export function remintable(entity: Entity): boolean {
+  return burned(entity) || created(entity)
 }
 
-export function remint(entity: Entity): boolean {
-  return existButBurned(entity) || !exists(entity)
+export function plsBe<T extends Entity>(callback: (arg: T) => boolean, entity: T) {
+  return needTo(callback, entity, true)
 }
 
-export function canOrElseError<T extends Entity>(callback: (arg: T) => boolean, entity: T, negation?: boolean) {
+export function plsNotBe<T extends Entity>(callback: (arg: T) => boolean, entity: T) {
+  return needTo(callback, entity, false)
+}
+
+export function needTo<T extends Entity>(callback: (arg: T) => boolean, entity: T, positive: boolean = true) {
   const entityName = entityOf(entity)
-  if (negation ? !callback(entity) : callback(entity)) {
-    throw new ReferenceError(`[PROBLEM] Entity ${entityName} ${negation ? ' not' : ''} ${callback.name}`)
+  if (positive ? callback(entity) : !callback(entity)) {
+    throw new ReferenceError(`[PROBLEM] Entity ${entityName} needs ${positive ? ' ' : ' not'} to be ${callback.name}`)
   }
 }
