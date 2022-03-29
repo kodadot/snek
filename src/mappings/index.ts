@@ -88,14 +88,16 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
 }
 
 export async function handleCollectionDestroy(context: Context): Promise<void> {
-  const collectionEvent = unwrap(context, getDestroyCollectionEvent)
-  const entity = ensure<CE>(await get(context.store, CE, collectionEvent.id))
-  // canOrElseError<CE>(exists, nft, true)
+  const event = unwrap(context, getDestroyCollectionEvent)
+  const entity = ensure<CE>(await get(context.store, CE, event.id))
+  canOrElseError<CE>(exists, entity, true)
   entity.burned = true
   logger.success(
-    `[DESTROY] ${collectionEvent.id} from ${collectionEvent.caller}`
+    `[DESTROY] ${event.id} by ${event.caller}`
   )
+  const meta = entity.metadata ?? ''
   await context.store.save(entity)
+  await createCollectionEvent(entity, Interaction.DESTROY, event, meta, context.store)
 }
 
 export async function handleTokenCreate(context: Context): Promise<void> {
@@ -151,7 +153,8 @@ export async function handleTokenBurn(context: Context): Promise<void> {
   entity.burned = true
   logger.success(`[BURN] ${id} by ${event.caller}}`)
   await context.store.save(entity)
-  await createEvent(entity, Interaction.CONSUME, event, '', context.store)
+  const meta = entity.metadata ?? ''
+  await createEvent(entity, Interaction.CONSUME, event, meta, context.store)
 }
 
 async function createEvent(
