@@ -7,6 +7,7 @@ import {
   MetadataEntity as Metadata,
   NFTEntity as NE,
 } from '../model'
+import { CollectionType } from '../model/generated/_collectionType'
 import { canOrElseError, exists } from './utils/consolidator'
 import { create, get } from './utils/entity'
 import { createTokenId, unwrap } from './utils/extract'
@@ -75,6 +76,7 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
   final.burned = false
   final.createdAt = event.timestamp
   final.updatedAt = event.timestamp
+  final.type = event.type as CollectionType // unsafe
 
   if (final.metadata) {
     const metadata = await handleMetadata(final.metadata, context.store)

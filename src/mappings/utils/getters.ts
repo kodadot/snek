@@ -5,16 +5,16 @@ import { BurnTokenEvent, CreateCollectionEvent, CreateTokenEvent, DestroyCollect
 export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
   const event = new NftClassCreatedEvent(ctx);
   if (event.isV39) {
-    const { classId, owner } = event.asV39;
-    return { id: classId.toString(), caller: owner.toString() };
+    const { classId, owner, classType } = event.asV39;
+    return { id: classId.toString(), caller: owner.toString(), type: classType.toString()};
   }
   if (event.isV50) {
-    const { classId, owner, metadata } = event.asV50;
-    return { id: classId.toString(), caller: owner.toString(), metadata: metadata.toString()  };
+    const { classId, owner, metadata, classType } = event.asV50;
+    return { id: classId.toString(), caller: owner.toString(), metadata: metadata.toString(), type: classType.toString()  };
   }
 
-  const { classId, owner, metadata } = event.asLatest;
-  return { id: classId.toString(), caller: owner.toString(), metadata: metadata.toString()  };
+  const { classId, owner, metadata, classType } = event.asLatest;
+  return { id: classId.toString(), caller: owner.toString(), metadata: metadata.toString(), type: classType.toString()  };
 }
 
 export function getCreateTokenEvent(ctx: Context): CreateTokenEvent {

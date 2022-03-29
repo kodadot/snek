@@ -2,6 +2,7 @@ import { Interaction } from '../../model/generated/_interaction'
 import { Attribute } from '../../model/generated/_attribute'
 import {EventHandlerContext } from '@subsquid/substrate-processor'
 import { nanoid } from 'nanoid'
+import { CollectionType } from '../../model/generated/_collectionType'
 
 export type BaseCall = {
   caller: string;
@@ -63,7 +64,9 @@ export type OptionalMeta = {
   metadata?: string;
 }
 
-export type CreateCollectionEvent = BaseCollectionEvent & OptionalMeta
+export type CreateCollectionEvent = BaseCollectionEvent & OptionalMeta & {
+  type: string | CollectionType;
+}
 
 export type CreateTokenEvent = {
   collectionId: string;
