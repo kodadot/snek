@@ -37,6 +37,7 @@
   "ignorePatterns": [
     "src/model/generated",
     "src/types",
-    "db"
+    "db",
+    "tests/"
   ]
 }
