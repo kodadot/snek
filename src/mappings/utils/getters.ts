@@ -7,15 +7,15 @@ export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
   const event = new NftClassCreatedEvent(ctx);
   if (event.isV39) {
     const { classId, owner, classType } = event.asV39;
-    return { id: classId.toString(), caller: addressOf(owner), type: classType.toString()};
+    return { id: classId.toString(), caller: addressOf(owner), type: classType.__kind };
   }
   if (event.isV50) {
     const { classId, owner, metadata, classType } = event.asV50;
-    return { id: classId.toString(), caller: addressOf(owner), metadata: metadata.toString(), type: classType.toString()  };
+    return { id: classId.toString(), caller: addressOf(owner), metadata: metadata.toString(), type: classType.__kind  };
   }
 
   const { classId, owner, metadata, classType } = event.asLatest;
-  return { id: classId.toString(), caller: addressOf(owner), metadata: metadata.toString(), type: classType.toString()  };
+  return { id: classId.toString(), caller: addressOf(owner), metadata: metadata.toString(), type: classType.__kind  };
 }
 
 export function getCreateTokenEvent(ctx: Context): CreateTokenEvent {
