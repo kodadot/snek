@@ -12,7 +12,7 @@ export class NftClassCreatedEvent {
    * A class was created \[owner, class_id, class_type\]
    */
   get isV39(): boolean {
-    return this.ctx._chain.getEventHash('nft.ClassCreated') === 'e5ba1c0085c1faaf7ada6485d9aa18c5e6ed625403fb4641aa06416b38c7eada'
+    return this.ctx._chain.getEventHash('nft.ClassCreated') === '7adeb3f2ae9b2b9c39201542a741e44b5484fadd52179e412e45be77a794f225'
   }
 
   /**
@@ -27,7 +27,7 @@ export class NftClassCreatedEvent {
    * A class was created \[owner, class_id, class_type\]
    */
   get isV50(): boolean {
-    return this.ctx._chain.getEventHash('nft.ClassCreated') === 'ce3713641150a419581dc719e818fcd693c4cea897dfce1be8ed7cbd749498fc'
+    return this.ctx._chain.getEventHash('nft.ClassCreated') === '964234ae203d3207b740072bc8630eee21c72fe7995f3fc03e62f0bb443cca32'
   }
 
   /**
@@ -58,7 +58,7 @@ export class NftClassDestroyedEvent {
    * A class was destroyed \[class_id\]
    */
   get isV39(): boolean {
-    return this.ctx._chain.getEventHash('nft.ClassDestroyed') === 'f04371ea3b0ac69e55d1c975ad8fbdc308f1dee37ebfdb2351ac189370b568ff'
+    return this.ctx._chain.getEventHash('nft.ClassDestroyed') === '51309f98603f5eeb2eb07f9373848f1874c4bfaea4a29b0e0d21dd93b98da94a'
   }
 
   /**
@@ -89,7 +89,7 @@ export class NftInstanceBurnedEvent {
    * An instance was burned \[sender, class_id, instance_id\]
    */
   get isV39(): boolean {
-    return this.ctx._chain.getEventHash('nft.InstanceBurned') === 'baa08b83bc16cebc818192f9e551a533e3945d39c52416aff7af254d13ddab40'
+    return this.ctx._chain.getEventHash('nft.InstanceBurned') === 'cbf0740ecac063f0cc91759153cc494f3d948025e716ccd16da079129444cc1d'
   }
 
   /**
@@ -120,7 +120,7 @@ export class NftInstanceMintedEvent {
    * An instance was minted \[owner, class_id, instance_id\]
    */
   get isV39(): boolean {
-    return this.ctx._chain.getEventHash('nft.InstanceMinted') === '4c21cb1c3dd57664667294c38ca430c1713ef83678b8823da51ee75558fa2b92'
+    return this.ctx._chain.getEventHash('nft.InstanceMinted') === 'cbf0740ecac063f0cc91759153cc494f3d948025e716ccd16da079129444cc1d'
   }
 
   /**
@@ -135,7 +135,7 @@ export class NftInstanceMintedEvent {
    * An instance was minted \[owner, class_id, instance_id\]
    */
   get isV50(): boolean {
-    return this.ctx._chain.getEventHash('nft.InstanceMinted') === '0fd54946aedb7b39910e7d095f123ab20efd8a3aebf4386f2c9620706a588697'
+    return this.ctx._chain.getEventHash('nft.InstanceMinted') === 'eb2d7da6cd031b1051bd4c0ebcbe8cd70b244f54737e21a7f8279dccee6fa006'
   }
 
   /**
@@ -166,7 +166,7 @@ export class NftInstanceTransferredEvent {
    * An instance was transferred \[from, to, class_id, instance_id\]
    */
   get isV39(): boolean {
-    return this.ctx._chain.getEventHash('nft.InstanceTransferred') === '755be91558a0f192872755d165315d444206ce854c731f88d1684fdbaddcf282'
+    return this.ctx._chain.getEventHash('nft.InstanceTransferred') === 'e0a071978a33a540c15a46174c5018087ae648a19419f54dab0cb069ce949563'
   }
 
   /**
