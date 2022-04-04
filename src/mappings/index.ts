@@ -64,6 +64,7 @@ async function handleMetadata(
 }
 
 export async function handleCollectionCreate(context: Context): Promise<void> {
+  logger.pending(`[COLECTTION++]: ${context.event.blockNumber}`)
   const event = unwrap(context, getCreateCollectionEvent)
   const final = await getOrCreate<CE>(context.store, CE, event.id, {})
   plsBe(remintable, final)
@@ -92,6 +93,7 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
 }
 
 export async function handleCollectionDestroy(context: Context): Promise<void> {
+  logger.pending(`[DESTROY]: ${context.event.blockNumber}`)
   const event = unwrap(context, getDestroyCollectionEvent)
   const entity = ensure<CE>(await get(context.store, CE, event.id))
   plsBe(real, entity)
@@ -106,6 +108,7 @@ export async function handleCollectionDestroy(context: Context): Promise<void> {
 }
 
 export async function handleTokenCreate(context: Context): Promise<void> {
+  logger.pending(`[NFT++]: ${context.event.blockNumber}`)
   const event = unwrap(context, getCreateTokenEvent)
   const id = createTokenId(event.collectionId, event.sn)
   const collection = ensure<CE>(
@@ -140,6 +143,7 @@ export async function handleTokenCreate(context: Context): Promise<void> {
 }
 
 export async function handleTokenTransfer(context: Context): Promise<void> {
+  logger.pending(`[SEND]: ${context.event.blockNumber}`)
   const event = unwrap(context, getTransferTokenEvent)
   const id = createTokenId(event.collectionId, event.sn)
   const entity = ensure<NE>(await get(context.store, NE, id))
@@ -155,6 +159,7 @@ export async function handleTokenTransfer(context: Context): Promise<void> {
 }
 
 export async function handleTokenBurn(context: Context): Promise<void> {
+  logger.pending(`[BURN]: ${context.event.blockNumber}`)
   const event = unwrap(context, getBurnTokenEvent)
   const id = createTokenId(event.collectionId, event.sn)
   const entity = ensure<NE>(await get(context.store, NE, id))
