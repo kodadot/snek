@@ -1,5 +1,6 @@
 import { CollectionEntity, NFTEntity } from '../../model/generated'
-// import { decodeAddress } from '@polkadot/util-crypto'
+import logger from './logger'
+
 type Entity = CollectionEntity | NFTEntity
 
 export function real<T>(entity: T | undefined): boolean {
@@ -40,7 +41,7 @@ export function plsNotBe<T extends Entity>(callback: (arg: T) => boolean, entity
 
 export function needTo<T extends Entity>(callback: (arg: T) => boolean, entity: T, positive: boolean = true) {
   const entityName = entityOf(entity)
-  if (positive ? callback(entity) : !callback(entity)) {
-    throw new ReferenceError(`[PROBLEM] Entity ${entityName} needs ${positive ? ' ' : ' not'} to be ${callback.name}`)
+  if (positive ? !callback(entity) : callback(entity)) {
+    throw new ReferenceError(`[PROBLEM] Entity ${entityName} needs ${positive ? '' : 'not'} to be ${callback.name}`)
   }
 }
