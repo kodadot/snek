@@ -42,7 +42,7 @@ reset:
 	npx sqd db:migrate
 
 migrate:
-	@npx sqd db:migrate
+	npx sqd db:migrate
 
 update NAME:
 	npx sqd db:create-migration "{{NAME}}"

@@ -1,5 +1,5 @@
-module.exports = class Init1648543948064 {
-  name = 'Init1648543948064'
+module.exports = class Init1649069713275 {
+  name = 'Init1649069713275'
 
   async up(db) {
     await db.query(`CREATE TABLE "collection_event" ("id" character varying NOT NULL, "block_number" numeric, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "caller" text NOT NULL, "current_owner" text, "interaction" character varying(12) NOT NULL, "meta" text NOT NULL, "collection_id" character varying NOT NULL, CONSTRAINT "PK_5071dfbea812b4caade2ede2139" PRIMARY KEY ("id"))`)
@@ -11,7 +11,7 @@ module.exports = class Init1648543948064 {
     await db.query(`CREATE INDEX "IDX_4b98bf4d630de0037475b9bbb7" ON "nft_entity" ("collection_id") `)
     await db.query(`CREATE INDEX "IDX_16e57ac8478b6ea1f383e3eb03" ON "nft_entity" ("hash") `)
     await db.query(`CREATE INDEX "IDX_2bfc45b91959a14ab8b2d734cd" ON "nft_entity" ("meta_id") `)
-    await db.query(`CREATE TABLE "collection_entity" ("id" character varying NOT NULL, "block_number" numeric, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL, "current_owner" text NOT NULL, "burned" boolean NOT NULL, "issuer" text NOT NULL, "metadata" text, "name" text, "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL, "meta_id" character varying, CONSTRAINT "PK_5d44e140c4fcb3d961f9e83405f" PRIMARY KEY ("id"))`)
+    await db.query(`CREATE TABLE "collection_entity" ("id" character varying NOT NULL, "block_number" numeric, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL, "current_owner" text NOT NULL, "burned" boolean NOT NULL, "issuer" text NOT NULL, "metadata" text, "name" text, "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL, "type" character varying(15) NOT NULL, "meta_id" character varying, CONSTRAINT "PK_5d44e140c4fcb3d961f9e83405f" PRIMARY KEY ("id"))`)
     await db.query(`CREATE INDEX "IDX_014542183f297493eab0cd8bdf" ON "collection_entity" ("meta_id") `)
     await db.query(`ALTER TABLE "collection_event" ADD CONSTRAINT "FK_93f81f26d6b052b289167b3ae3e" FOREIGN KEY ("collection_id") REFERENCES "collection_entity"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
     await db.query(`ALTER TABLE "event" ADD CONSTRAINT "FK_9380d479563e5a664759359470a" FOREIGN KEY ("nft_id") REFERENCES "nft_entity"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
