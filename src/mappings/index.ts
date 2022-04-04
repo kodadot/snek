@@ -1,5 +1,6 @@
 import { Store } from '@subsquid/substrate-processor'
 import md5 from 'md5'
+import { exit } from 'process'
 import {
   CollectionEntity as CE,
   CollectionEvent,
@@ -66,6 +67,7 @@ async function handleMetadata(
 export async function handleCollectionCreate(context: Context): Promise<void> {
   logger.pending(`[COLECTTION++]: ${context.event.blockNumber}`)
   const event = unwrap(context, getCreateCollectionEvent)
+  logger.debug(`collection: ${JSON.stringify(event, null, 2)}`)
   const final = await getOrCreate<CE>(context.store, CE, event.id, {})
   plsBe(remintable, final)
 
@@ -78,8 +80,6 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
   final.createdAt = event.timestamp
   final.updatedAt = event.timestamp
   final.type = event.type as CollectionType // unsafe
-
-  logger.info(`collection: ${JSON.stringify(final, null, 2)}`)
 
   if (final.metadata) {
     const metadata = await handleMetadata(final.metadata, context.store)
@@ -110,6 +110,7 @@ export async function handleCollectionDestroy(context: Context): Promise<void> {
 export async function handleTokenCreate(context: Context): Promise<void> {
   logger.pending(`[NFT++]: ${context.event.blockNumber}`)
   const event = unwrap(context, getCreateTokenEvent)
+  logger.debug(`nft: ${JSON.stringify(event, null, 2)}`)
   const id = createTokenId(event.collectionId, event.sn)
   const collection = ensure<CE>(
     await get<CE>(context.store, CE, event.collectionId)
@@ -145,6 +146,7 @@ export async function handleTokenCreate(context: Context): Promise<void> {
 export async function handleTokenTransfer(context: Context): Promise<void> {
   logger.pending(`[SEND]: ${context.event.blockNumber}`)
   const event = unwrap(context, getTransferTokenEvent)
+  logger.debug(`send: ${JSON.stringify(event, null, 2)}`)
   const id = createTokenId(event.collectionId, event.sn)
   const entity = ensure<NE>(await get(context.store, NE, id))
   plsBe(real, entity)
@@ -161,6 +163,7 @@ export async function handleTokenTransfer(context: Context): Promise<void> {
 export async function handleTokenBurn(context: Context): Promise<void> {
   logger.pending(`[BURN]: ${context.event.blockNumber}`)
   const event = unwrap(context, getBurnTokenEvent)
+  logger.debug(`burn: ${JSON.stringify(event, null, 2)}`)
   const id = createTokenId(event.collectionId, event.sn)
   const entity = ensure<NE>(await get(context.store, NE, id))
   plsBe(real, entity)
