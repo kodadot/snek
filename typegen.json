@@ -7,7 +7,10 @@
     "nft.InstanceMinted",
     "nft.InstanceTransferred",
     "nft.InstanceBurned",
-    "nft.ClassDestroyed"
+    "nft.ClassDestroyed",
+    "marketplace.TokenSold",
+    "marketplace.TokenPriceUpdated",
+    "marketplace.RoyaltyAdded"
   ],
   "calls": []
 }
