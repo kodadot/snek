@@ -5,7 +5,7 @@ export enum Event {
   burn = 'nft.InstanceBurned',
   destroy = 'nft.ClassDestroyed',
   priceUpdate = 'marketplace.TokenPriceUpdated',
-  sold = 'marketplace.InstanceSold',
+  sold = 'marketplace.TokenSold',
   placeOffer = 'marketplace.OfferPlaced',
   withdrawOffer = 'marketplace.OfferWithdrawn',
   acceptOffer = 'marketplace.OfferAccepted',
