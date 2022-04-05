@@ -1,6 +1,6 @@
-import { NftClassCreatedEvent, NftClassDestroyedEvent, NftInstanceBurnedEvent, NftInstanceMintedEvent, NftInstanceTransferredEvent } from '../../types/events'
+import { MarketplaceTokenPriceUpdatedEvent, MarketplaceTokenSoldEvent, NftClassCreatedEvent, NftClassDestroyedEvent, NftInstanceBurnedEvent, NftInstanceMintedEvent, NftInstanceTransferredEvent } from '../../types/events'
 import { addressOf } from './helper'
-import { BurnTokenEvent, CreateCollectionEvent, CreateTokenEvent, DestroyCollectionEvent, TransferTokenEvent, Context } from './types'
+import { BurnTokenEvent, CreateCollectionEvent, CreateTokenEvent, DestroyCollectionEvent, TransferTokenEvent, Context, ListTokenEvent, BuyTokenEvent } from './types'
 
 
 export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
@@ -49,4 +49,16 @@ export function getDestroyCollectionEvent(ctx: Context): DestroyCollectionEvent 
   const event = new NftClassDestroyedEvent(ctx);
   const { classId, owner } = event.asLatest;
     return { id: classId.toString(), caller: addressOf(owner) };
+}
+
+export function getListTokenEvent(ctx: Context): ListTokenEvent {
+  const event = new MarketplaceTokenPriceUpdatedEvent(ctx);
+  const [owner, classId, instanceId, price ] = event.asLatest;
+  return { collectionId: classId.toString(), caller: addressOf(owner), sn: instanceId.toString(), price: BigInt(price ?? 0) };
+}
+
+export function getBuyTokenEvent(ctx: Context): BuyTokenEvent {
+  const event = new MarketplaceTokenSoldEvent(ctx);
+  const [from, to, classId, instanceId, price ] = event.asLatest;
+  return { collectionId: classId.toString(), caller: addressOf(to), sn: instanceId.toString(), price: BigInt(price ?? 0), currentOwner: addressOf(from) };
 }

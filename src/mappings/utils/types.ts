@@ -82,6 +82,17 @@ export type TransferTokenEvent = {
   to: string;
 }
 
+export type ListTokenEvent = {
+  collectionId: string;
+  caller: string;
+  sn: string;
+  price: bigint
+}
+
+export type BuyTokenEvent = ListTokenEvent & {
+  currentOwner: string;
+}
+
 export type BurnTokenEvent = CreateTokenEvent
 
 export type DestroyCollectionEvent = BaseCollectionEvent
@@ -95,6 +106,11 @@ export type EntityConstructor<T> = {
 export type SomethingWithMeta = {
   metadata: string
 }
+
+export type SomethingWithOptionalMeta = {
+  metadata?: string
+}
+
 export type UnwrapFunc<T> = (ctx: Context) => T
 export type SanitizerFunc = (url: string) => string
 
