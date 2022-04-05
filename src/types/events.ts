@@ -3,6 +3,99 @@ import {EventContext, Result, deprecateLatest} from './support'
 import * as v39 from './v39'
 import * as v50 from './v50'
 
+export class MarketplaceRoyaltyAddedEvent {
+  constructor(private ctx: EventContext) {
+    assert(this.ctx.event.name === 'marketplace.RoyaltyAdded')
+  }
+
+  /**
+   * Marketplace data has been added \[class_type, sender, class_id, instance_id\]
+   */
+  get isV39(): boolean {
+    return this.ctx._chain.getEventHash('marketplace.RoyaltyAdded') === 'b25c5b1351882b8049f26b3ffe8318b0c04beabe7f3b1174b983af490abf68f7'
+  }
+
+  /**
+   * Marketplace data has been added \[class_type, sender, class_id, instance_id\]
+   */
+  get asV39(): [bigint, bigint, v39.AccountId32, number] {
+    assert(this.isV39)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
+    deprecateLatest()
+    return this.isV39
+  }
+
+  get asLatest(): [bigint, bigint, v39.AccountId32, number] {
+    deprecateLatest()
+    return this.asV39
+  }
+}
+
+export class MarketplaceTokenPriceUpdatedEvent {
+  constructor(private ctx: EventContext) {
+    assert(this.ctx.event.name === 'marketplace.TokenPriceUpdated')
+  }
+
+  /**
+   * The price for a token was updated \[owner, class_id, instance_id, price\]
+   */
+  get isV39(): boolean {
+    return this.ctx._chain.getEventHash('marketplace.TokenPriceUpdated') === '4100700286e3b39a636551e9e9872940d3c125d1b8729ac058742455e638fbe2'
+  }
+
+  /**
+   * The price for a token was updated \[owner, class_id, instance_id, price\]
+   */
+  get asV39(): [v39.AccountId32, bigint, bigint, (bigint | undefined)] {
+    assert(this.isV39)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
+    deprecateLatest()
+    return this.isV39
+  }
+
+  get asLatest(): [v39.AccountId32, bigint, bigint, (bigint | undefined)] {
+    deprecateLatest()
+    return this.asV39
+  }
+}
+
+export class MarketplaceTokenSoldEvent {
+  constructor(private ctx: EventContext) {
+    assert(this.ctx.event.name === 'marketplace.TokenSold')
+  }
+
+  /**
+   * Token was sold to a new owner \[owner, buyer, class_id, instance_id, price\]
+   */
+  get isV39(): boolean {
+    return this.ctx._chain.getEventHash('marketplace.TokenSold') === '4a3bc2182538af0cb911036daeda76c419c2f42491eda8f66b9ca681035507c0'
+  }
+
+  /**
+   * Token was sold to a new owner \[owner, buyer, class_id, instance_id, price\]
+   */
+  get asV39(): [v39.AccountId32, v39.AccountId32, bigint, bigint, bigint] {
+    assert(this.isV39)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
+    deprecateLatest()
+    return this.isV39
+  }
+
+  get asLatest(): [v39.AccountId32, v39.AccountId32, bigint, bigint, bigint] {
+    deprecateLatest()
+    return this.asV39
+  }
+}
+
 export class NftClassCreatedEvent {
   constructor(private ctx: EventContext) {
     assert(this.ctx.event.name === 'nft.ClassCreated')

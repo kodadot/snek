@@ -14,9 +14,11 @@ import { create, get, getOrCreate } from './utils/entity'
 import { createTokenId, unwrap } from './utils/extract'
 import {
   getBurnTokenEvent,
+  getBuyTokenEvent,
   getCreateCollectionEvent,
   getCreateTokenEvent,
   getDestroyCollectionEvent,
+  getListTokenEvent,
   getTransferTokenEvent,
 } from './utils/getters'
 import { isEmpty } from './utils/helper'
@@ -173,6 +175,37 @@ export async function handleTokenBurn(context: Context): Promise<void> {
   await context.store.save(entity)
   const meta = entity.metadata ?? ''
   await createEvent(entity, Interaction.CONSUME, event, meta, context.store)
+}
+
+export async function handleTokenList(context: Context): Promise<void> {
+  logger.pending(`[LIST]: ${context.event.blockNumber}`)
+  const event = unwrap(context, getListTokenEvent)
+  logger.debug(`list: ${JSON.stringify(event, null, 2)}`)
+  const id = createTokenId(event.collectionId, event.sn)
+  const entity = ensure<NE>(await get(context.store, NE, id))
+  plsBe(real, entity)
+
+  entity.price = event.price
+  logger.success(`[list] ${id} by ${event.caller}}`)
+  await context.store.save(entity)
+  const meta = entity.metadata ?? ''
+  await createEvent(entity, Interaction.LIST, event, meta, context.store)
+}
+
+export async function handleTokenBuy(context: Context): Promise<void> {
+  logger.pending(`[BUY]: ${context.event.blockNumber}`)
+  const event = unwrap(context, getBuyTokenEvent)
+  logger.debug(`buy: ${JSON.stringify(event, null, 2)}`)
+  const id = createTokenId(event.collectionId, event.sn)
+  const entity = ensure<NE>(await get(context.store, NE, id))
+  plsBe(real, entity)
+  entity.price = BigInt(0)
+  entity.currentOwner = event.caller
+
+  logger.success(`[BUY] ${id} by ${event.caller}}`)
+  await context.store.save(entity)
+  const meta = entity.metadata ?? ''
+  await createEvent(entity, Interaction.BUY, event, meta, context.store, event.currentOwner)
 }
 
 async function createEvent(
