@@ -64,3 +64,6 @@ exec:
 
 update-deps:
 	npx taze
+
+where-chain:
+	echo "https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Fbasilisk-kodadot.hydration.cloud#/explorer" | pbcopy
