@@ -44,8 +44,8 @@ reset:
 migrate:
 	npx sqd db:migrate
 
-update NAME:
-	npx sqd db:create-migration "{{NAME}}"
+update-db:
+	npx sqd db:create-migration Data
 
 test:
   npm run test:unit
@@ -62,5 +62,5 @@ kill TAG:
 exec:
 	docker exec -it snek-db-1 psql -U postgres -d squid
 
-deps:
-	npx npm-check-updates -u
+update-deps:
+	npx taze
