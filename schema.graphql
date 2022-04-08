@@ -27,7 +27,7 @@ type NFTEntity @entity {
   meta: MetadataEntity
   metadata: String
   name: String
-  price: BigInt!
+  price: BigInt
   sn: String!
   updatedAt: DateTime!
   # type: ClassType!
@@ -85,6 +85,7 @@ enum Interaction {
   MINT
   MINTNFT
   LIST
+  UNLIST
   BUY
   SEND
   CONSUME

@@ -49,8 +49,8 @@ export class NFTEntity {
   @Column_("text", {nullable: true})
   name!: string | undefined | null
 
-  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
-  price!: bigint
+  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: true})
+  price!: bigint | undefined | null
 
   @Column_("text", {nullable: false})
   sn!: string
