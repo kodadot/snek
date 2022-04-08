@@ -188,8 +188,9 @@ export async function handleTokenList(context: Context): Promise<void> {
   entity.price = event.price
   logger.success(`[list] ${id} by ${event.caller}}`)
   await context.store.save(entity)
-  const meta = entity.metadata ?? ''
-  await createEvent(entity, Interaction.LIST, event, meta, context.store)
+  const meta = String(event.price || '')
+  const interaction = event.price ? Interaction.LIST : Interaction.UNLIST
+  await createEvent(entity,  interaction, event, meta, context.store)
 }
 
 export async function handleTokenBuy(context: Context): Promise<void> {
@@ -199,7 +200,7 @@ export async function handleTokenBuy(context: Context): Promise<void> {
   const id = createTokenId(event.collectionId, event.sn)
   const entity = ensure<NE>(await get(context.store, NE, id))
   plsBe(real, entity)
-  entity.price = BigInt(0)
+  entity.price = undefined // not sure if this is correct
   entity.currentOwner = event.caller
 
   logger.success(`[BUY] ${id} by ${event.caller}}`)

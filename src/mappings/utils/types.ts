@@ -86,7 +86,7 @@ export type ListTokenEvent = {
   collectionId: string;
   caller: string;
   sn: string;
-  price: bigint
+  price?: bigint
 }
 
 export type BuyTokenEvent = ListTokenEvent & {

@@ -54,7 +54,7 @@ export function getDestroyCollectionEvent(ctx: Context): DestroyCollectionEvent 
 export function getListTokenEvent(ctx: Context): ListTokenEvent {
   const event = new MarketplaceTokenPriceUpdatedEvent(ctx);
   const [owner, classId, instanceId, price ] = event.asLatest;
-  return { collectionId: classId.toString(), caller: addressOf(owner), sn: instanceId.toString(), price: BigInt(price ?? 0) };
+  return { collectionId: classId.toString(), caller: addressOf(owner), sn: instanceId.toString(), price };
 }
 
 export function getBuyTokenEvent(ctx: Context): BuyTokenEvent {
