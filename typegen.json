@@ -10,7 +10,8 @@
     "nft.ClassDestroyed",
     "marketplace.TokenSold",
     "marketplace.TokenPriceUpdated",
-    "marketplace.RoyaltyAdded"
+    "marketplace.RoyaltyAdded",
+    "marketplace.RoyaltyPaid"
   ],
   "calls": []
 }
