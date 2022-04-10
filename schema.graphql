@@ -28,6 +28,8 @@ type NFTEntity @entity {
   metadata: String
   name: String
   price: BigInt
+  royalty: Int
+  recipient: String
   sn: String!
   updatedAt: DateTime!
   # type: ClassType!
