@@ -33,7 +33,7 @@ processor.addEventHandler(Event.sold, mappings.handleTokenBuy);
 // processor.addEventHandler(Event.placeOffer, dummy);
 // processor.addEventHandler(Event.withdrawOffer, dummy);
 // processor.addEventHandler(Event.acceptOffer, dummy);
-// processor.addEventHandler(Event.payRoyalty, dummy);
-// processor.addEventHandler(Event.addRoyalty, dummy);
+processor.addEventHandler(Event.addRoyalty, mappings.handleRoyaltyAdd);
+processor.addEventHandler(Event.payRoyalty, mappings.handleRoyaltyPay);
 
 processor.run();
