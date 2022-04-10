@@ -50,14 +50,14 @@ export interface IEvent {
   meta: string;
 }
 
-export interface RmrkInteraction {
-  id: string;
-  metadata?: string;
-}
-
 export type BaseCollectionEvent = {
   id: string;
   caller: string;
+}
+
+export type BaseTokenEvent = {
+  collectionId: string;
+  sn: string;
 }
 
 export type OptionalMeta = {
@@ -68,24 +68,18 @@ export type CreateCollectionEvent = BaseCollectionEvent & OptionalMeta & {
   type: string | CollectionType;
 }
 
-export type CreateTokenEvent = {
-  collectionId: string;
+export type CreateTokenEvent = BaseTokenEvent & {
   caller: string;
   metadata?: string;
-  sn: string;
 }
 
-export type TransferTokenEvent = {
-  collectionId: string;
-  sn: string;
+export type TransferTokenEvent = BaseTokenEvent & {
   caller: string;
   to: string;
 }
 
-export type ListTokenEvent = {
-  collectionId: string;
+export type ListTokenEvent = BaseTokenEvent & {
   caller: string;
-  sn: string;
   price?: bigint
 }
 
@@ -96,6 +90,15 @@ export type BuyTokenEvent = ListTokenEvent & {
 export type BurnTokenEvent = CreateTokenEvent
 
 export type DestroyCollectionEvent = BaseCollectionEvent
+
+export type AddRoyaltyEvent = BaseTokenEvent & {
+  recipient: string;
+  royalty: number;
+}
+
+export type PayRoyaltyEvent = AddRoyaltyEvent & {
+  amount: bigint;
+}
 
 export type CallWith<T> = BaseCall & T
 
