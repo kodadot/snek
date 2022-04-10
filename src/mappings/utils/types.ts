@@ -1,6 +1,6 @@
 import { Interaction } from '../../model/generated/_interaction'
 import { Attribute } from '../../model/generated/_attribute'
-import {EventHandlerContext } from '@subsquid/substrate-processor'
+import { EventHandlerContext } from '@subsquid/substrate-processor'
 import { nanoid } from 'nanoid'
 import { CollectionType } from '../../model/generated/_collectionType'
 
