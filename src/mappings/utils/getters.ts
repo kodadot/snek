@@ -1,6 +1,6 @@
-import { MarketplaceTokenPriceUpdatedEvent, MarketplaceTokenSoldEvent, NftClassCreatedEvent, NftClassDestroyedEvent, NftInstanceBurnedEvent, NftInstanceMintedEvent, NftInstanceTransferredEvent } from '../../types/events'
+import { MarketplaceRoyaltyAddedEvent, MarketplaceRoyaltyPaidEvent, MarketplaceTokenPriceUpdatedEvent, MarketplaceTokenSoldEvent, NftClassCreatedEvent, NftClassDestroyedEvent, NftInstanceBurnedEvent, NftInstanceMintedEvent, NftInstanceTransferredEvent } from '../../types/events'
 import { addressOf } from './helper'
-import { BurnTokenEvent, CreateCollectionEvent, CreateTokenEvent, DestroyCollectionEvent, TransferTokenEvent, Context, ListTokenEvent, BuyTokenEvent } from './types'
+import { BurnTokenEvent, CreateCollectionEvent, CreateTokenEvent, DestroyCollectionEvent, TransferTokenEvent, Context, ListTokenEvent, BuyTokenEvent, AddRoyaltyEvent, PayRoyaltyEvent } from './types'
 
 
 export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
@@ -61,4 +61,16 @@ export function getBuyTokenEvent(ctx: Context): BuyTokenEvent {
   const event = new MarketplaceTokenSoldEvent(ctx);
   const [from, to, classId, instanceId, price ] = event.asLatest;
   return { collectionId: classId.toString(), caller: addressOf(to), sn: instanceId.toString(), price: BigInt(price ?? 0), currentOwner: addressOf(from) };
+}
+
+export function getAddRoyaltyEvent(ctx: Context): AddRoyaltyEvent {
+  const event = new MarketplaceRoyaltyAddedEvent(ctx);
+  const [classId, instanceId, recipient, royalty] = event.asLatest;
+  return { collectionId: classId.toString(), sn: instanceId.toString(), recipient: addressOf(recipient), royalty };
+}
+
+export function getPayRoyaltyEvent(ctx: Context): PayRoyaltyEvent {
+  const event = new MarketplaceRoyaltyPaidEvent(ctx);
+  const [classId, instanceId, recipient, royalty, amount] = event.asLatest;
+  return { collectionId: classId.toString(), sn: instanceId.toString(), recipient: addressOf(recipient), royalty, amount };
 }

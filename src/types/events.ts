@@ -34,6 +34,37 @@ export class MarketplaceRoyaltyAddedEvent {
   }
 }
 
+export class MarketplaceRoyaltyPaidEvent {
+  constructor(private ctx: EventContext) {
+    assert(this.ctx.event.name === 'marketplace.RoyaltyPaid')
+  }
+
+  /**
+   * Royalty hs been paid to the author \[class_id, instance_id, author, royalty, royalty_amount\]
+   */
+  get isV39(): boolean {
+    return this.ctx._chain.getEventHash('marketplace.RoyaltyPaid') === '82293205d464a489606def2289dde2ad7444a78cb3ae19f599a2160d68a0b720'
+  }
+
+  /**
+   * Royalty hs been paid to the author \[class_id, instance_id, author, royalty, royalty_amount\]
+   */
+  get asV39(): [bigint, bigint, v39.AccountId32, number, bigint] {
+    assert(this.isV39)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
+    deprecateLatest()
+    return this.isV39
+  }
+
+  get asLatest(): [bigint, bigint, v39.AccountId32, number, bigint] {
+    deprecateLatest()
+    return this.asV39
+  }
+}
+
 export class MarketplaceTokenPriceUpdatedEvent {
   constructor(private ctx: EventContext) {
     assert(this.ctx.event.name === 'marketplace.TokenPriceUpdated')

@@ -13,12 +13,14 @@ import { plsBe, plsNotBe, real, remintable } from './utils/consolidator'
 import { create, get, getOrCreate } from './utils/entity'
 import { createTokenId, unwrap } from './utils/extract'
 import {
+  getAddRoyaltyEvent,
   getBurnTokenEvent,
   getBuyTokenEvent,
   getCreateCollectionEvent,
   getCreateTokenEvent,
   getDestroyCollectionEvent,
   getListTokenEvent,
+  getPayRoyaltyEvent,
   getTransferTokenEvent,
 } from './utils/getters'
 import { isEmpty } from './utils/helper'
@@ -207,6 +209,33 @@ export async function handleTokenBuy(context: Context): Promise<void> {
   await context.store.save(entity)
   const meta = entity.metadata ?? ''
   await createEvent(entity, Interaction.BUY, event, meta, context.store, event.currentOwner)
+}
+
+export async function handleRoyaltyAdd(context: Context): Promise<void> {
+  logger.pending(`[ADD ROYALTY]: ${context.event.blockNumber}`)
+  const event = unwrap(context, getAddRoyaltyEvent)
+  logger.debug(`add: ${JSON.stringify(event, null, 2)}`)
+  const id = createTokenId(event.collectionId, event.sn)
+  const entity = ensure<NE>(await get(context.store, NE, id))
+  plsBe(real, entity)
+
+  entity.royalty = event.royalty
+  logger.success(`[ADD] ${id} by ${event.caller}}`)
+  await context.store.save(entity)
+  const meta = String(event.royalty || '')
+  await createEvent(entity, Interaction.ROYALTY, event, meta, context.store)
+}
+
+export async function handleRoyaltyPay(context: Context): Promise<void> {
+  logger.pending(`[PAY ROYALTY]: ${context.event.blockNumber}`)
+  const event = unwrap(context, getPayRoyaltyEvent)
+  logger.debug(`pay: ${JSON.stringify(event, null, 2)}`)
+  const id = createTokenId(event.collectionId, event.sn)
+  const entity = ensure<NE>(await get(context.store, NE, id))
+  plsBe(real, entity)
+
+  const meta = String(event.amount || '')
+  await createEvent(entity, Interaction.PAY_ROYALTY, event, meta, context.store, event.recipient)
 }
 
 async function createEvent(
