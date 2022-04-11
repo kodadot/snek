@@ -220,6 +220,8 @@ export async function handleRoyaltyAdd(context: Context): Promise<void> {
   plsBe(real, entity)
 
   entity.royalty = event.royalty
+  entity.recipient = event.recipient
+
   logger.success(`[ROYALTY] ${id} by ${event.caller}}`)
   await context.store.save(entity)
   const meta = String(event.royalty || '')
