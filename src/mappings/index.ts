@@ -182,13 +182,13 @@ export async function handleTokenBurn(context: Context): Promise<void> {
 export async function handleTokenList(context: Context): Promise<void> {
   logger.pending(`[LIST]: ${context.event.blockNumber}`)
   const event = unwrap(context, getListTokenEvent)
-  logger.debug(`list: ${JSON.stringify(event, null, 2)}`)
+  logger.debug(`list: ${JSON.stringify({ ...event, price: String(event.price)  }, null, 2)}`)
   const id = createTokenId(event.collectionId, event.sn)
   const entity = ensure<NE>(await get(context.store, NE, id))
   plsBe(real, entity)
 
   entity.price = event.price
-  logger.success(`[list] ${id} by ${event.caller}}`)
+  logger.success(`[LIST] ${id} by ${event.caller}} for ${String(event.price)}`)
   await context.store.save(entity)
   const meta = String(event.price || '')
   const interaction = event.price ? Interaction.LIST : Interaction.UNLIST
@@ -212,15 +212,15 @@ export async function handleTokenBuy(context: Context): Promise<void> {
 }
 
 export async function handleRoyaltyAdd(context: Context): Promise<void> {
-  logger.pending(`[ADD ROYALTY]: ${context.event.blockNumber}`)
+  logger.pending(`[ROYALTY]: ${context.event.blockNumber}`)
   const event = unwrap(context, getAddRoyaltyEvent)
-  logger.debug(`add: ${JSON.stringify(event, null, 2)}`)
+  logger.debug(`royalty add: ${JSON.stringify(event, null, 2)}`)
   const id = createTokenId(event.collectionId, event.sn)
   const entity = ensure<NE>(await get(context.store, NE, id))
   plsBe(real, entity)
 
   entity.royalty = event.royalty
-  logger.success(`[ADD] ${id} by ${event.caller}}`)
+  logger.success(`[ROYALTY] ${id} by ${event.caller}}`)
   await context.store.save(entity)
   const meta = String(event.royalty || '')
   await createEvent(entity, Interaction.ROYALTY, event, meta, context.store)
