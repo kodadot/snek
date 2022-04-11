@@ -22,6 +22,7 @@ type NFTEntity @entity {
   createdAt: DateTime!
   currentOwner: String!
   events: [Event!] @derivedFrom(field: "nft")
+  offers: [Offer!] @derivedFrom(field: "nft")
   hash: String! @index
   issuer: String!
   meta: MetadataEntity
@@ -81,6 +82,15 @@ type CollectionEvent implements EventType @entity {
   interaction: Interaction!
   meta: String!
   collection: CollectionEntity!
+}
+
+type Offer @entity {
+  id: ID! # should be addr-id-amount?
+  caller: String!
+  nft: NFTEntity!
+  blockNumber: BigInt!
+  expiration: BigInt!
+  price: BigInt! 
 }
 
 enum Interaction {
