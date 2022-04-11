@@ -11,7 +11,10 @@
     "marketplace.TokenSold",
     "marketplace.TokenPriceUpdated",
     "marketplace.RoyaltyAdded",
-    "marketplace.RoyaltyPaid"
+    "marketplace.RoyaltyPaid",
+    "marketplace.OfferPlaced",
+    "marketplace.OfferWithdrawn",
+    "marketplace.OfferAccepted"
   ],
   "calls": []
 }

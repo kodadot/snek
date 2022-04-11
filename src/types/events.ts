@@ -3,6 +3,99 @@ import {EventContext, Result, deprecateLatest} from './support'
 import * as v39 from './v39'
 import * as v50 from './v50'
 
+export class MarketplaceOfferAcceptedEvent {
+  constructor(private ctx: EventContext) {
+    assert(this.ctx.event.name === 'marketplace.OfferAccepted')
+  }
+
+  /**
+   * Offer was accepted \[sender, class_id, instance_id\]
+   */
+  get isV39(): boolean {
+    return this.ctx._chain.getEventHash('marketplace.OfferAccepted') === '426271b0ff71255c125e9a4ea897d86d39682c8454bbff4c6c9a8d50e0d966a4'
+  }
+
+  /**
+   * Offer was accepted \[sender, class_id, instance_id\]
+   */
+  get asV39(): [v39.AccountId32, bigint, bigint, bigint] {
+    assert(this.isV39)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
+    deprecateLatest()
+    return this.isV39
+  }
+
+  get asLatest(): [v39.AccountId32, bigint, bigint, bigint] {
+    deprecateLatest()
+    return this.asV39
+  }
+}
+
+export class MarketplaceOfferPlacedEvent {
+  constructor(private ctx: EventContext) {
+    assert(this.ctx.event.name === 'marketplace.OfferPlaced')
+  }
+
+  /**
+   * Offer was placed on a token \[offerer, class_id, instance_id, price\]
+   */
+  get isV39(): boolean {
+    return this.ctx._chain.getEventHash('marketplace.OfferPlaced') === '426271b0ff71255c125e9a4ea897d86d39682c8454bbff4c6c9a8d50e0d966a4'
+  }
+
+  /**
+   * Offer was placed on a token \[offerer, class_id, instance_id, price\]
+   */
+  get asV39(): [v39.AccountId32, bigint, bigint, bigint] {
+    assert(this.isV39)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
+    deprecateLatest()
+    return this.isV39
+  }
+
+  get asLatest(): [v39.AccountId32, bigint, bigint, bigint] {
+    deprecateLatest()
+    return this.asV39
+  }
+}
+
+export class MarketplaceOfferWithdrawnEvent {
+  constructor(private ctx: EventContext) {
+    assert(this.ctx.event.name === 'marketplace.OfferWithdrawn')
+  }
+
+  /**
+   * Offer was withdrawn \[sender, class_id, instance_id\]
+   */
+  get isV39(): boolean {
+    return this.ctx._chain.getEventHash('marketplace.OfferWithdrawn') === '0f263bfdefa394edfb38d20d33662423a2e0902235b599f9b2b0292f157f0902'
+  }
+
+  /**
+   * Offer was withdrawn \[sender, class_id, instance_id\]
+   */
+  get asV39(): [v39.AccountId32, bigint, bigint] {
+    assert(this.isV39)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
+    deprecateLatest()
+    return this.isV39
+  }
+
+  get asLatest(): [v39.AccountId32, bigint, bigint] {
+    deprecateLatest()
+    return this.asV39
+  }
+}
+
 export class MarketplaceRoyaltyAddedEvent {
   constructor(private ctx: EventContext) {
     assert(this.ctx.event.name === 'marketplace.RoyaltyAdded')
