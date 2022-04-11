@@ -96,15 +96,25 @@ export type AddRoyaltyEvent = BaseTokenEvent & {
   royalty: number;
 }
 
-export type PayRoyaltyEvent = AddRoyaltyEvent & {
-  amount: bigint;
-}
+export type PayRoyaltyEvent = AddRoyaltyEvent & WithAmount
+
+export type BaseOfferEvent = BaseTokenEvent & WithCaller
+
+export type MakeOfferEvent = BaseOfferEvent & WithAmount
 
 export type CallWith<T> = BaseCall & T
 
 export type EntityConstructor<T> = {
   new (...args: any[]): T;
 };
+
+export type WithAmount = {
+  amount: bigint;
+}
+
+export type WithCaller = {
+  caller: string;
+}
 
 export type SomethingWithMeta = {
   metadata: string

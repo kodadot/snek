@@ -1,6 +1,6 @@
-import { MarketplaceRoyaltyAddedEvent, MarketplaceRoyaltyPaidEvent, MarketplaceTokenPriceUpdatedEvent, MarketplaceTokenSoldEvent, NftClassCreatedEvent, NftClassDestroyedEvent, NftInstanceBurnedEvent, NftInstanceMintedEvent, NftInstanceTransferredEvent } from '../../types/events'
+import { MarketplaceOfferAcceptedEvent, MarketplaceOfferPlacedEvent, MarketplaceOfferWithdrawnEvent, MarketplaceRoyaltyAddedEvent, MarketplaceRoyaltyPaidEvent, MarketplaceTokenPriceUpdatedEvent, MarketplaceTokenSoldEvent, NftClassCreatedEvent, NftClassDestroyedEvent, NftInstanceBurnedEvent, NftInstanceMintedEvent, NftInstanceTransferredEvent } from '../../types/events'
 import { addressOf } from './helper'
-import { BurnTokenEvent, CreateCollectionEvent, CreateTokenEvent, DestroyCollectionEvent, TransferTokenEvent, Context, ListTokenEvent, BuyTokenEvent, AddRoyaltyEvent, PayRoyaltyEvent } from './types'
+import { BurnTokenEvent, CreateCollectionEvent, CreateTokenEvent, DestroyCollectionEvent, TransferTokenEvent, Context, ListTokenEvent, BuyTokenEvent, AddRoyaltyEvent, PayRoyaltyEvent, BaseOfferEvent, MakeOfferEvent } from './types'
 
 
 export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
@@ -73,4 +73,22 @@ export function getPayRoyaltyEvent(ctx: Context): PayRoyaltyEvent {
   const event = new MarketplaceRoyaltyPaidEvent(ctx);
   const [classId, instanceId, recipient, royalty, amount] = event.asLatest;
   return { collectionId: classId.toString(), sn: instanceId.toString(), recipient: addressOf(recipient), royalty, amount };
+}
+
+export function getPlaceOfferEvent(ctx: Context): MakeOfferEvent {
+  const event = new MarketplaceOfferPlacedEvent(ctx);
+  const [caller, classId, instanceId, amount] = event.asLatest;
+  return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount };
+}
+
+export function getWithdrawOfferEvent(ctx: Context): BaseOfferEvent {
+  const event = new MarketplaceOfferWithdrawnEvent(ctx);
+  const [caller, classId, instanceId] = event.asLatest;
+  return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller) };
+}
+
+export function getAcceptOfferEvent(ctx: Context): MakeOfferEvent {
+  const event = new MarketplaceOfferAcceptedEvent(ctx);
+  const [caller, classId, instanceId, amount] = event.asLatest;
+  return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount };
 }
