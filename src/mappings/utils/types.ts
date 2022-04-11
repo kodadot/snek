@@ -133,6 +133,8 @@ export function ensure<T>(value: any): T {
 
 export const eventId = (id: string, event: Interaction) => `${id}-${event}-${nanoid()}`
 
+export const createOfferId = (id: string, caller: string) => `${id}-${caller}`
+
 export type TokenMetadata = {
   name?: string
   description: string

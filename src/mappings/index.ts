@@ -7,6 +7,7 @@ import {
   Event,
   MetadataEntity as Metadata,
   NFTEntity as NE,
+  Offer,
 } from '../model'
 import { CollectionType } from '../model/generated/_collectionType'
 import { plsBe, plsNotBe, real, remintable } from './utils/consolidator'
@@ -21,7 +22,9 @@ import {
   getDestroyCollectionEvent,
   getListTokenEvent,
   getPayRoyaltyEvent,
+  getPlaceOfferEvent,
   getTransferTokenEvent,
+  getWithdrawOfferEvent,
 } from './utils/getters'
 import { isEmpty } from './utils/helper'
 import logger, { logError } from './utils/logger'
@@ -32,6 +35,7 @@ import {
   collectionEventFrom,
   CollectionInteraction,
   Context,
+  createOfferId,
   ensure,
   eventFrom,
   eventId,
@@ -238,6 +242,32 @@ export async function handleRoyaltyPay(context: Context): Promise<void> {
 
   const meta = String(event.amount || '')
   await createEvent(entity, Interaction.PAY_ROYALTY, event, meta, context.store, event.recipient)
+}
+
+// https://github.com/galacticcouncil/Basilisk-node/issues/424
+// https://github.com/galacticcouncil/Basilisk-node/issues/425
+export async function handleOfferPlace(context: Context): Promise<void> {
+  logger.pending(`[PLACE OFFER]: ${context.event.blockNumber}`)
+  const event = unwrap(context, getPlaceOfferEvent)
+  logger.debug(`offer: ${JSON.stringify({ ...event, price: String(event.amount)  }, null, 2)}`)
+  const id = createTokenId(event.collectionId, event.sn)
+  const entity = ensure<NE>(await get(context.store, NE, id))
+  plsBe(real, entity)
+
+  const offerId = createOfferId(entity.id, event.caller)
+  const offer = create<Offer>(Offer, offerId, { 
+    caller: event.caller,
+    price: event.amount,
+    blockNumber: BigInt(event.blockNumber),
+    expiration: BigInt(event.blockNumber) + 14400n, //  24-48 hours // TODO: fix
+   })
+
+  offer.nft = entity
+  logger.success(`[PLACE OFFER] for ${id} by ${event.caller}} for ${String(event.amount)}`)
+  await context.store.save(offer)
+  
+  const meta = String(event.amount || '')
+  await createEvent(entity, Interaction.OFFER, event, meta, context.store, entity.currentOwner)
 }
 
 async function createEvent(
