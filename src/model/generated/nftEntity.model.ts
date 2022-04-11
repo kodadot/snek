@@ -2,6 +2,7 @@ import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, M
 import * as marshal from "./marshal"
 import {CollectionEntity} from "./collectionEntity.model"
 import {Event} from "./event.model"
+import {Offer} from "./offer.model"
 import {MetadataEntity} from "./metadataEntity.model"
 
 @Entity_()
@@ -31,6 +32,9 @@ export class NFTEntity {
 
   @OneToMany_(() => Event, e => e.nft)
   events!: Event[]
+
+  @OneToMany_(() => Offer, e => e.nft)
+  offers!: Offer[]
 
   @Index_()
   @Column_("text", {nullable: false})
