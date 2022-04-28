@@ -1,10 +1,11 @@
 import { MarketplaceOfferAcceptedEvent, MarketplaceOfferPlacedEvent, MarketplaceOfferWithdrawnEvent, MarketplaceRoyaltyAddedEvent, MarketplaceRoyaltyPaidEvent, MarketplaceTokenPriceUpdatedEvent, MarketplaceTokenSoldEvent, NftClassCreatedEvent, NftClassDestroyedEvent, NftInstanceBurnedEvent, NftInstanceMintedEvent, NftInstanceTransferredEvent } from '../../types/events'
 import { addressOf } from './helper'
 import { BurnTokenEvent, CreateCollectionEvent, CreateTokenEvent, DestroyCollectionEvent, TransferTokenEvent, Context, ListTokenEvent, BuyTokenEvent, AddRoyaltyEvent, PayRoyaltyEvent, BaseOfferEvent, MakeOfferEvent } from './types'
-
+import logger from './logger'
 
 export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
   const event = new NftClassCreatedEvent(ctx);
+  logger.debug('NftClassCreatedEvent', event.isV39)
   if (event.isV39) {
     const { classId, owner, classType } = event.asV39;
     return { id: classId.toString(), caller: addressOf(owner), type: classType.__kind };
@@ -20,6 +21,7 @@ export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
 
 export function getCreateTokenEvent(ctx: Context): CreateTokenEvent {
   const event = new NftInstanceMintedEvent(ctx);
+  logger.debug('NftInstanceMintedEvent', event.isV39)
   if (event.isV39) {
     const { classId, owner, instanceId } = event.asV39;
     return { collectionId: classId.toString(), caller: addressOf(owner), sn: instanceId.toString() };

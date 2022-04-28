@@ -1,6 +1,5 @@
 import { Store } from '@subsquid/substrate-processor'
 import md5 from 'md5'
-import { exit } from 'process'
 import {
   CollectionEntity as CE,
   CollectionEvent,
@@ -83,11 +82,14 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
   final.issuer = event.caller
   final.currentOwner = event.caller
   final.blockNumber = BigInt(event.blockNumber)
-  final.metadata = event.metadata
+  final.metadata = event.metadata || 'ipfs://ipfs/bafkreiazeqysfmeuzqcnjp6rijxfu5h7sj3t4h2rxehi7rlyegzfy7lxeq'
   final.burned = false
   final.createdAt = event.timestamp
   final.updatedAt = event.timestamp
   final.type = event.type as CollectionType // unsafe
+
+
+  logger.debug(`metadata: ${event.metadata}`)
 
   if (final.metadata) {
     const metadata = await handleMetadata(final.metadata, context.store)
@@ -134,11 +136,13 @@ export async function handleTokenCreate(context: Context): Promise<void> {
   final.blockNumber = BigInt(event.blockNumber)
   final.collection = collection
   final.sn = event.sn
-  final.metadata = event.metadata
+  final.metadata = event.metadata || 'ipfs://ipfs/bafkreiazeqysfmeuzqcnjp6rijxfu5h7sj3t4h2rxehi7rlyegzfy7lxeq'
   final.price = BigInt(0)
   final.burned = false
   final.createdAt = event.timestamp
   final.updatedAt = event.timestamp
+
+  logger.debug(`metadata: ${event.metadata}`)
 
   if (final.metadata) {
     const metadata = await handleMetadata(final.metadata, context.store)
