@@ -2,6 +2,7 @@ import assert from 'assert'
 import {EventContext, Result, deprecateLatest} from './support'
 import * as v39 from './v39'
 import * as v50 from './v50'
+import * as v51 from './v51'
 
 export class MarketplaceOfferAcceptedEvent {
   constructor(private ctx: EventContext) {
@@ -54,14 +55,29 @@ export class MarketplaceOfferPlacedEvent {
     return this.ctx._chain.decodeEvent(this.ctx.event)
   }
 
-  get isLatest(): boolean {
-    deprecateLatest()
-    return this.isV39
+  /**
+   * Offer was placed on a token \[offerer, class_id, instance_id, price, expires\]
+   */
+  get isV51(): boolean {
+    return this.ctx._chain.getEventHash('marketplace.OfferPlaced') === '0c0020b8a59f4c44bfafff6516e075c67efa07d49d2257040c27bd47de251831'
   }
 
-  get asLatest(): [v39.AccountId32, bigint, bigint, bigint] {
+  /**
+   * Offer was placed on a token \[offerer, class_id, instance_id, price, expires\]
+   */
+  get asV51(): [v51.AccountId32, bigint, bigint, bigint, number] {
+    assert(this.isV51)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
     deprecateLatest()
-    return this.asV39
+    return this.isV51
+  }
+
+  get asLatest(): [v51.AccountId32, bigint, bigint, bigint, number] {
+    deprecateLatest()
+    return this.asV51
   }
 }
 
