@@ -13,6 +13,7 @@ import { plsBe, plsNotBe, real, remintable } from './utils/consolidator'
 import { create, get, getOrCreate } from './utils/entity'
 import { createTokenId, unwrap } from './utils/extract'
 import {
+  getAcceptOfferEvent,
   getAddRoyaltyEvent,
   getBurnTokenEvent,
   getBuyTokenEvent,
@@ -272,6 +273,17 @@ export async function handleOfferPlace(context: Context): Promise<void> {
   const meta = String(event.amount || '')
   await createEvent(entity, Interaction.OFFER, event, meta, context.store, entity.currentOwner)
 }
+
+// export async function handleOfferAccept(context: Context): Promise<void> {
+//   logger.pending(`[ACCEPT OFFER]: ${context.event.blockNumber}`)
+//   const event = unwrap(context, getAcceptOfferEvent)
+//   logger.debug(`offer: ${JSON.stringify({ ...event, price: String(event.amount)  }, null, 2)}`)
+//   const id = createOfferId(createTokenId(event.collectionId, event.sn), event.caller) 
+//   const entity = ensure<Offer>(await get(context.store, Offer, id))
+//   // plsBe(real, entity)
+
+  
+// }
 
 async function createEvent(
   final: NE,
