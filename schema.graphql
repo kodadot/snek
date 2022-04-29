@@ -1,13 +1,150 @@
-type Account @entity {
-  "Account address"
+type CollectionEntity @entity {
   id: ID!
-  balance: BigInt!
-  historicalBalances: [HistoricalBalance!] @derivedFrom(field: "account")
+  blockNumber: BigInt
+  createdAt: DateTime!
+  currentOwner: String!
+  burned: Boolean!
+  events: [CollectionEvent!] @derivedFrom(field: "collection")
+  issuer: String!
+  meta: MetadataEntity
+  metadata: String
+  name: String
+  nfts: [NFTEntity!] @derivedFrom(field: "collection")
+  updatedAt: DateTime!
+  type: CollectionType!
 }
 
-type HistoricalBalance @entity {
+type NFTEntity @entity {
   id: ID!
-  account: Account!
-  balance: BigInt!
-  date: DateTime!
+  blockNumber: BigInt
+  burned: Boolean!
+  collection: CollectionEntity!
+  createdAt: DateTime!
+  currentOwner: String!
+  events: [Event!] @derivedFrom(field: "nft")
+  offers: [Offer!] @derivedFrom(field: "nft")
+  hash: String! @index
+  issuer: String!
+  meta: MetadataEntity
+  metadata: String
+  name: String
+  price: BigInt
+  royalty: Int
+  recipient: String
+  sn: String!
+  updatedAt: DateTime!
+  # type: ClassType!
 }
+
+type MetadataEntity @entity {
+  id: ID!
+  name: String
+  description: String
+  image: String
+  attributes: [Attribute!]
+  animationUrl: String
+  type: String
+}
+
+type Attribute @jsonField {
+  display: String
+  trait: String
+  value: String!
+}
+
+interface EventType {
+  id: ID!
+  blockNumber: BigInt
+  timestamp: DateTime!
+  caller: String!
+  currentOwner: String
+  interaction: Interaction!
+  meta: String!
+}
+
+type Event implements EventType @entity {
+  id: ID!
+  blockNumber: BigInt
+  timestamp: DateTime!
+  caller: String!
+  currentOwner: String! # currentOwner
+  interaction: Interaction!
+  meta: String!
+  nft: NFTEntity!
+}
+
+type CollectionEvent implements EventType @entity {
+  id: ID!
+  blockNumber: BigInt
+  timestamp: DateTime!
+  caller: String!
+  currentOwner: String # currentOwner
+  interaction: Interaction!
+  meta: String!
+  collection: CollectionEntity!
+}
+
+type Offer @entity {
+  id: ID! # should be addr-id-amount?
+  caller: String!
+  nft: NFTEntity!
+  blockNumber: BigInt!
+  expiration: BigInt!
+  price: BigInt! 
+}
+
+enum Interaction {
+  MINT
+  MINTNFT
+  LIST
+  UNLIST
+  BUY
+  SEND
+  CONSUME
+  DESTROY
+  OFFER
+  ACCEPT_OFFER # OFFER
+  CANCEL_OFFER # OFFER
+  PAY_ROYALTY
+  ROYALTY
+}
+
+enum CollectionType {
+  Marketplace
+  LiquidityMining
+  Redeemable
+  Auction
+  HydraHeads
+}
+
+# Implement in the later stages 
+# type Series @entity {
+#   id: ID!
+#   unique: Int!
+#   uniqueCollectors: Int!
+#   sold: Int! @index
+#   total: Int!
+#   averagePrice: Float
+#   floorPrice: BigInt
+#   buys: Int
+#   volume: BigInt
+#   name: String! @index
+#   metadata: String
+#   image: String
+# }
+
+# type Spotlight @entity {
+#   id: ID!
+#   collections: Int!
+#   uniqueCollectors: Int!
+#   unique: Int!
+#   sold: Int! @index
+#   total: Int!
+#   average: Float 
+#   volume: BigInt
+# }
+
+# type CacheStatus @entity {
+#   id: ID!
+#   lastBlockTimestamp: DateTime!
+# }

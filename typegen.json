@@ -3,7 +3,18 @@
   "chainVersions": "kusamaVersions.json",
   "typesBundle": "kusama",
   "events": [
-    "balances.Transfer"
+    "nft.ClassCreated",
+    "nft.InstanceMinted",
+    "nft.InstanceTransferred",
+    "nft.InstanceBurned",
+    "nft.ClassDestroyed",
+    "marketplace.TokenSold",
+    "marketplace.TokenPriceUpdated",
+    "marketplace.RoyaltyAdded",
+    "marketplace.RoyaltyPaid",
+    "marketplace.OfferPlaced",
+    "marketplace.OfferWithdrawn",
+    "marketplace.OfferAccepted"
   ],
   "calls": []
 }

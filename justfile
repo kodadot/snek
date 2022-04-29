@@ -30,8 +30,8 @@ ksmVersion: explore
 
 explore:
 	npx squid-substrate-metadata-explorer \
-		--chain wss://kusama-rpc.polkadot.io \
-		--archive https://kusama.indexer.gc.subsquid.io/v4/graphql \
+		--chain wss://basilisk-kodadot.hydration.cloud \
+		--archive http://localhost:4010/v1/graphql \
 		--out kusamaVersions.json
 
 bug: down up
@@ -42,10 +42,10 @@ reset:
 	npx sqd db:migrate
 
 migrate:
-	@npx sqd db:migrate
+	npx sqd db:migrate
 
-update NAME:
-	npx sqd db:create-migration "{{NAME}}"
+update-db:
+	npx sqd db:create-migration Data
 
 test:
   npm run test:unit
@@ -61,3 +61,9 @@ kill TAG:
 
 exec:
 	docker exec -it snek-db-1 psql -U postgres -d squid
+
+update-deps:
+	npx taze
+
+where-chain:
+	echo "https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Fbasilisk-kodadot.hydration.cloud#/explorer" | pbcopy
