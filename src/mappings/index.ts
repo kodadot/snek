@@ -253,7 +253,7 @@ export async function handleRoyaltyPay(context: Context): Promise<void> {
 export async function handleOfferPlace(context: Context): Promise<void> {
   logger.pending(`[PLACE OFFER]: ${context.event.blockNumber}`)
   const event = unwrap(context, getPlaceOfferEvent)
-  logger.debug(`offer: ${JSON.stringify({ ...event, price: String(event.amount)  }, null, 2)}`)
+  // logger.debug(`offer: ${JSON.stringify({ ...event, price: String(event.amount), expiresAt: String(event.expiresAt)  }, null, 2)}`)
   const id = createTokenId(event.collectionId, event.sn)
   const entity = ensure<NE>(await get(context.store, NE, id))
   plsBe(real, entity)

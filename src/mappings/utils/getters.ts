@@ -80,6 +80,11 @@ export function getPayRoyaltyEvent(ctx: Context): PayRoyaltyEvent {
 
 export function getPlaceOfferEvent(ctx: Context): MakeOfferEvent {
   const event = new MarketplaceOfferPlacedEvent(ctx);
+  if (event.isV39) {
+    const [caller, classId, instanceId, amount] = event.asV39;  
+    return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, expiresAt: BigInt(0), };
+  }
+
   const [caller, classId, instanceId, amount, blockNumber] = event.asLatest;
   return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, expiresAt: BigInt(blockNumber) };
 }
