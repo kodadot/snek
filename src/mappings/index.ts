@@ -206,7 +206,7 @@ export async function handleTokenList(context: Context): Promise<void> {
 export async function handleTokenBuy(context: Context): Promise<void> {
   logger.pending(`[BUY]: ${context.event.blockNumber}`)
   const event = unwrap(context, getBuyTokenEvent)
-  logger.debug(`buy: ${JSON.stringify(event, null, 2)}`)
+  logger.debug(`buy: ${JSON.stringify({ ...event, price: String(event.price)  }, null, 2)}`)
   const id = createTokenId(event.collectionId, event.sn)
   const entity = ensure<NE>(await get(context.store, NE, id))
   plsBe(real, entity)
