@@ -100,7 +100,11 @@ export type PayRoyaltyEvent = AddRoyaltyEvent & WithAmount
 
 export type BaseOfferEvent = BaseTokenEvent & WithCaller
 
-export type MakeOfferEvent = BaseOfferEvent & WithAmount
+export type AcceptOfferEvent = BaseOfferEvent & WithAmount
+
+export type MakeOfferEvent = AcceptOfferEvent & {
+  expiresAt: bigint;
+}
 
 export type CallWith<T> = BaseCall & T
 

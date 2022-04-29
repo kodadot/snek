@@ -249,7 +249,6 @@ export async function handleRoyaltyPay(context: Context): Promise<void> {
 }
 
 // https://github.com/galacticcouncil/Basilisk-node/issues/424
-// https://github.com/galacticcouncil/Basilisk-node/issues/425
 export async function handleOfferPlace(context: Context): Promise<void> {
   logger.pending(`[PLACE OFFER]: ${context.event.blockNumber}`)
   const event = unwrap(context, getPlaceOfferEvent)
@@ -263,7 +262,7 @@ export async function handleOfferPlace(context: Context): Promise<void> {
     caller: event.caller,
     price: event.amount,
     blockNumber: BigInt(event.blockNumber),
-    expiration: BigInt(event.blockNumber) + 14400n, //  24-48 hours // TODO: fix
+    expiration: event.expiresAt,
    })
 
   offer.nft = entity
