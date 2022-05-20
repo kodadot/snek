@@ -10,7 +10,7 @@ const processor = new SubstrateProcessor("snek_nft");
 
 // processor.setTypesBundle("basilisk");
 processor.setBatchSize(500);
-processor.setBlockRange({ from: 8700, to: 206630 });
+processor.setBlockRange({ from: 8700 });
 
 const archive = process.env.ARCHIVE_URL ?? lookupArchive("basilisk")[0].url
 
