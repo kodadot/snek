@@ -1,7 +1,7 @@
-# squid-template
+# Snek
 
-Sample [squid](https://subsquid.io) project to demonstrate its structure and conventions.
-It accumulates [kusama](https://kusama.network) account balances and serves them via graphql API. For more info consult [FAQ](./FAQ.md).
+**Implementation of the best NFT marketplace with locked balances.**
+
 
 ## Prerequisites
 

@@ -13,6 +13,7 @@ import { plsBe, plsNotBe, real, remintable } from './utils/consolidator'
 import { create, get, getOrCreate } from './utils/entity'
 import { createTokenId, unwrap } from './utils/extract'
 import {
+  getAcceptOfferEvent,
   getAddRoyaltyEvent,
   getBurnTokenEvent,
   getBuyTokenEvent,
@@ -206,7 +207,7 @@ export async function handleTokenList(context: Context): Promise<void> {
 export async function handleTokenBuy(context: Context): Promise<void> {
   logger.pending(`[BUY]: ${context.event.blockNumber}`)
   const event = unwrap(context, getBuyTokenEvent)
-  logger.debug(`buy: ${JSON.stringify(event, null, 2)}`)
+  logger.debug(`buy: ${JSON.stringify({ ...event, price: String(event.price)  }, null, 2)}`)
   const id = createTokenId(event.collectionId, event.sn)
   const entity = ensure<NE>(await get(context.store, NE, id))
   plsBe(real, entity)
@@ -249,11 +250,10 @@ export async function handleRoyaltyPay(context: Context): Promise<void> {
 }
 
 // https://github.com/galacticcouncil/Basilisk-node/issues/424
-// https://github.com/galacticcouncil/Basilisk-node/issues/425
 export async function handleOfferPlace(context: Context): Promise<void> {
   logger.pending(`[PLACE OFFER]: ${context.event.blockNumber}`)
   const event = unwrap(context, getPlaceOfferEvent)
-  logger.debug(`offer: ${JSON.stringify({ ...event, price: String(event.amount)  }, null, 2)}`)
+  // logger.debug(`offer: ${JSON.stringify({ ...event, price: String(event.amount), expiresAt: String(event.expiresAt)  }, null, 2)}`)
   const id = createTokenId(event.collectionId, event.sn)
   const entity = ensure<NE>(await get(context.store, NE, id))
   plsBe(real, entity)
@@ -263,7 +263,7 @@ export async function handleOfferPlace(context: Context): Promise<void> {
     caller: event.caller,
     price: event.amount,
     blockNumber: BigInt(event.blockNumber),
-    expiration: BigInt(event.blockNumber) + 14400n, //  24-48 hours // TODO: fix
+    expiration: event.expiresAt,
    })
 
   offer.nft = entity
@@ -273,6 +273,17 @@ export async function handleOfferPlace(context: Context): Promise<void> {
   const meta = String(event.amount || '')
   await createEvent(entity, Interaction.OFFER, event, meta, context.store, entity.currentOwner)
 }
+
+// export async function handleOfferAccept(context: Context): Promise<void> {
+//   logger.pending(`[ACCEPT OFFER]: ${context.event.blockNumber}`)
+//   const event = unwrap(context, getAcceptOfferEvent)
+//   logger.debug(`offer: ${JSON.stringify({ ...event, price: String(event.amount)  }, null, 2)}`)
+//   const id = createOfferId(createTokenId(event.collectionId, event.sn), event.caller) 
+//   const entity = ensure<Offer>(await get(context.store, Offer, id))
+//   // plsBe(real, entity)
+
+  
+// }
 
 async function createEvent(
   final: NE,

@@ -1,3 +1,5 @@
+set dotenv-load
+
 process: build
 	node -r dotenv/config lib/processor.js
 
@@ -31,7 +33,7 @@ ksmVersion: explore
 explore:
 	npx squid-substrate-metadata-explorer \
 		--chain wss://basilisk-kodadot.hydration.cloud \
-		--archive http://localhost:4010/v1/graphql \
+		--archive $ARCHIVE_URL \
 		--out kusamaVersions.json
 
 bug: down up

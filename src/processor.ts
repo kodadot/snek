@@ -10,7 +10,7 @@ const processor = new SubstrateProcessor("snek_nft");
 
 // processor.setTypesBundle("basilisk");
 processor.setBatchSize(500);
-processor.setBlockRange({ from: 8700, to: 9000 });
+processor.setBlockRange({ from: 8700 });
 
 const archive = process.env.ARCHIVE_URL ?? lookupArchive("basilisk")[0].url
 
@@ -30,7 +30,7 @@ processor.addEventHandler(Event.burn, mappings.handleTokenBurn);
 processor.addEventHandler(Event.destroy, mappings.handleCollectionDestroy);
 processor.addEventHandler(Event.priceUpdate, mappings.handleTokenList);
 processor.addEventHandler(Event.sold, mappings.handleTokenBuy);
-// processor.addEventHandler(Event.placeOffer, dummy);
+processor.addEventHandler(Event.placeOffer, mappings.handleOfferPlace);
 // processor.addEventHandler(Event.withdrawOffer, dummy);
 // processor.addEventHandler(Event.acceptOffer, dummy);
 processor.addEventHandler(Event.addRoyalty, mappings.handleRoyaltyAdd);
