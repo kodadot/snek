@@ -4,6 +4,7 @@ import { EventHandlerContext } from '@subsquid/substrate-processor'
 import { nanoid } from 'nanoid'
 import { CollectionType } from '../../model/generated/_collectionType'
 import { OfferInteraction } from '../../model'
+import { createTokenId } from './extract'
 
 export type BaseCall = {
   caller: string;
@@ -141,6 +142,10 @@ export function ensure<T>(value: any): T {
 export const eventId = (id: string, event: Interaction | OfferInteraction) => `${id}-${event}-${nanoid()}`
 
 export const createOfferId = (id: string, caller: string) => `${id}-${caller}`
+
+const offerIdFrom = (collectionId: string, id: string, caller: string) => createOfferId(createTokenId(collectionId, id), caller)
+
+export const offerIdOf = (call: CallWith<BaseOfferEvent>) => offerIdFrom(call.collectionId, call.sn, call.caller)
 
 export type TokenMetadata = {
   name?: string
