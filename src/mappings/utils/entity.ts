@@ -54,6 +54,18 @@ export async function get<T extends EntityWithId>(
   })
 }
 
+export async function find<T extends EntityWithId>(
+  store: Store,
+  entityConstructor: EntityConstructor<T>,
+  [key, value]: [keyof T, string | number | boolean]
+): Promise<T[]> {
+  return store.find<T>(entityConstructor, {
+    where: { 
+      [key]: value
+     },
+  })
+}
+
 export function create<T extends EntityWithId>(
   entityConstructor: EntityConstructor<T>,
   id: string,

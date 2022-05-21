@@ -323,6 +323,9 @@ export async function handleOfferWithdraw(context: Context): Promise<void> {
   // TODO: Set expired offers to expired
 }
 
+// async function markOfferExpired(collectionId: string, sn: string, blockNumber: bigint, store: Store): Promise<void> {
+// }
+
 async function createEvent(
   final: NE,
   interaction: Interaction,
