@@ -3,6 +3,7 @@ import { Attribute } from '../../model/generated/_attribute'
 import { EventHandlerContext } from '@subsquid/substrate-processor'
 import { nanoid } from 'nanoid'
 import { CollectionType } from '../../model/generated/_collectionType'
+import { OfferInteraction } from '../../model'
 
 export type BaseCall = {
   caller: string;
@@ -14,11 +15,13 @@ export { Interaction }
 
 export type CollectionInteraction = Interaction.MINT | Interaction.DESTROY
 
-export function collectionEventFrom(interaction: CollectionInteraction,  basecall: BaseCall, meta: string): IEvent {
-  return eventFrom(interaction, basecall, meta)
+type OneOfInteraction = Interaction | OfferInteraction
+
+export function collectionEventFrom(interaction: CollectionInteraction,  basecall: BaseCall, meta: string): IEvent<CollectionInteraction> {
+  return eventFrom<CollectionInteraction>(interaction, basecall, meta)
 }
 
-export function eventFrom(interaction: Interaction,  { blockNumber, caller, timestamp }: BaseCall, meta: string, currentOwner?: string): IEvent {
+export function eventFrom<T>(interaction: T,  { blockNumber, caller, timestamp }: BaseCall, meta: string, currentOwner?: string): IEvent<T> {
   return {
     interaction,
     blockNumber: BigInt(blockNumber),
@@ -41,8 +44,8 @@ export type Context = EventHandlerContext
 
 export type Optional<T> = T | null
 
-export interface IEvent {
-  interaction: Interaction;
+export interface IEvent<T = OneOfInteraction> {
+  interaction: T;
   blockNumber: bigint,
   caller: string,
   currentOwner: string,
@@ -135,7 +138,7 @@ export function ensure<T>(value: any): T {
   return value as T
 }
 
-export const eventId = (id: string, event: Interaction) => `${id}-${event}-${nanoid()}`
+export const eventId = (id: string, event: Interaction | OfferInteraction) => `${id}-${event}-${nanoid()}`
 
 export const createOfferId = (id: string, caller: string) => `${id}-${caller}`
 
