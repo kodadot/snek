@@ -320,6 +320,7 @@ export async function handleOfferWithdraw(context: Context): Promise<void> {
   await context.store.save(entity)
   const meta = String(entity.price || '')
   await createOfferEvent(entity, OfferInteraction.CANCEL, event, meta, context.store, currentOwner)
+  // TODO: Set expired offers to expired
 }
 
 async function createEvent(
