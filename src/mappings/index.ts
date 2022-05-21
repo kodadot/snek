@@ -7,6 +7,9 @@ import {
   MetadataEntity as Metadata,
   NFTEntity as NE,
   Offer,
+  OfferEvent,
+  OfferInteraction,
+  OfferStatus,
 } from '../model'
 import { CollectionType } from '../model/generated/_collectionType'
 import { plsBe, plsNotBe, real, remintable } from './utils/consolidator'
@@ -259,19 +262,25 @@ export async function handleOfferPlace(context: Context): Promise<void> {
   plsBe(real, entity)
 
   const offerId = createOfferId(entity.id, event.caller)
-  const offer = create<Offer>(Offer, offerId, { 
-    caller: event.caller,
-    price: event.amount,
-    blockNumber: BigInt(event.blockNumber),
-    expiration: event.expiresAt,
-   })
+  const mayOffer = await get(context.store, Offer, offerId)
 
-  offer.nft = entity
+  const offer = mayOffer ?? create<Offer>(Offer, offerId, {})
+  offer.caller= event.caller
+  offer.price= event.amount
+  offer.blockNumber= BigInt(event.blockNumber)
+  offer.expiration= event.expiresAt
+  offer.createdAt= event.timestamp
+  offer.status= OfferStatus.ACTIVE
+
+  if (!mayOffer) {
+    offer.nft = entity
+  }
+
   logger.success(`[PLACE OFFER] for ${id} by ${event.caller}} for ${String(event.amount)}`)
   await context.store.save(offer)
   
   const meta = String(event.amount || '')
-  await createEvent(entity, Interaction.OFFER, event, meta, context.store, entity.currentOwner)
+  await createOfferEvent(offer, OfferInteraction.CREATE, event, meta, context.store, entity.currentOwner)
 }
 
 // export async function handleOfferAccept(context: Context): Promise<void> {
@@ -332,6 +341,30 @@ async function createCollectionEvent(
       collectionEventFrom(interaction, call, meta)
     )
     event.collection = final
+    await store.save(event)
+  } catch (e) {
+    logError(e, (e) =>
+      logger.warn(`[[${interaction}]]: ${final.id} Reason: ${e.message}`)
+    )
+  }
+}
+
+async function createOfferEvent(
+  final: Offer,
+  interaction: OfferInteraction,
+  call: BaseCall,
+  meta: string,
+  store: Store,
+  currentOwner?: string
+) {
+  try {
+    const newEventId = eventId(final.id, interaction)
+    const event = create<OfferEvent>(
+      OfferEvent,
+      newEventId,
+      eventFrom(interaction, call, meta, currentOwner)
+    )
+    event.offer = final
     await store.save(event)
   } catch (e) {
     logError(e, (e) =>
