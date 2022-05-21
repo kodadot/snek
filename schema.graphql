@@ -87,12 +87,12 @@ type CollectionEvent implements EventType @entity {
 type OfferEvent @entity {
   id: ID!
   blockNumber: BigInt
-  timestamp: DateTime!
   caller: String!
   currentOwner: String # currentOwner
-  interaction: Interaction!
+  interaction: OfferInteraction!
   meta: String!
   offer: Offer!
+  timestamp: DateTime!
 }
 
 type Offer @entity {
@@ -117,9 +117,7 @@ enum Interaction {
   SEND
   CONSUME
   DESTROY
-  OFFER
-  ACCEPT_OFFER # OFFER
-  CANCEL_OFFER # OFFER
+  OFFER # ACCEPT OFFER
   PAY_ROYALTY
   ROYALTY
 }
@@ -130,6 +128,12 @@ enum CollectionType {
   Redeemable
   Auction
   HydraHeads
+}
+
+enum OfferInteraction {
+  CREATE
+  ACCEPT
+  CANCEL
 }
 
 enum OfferStatus {
