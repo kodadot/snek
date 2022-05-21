@@ -43,6 +43,7 @@ import {
   eventFrom,
   eventId,
   Interaction,
+  offerIdOf,
   Optional,
   TokenMetadata,
 } from './utils/types'
@@ -287,7 +288,7 @@ export async function handleOfferAccept(context: Context): Promise<void> {
   logger.pending(`[ACCEPT OFFER]: ${context.event.blockNumber}`)
   const event = unwrap(context, getAcceptOfferEvent)
   logger.debug(`offer: ${JSON.stringify({ ...event, price: String(event.amount)  }, null, 2)}`)
-  const id = createOfferId(createTokenId(event.collectionId, event.sn), event.caller) 
+  const id = offerIdOf(event)
   const entity = ensure<Offer>(await get(context.store, Offer, id))
   plsBe(real, entity)
 
@@ -300,6 +301,25 @@ export async function handleOfferAccept(context: Context): Promise<void> {
   await context.store.save(entity)
   const meta = String(event.amount || '')
   await createOfferEvent(entity, OfferInteraction.ACCEPT, event, meta, context.store, currentOwner)
+}
+
+export async function handleOfferWithdraw(context: Context): Promise<void> {
+  logger.pending(`[WITHDRAW OFFER]: ${context.event.blockNumber}`)
+  const event = unwrap(context, getWithdrawOfferEvent)
+  logger.debug(`offer no: ${JSON.stringify(event, null, 2)}`)
+  const id = offerIdOf(event)
+  const entity = ensure<Offer>(await get(context.store, Offer, id))
+  plsBe(real, entity)
+
+  entity.status = OfferStatus.WITHDRAWN
+  entity.updatedAt = event.timestamp
+
+  logger.success(`[WITHDRAW OFFER] for ${id} by ${event.caller}} for ${String(entity.price)}`)
+  const currentOwner = entity.nft.currentOwner
+
+  await context.store.save(entity)
+  const meta = String(entity.price || '')
+  await createOfferEvent(entity, OfferInteraction.CANCEL, event, meta, context.store, currentOwner)
 }
 
 async function createEvent(
