@@ -280,8 +280,16 @@ export async function handleOfferPlace(context: Context): Promise<void> {
 //   logger.debug(`offer: ${JSON.stringify({ ...event, price: String(event.amount)  }, null, 2)}`)
 //   const id = createOfferId(createTokenId(event.collectionId, event.sn), event.caller) 
 //   const entity = ensure<Offer>(await get(context.store, Offer, id))
-//   // plsBe(real, entity)
 
+//   if (!entity) {
+//     logger.warn(`[ACCEPT OFFER] cannot find offer ${id}`)
+//     return
+//   }
+//   logger.success(`[ACCEPT OFFER] for ${id} by ${event.caller}} for ${String(event.amount)}`)
+
+//   await context.store.delete<Offer>(entity, true)
+//   const meta = String(event.amount || '')
+//   await createEvent(entity.nft, Interaction.ACCEPT_OFFER, event, meta, context.store, entity.caller)
   
 // }
 
