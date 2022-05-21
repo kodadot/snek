@@ -1,11 +1,11 @@
 import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, ManyToOne as ManyToOne_, Index as Index_} from "typeorm"
 import * as marshal from "./marshal"
-import {Interaction} from "./_interaction"
-import {NFTEntity} from "./nftEntity.model"
+import {OfferInteraction} from "./_offerInteraction"
+import {Offer} from "./offer.model"
 
 @Entity_()
-export class Event {
-  constructor(props?: Partial<Event>) {
+export class OfferEvent {
+  constructor(props?: Partial<OfferEvent>) {
     Object.assign(this, props)
   }
 
@@ -15,22 +15,22 @@ export class Event {
   @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: true})
   blockNumber!: bigint | undefined | null
 
-  @Column_("timestamp with time zone", {nullable: false})
-  timestamp!: Date
-
   @Column_("text", {nullable: false})
   caller!: string
 
-  @Column_("text", {nullable: false})
-  currentOwner!: string
+  @Column_("text", {nullable: true})
+  currentOwner!: string | undefined | null
 
-  @Column_("varchar", {length: 11, nullable: false})
-  interaction!: Interaction
+  @Column_("varchar", {length: 6, nullable: false})
+  interaction!: OfferInteraction
 
   @Column_("text", {nullable: false})
   meta!: string
 
   @Index_()
-  @ManyToOne_(() => NFTEntity, {nullable: false})
-  nft!: NFTEntity
+  @ManyToOne_(() => Offer, {nullable: false})
+  offer!: Offer
+
+  @Column_("timestamp with time zone", {nullable: false})
+  timestamp!: Date
 }
