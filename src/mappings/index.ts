@@ -187,7 +187,7 @@ export async function handleTokenBurn(context: Context): Promise<void> {
   plsBe(real, entity)
 
   entity.burned = true
-  logger.success(`[BURN] ${id} by ${event.caller}}`)
+  logger.success(`[BURN] ${id} by ${event.caller}`)
   await context.store.save(entity)
   const meta = entity.metadata ?? ''
   await createEvent(entity, Interaction.CONSUME, event, meta, context.store)
@@ -219,7 +219,7 @@ export async function handleTokenBuy(context: Context): Promise<void> {
   entity.price = undefined // not sure if this is correct
   entity.currentOwner = event.caller
 
-  logger.success(`[BUY] ${id} by ${event.caller}}`)
+  logger.success(`[BUY] ${id} by ${event.caller}`)
   await context.store.save(entity)
   const meta = entity.metadata ?? ''
   await createEvent(entity, Interaction.BUY, event, meta, context.store, event.currentOwner)
@@ -236,7 +236,7 @@ export async function handleRoyaltyAdd(context: Context): Promise<void> {
   entity.royalty = event.royalty
   entity.recipient = event.recipient
 
-  logger.success(`[ROYALTY] ${id} by ${event.caller}}`)
+  logger.success(`[ROYALTY] ${id} by ${event.caller}`)
   await context.store.save(entity)
   const meta = String(event.royalty || '')
   await createEvent(entity, Interaction.ROYALTY, event, meta, context.store)
@@ -278,7 +278,7 @@ export async function handleOfferPlace(context: Context): Promise<void> {
     offer.nft = entity
   }
 
-  logger.success(`[PLACE OFFER] for ${id} by ${event.caller}} for ${String(event.amount)}`)
+  logger.success(`[PLACE OFFER] for ${id} by ${event.caller} for ${String(event.amount)}`)
   await context.store.save(offer)
   
   const meta = String(event.amount || '')
@@ -298,7 +298,7 @@ export async function handleOfferAccept(context: Context): Promise<void> {
   entity.status = OfferStatus.ACCEPTED
   entity.updatedAt = event.timestamp
 
-  logger.success(`[ACCEPT OFFER] for ${id} by ${event.caller}} for ${String(event.amount)}`)
+  logger.success(`[ACCEPT OFFER] for ${id} by ${event.caller} for ${String(event.amount)}`)
   
   const currentOwner = ensure<NE>(await get(context.store, NE, tokenId)).currentOwner
 
@@ -319,7 +319,7 @@ export async function handleOfferWithdraw(context: Context): Promise<void> {
   entity.status = OfferStatus.WITHDRAWN
   entity.updatedAt = event.timestamp
 
-  logger.success(`[WITHDRAW OFFER] for ${id} by ${event.caller}} for ${String(entity.price)}`)
+  logger.success(`[WITHDRAW OFFER] for ${id} by ${event.caller} for ${String(entity.price)}`)
   const currentOwner = ensure<NE>(await get(context.store, NE, tokenId)).currentOwner
 
   await context.store.save(entity)
