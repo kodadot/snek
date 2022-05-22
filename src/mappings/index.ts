@@ -43,6 +43,7 @@ import {
   eventFrom,
   eventId,
   Interaction,
+  tokenIdOf,
   offerIdOf,
   Optional,
   TokenMetadata,
@@ -287,8 +288,9 @@ export async function handleOfferPlace(context: Context): Promise<void> {
 export async function handleOfferAccept(context: Context): Promise<void> {
   logger.pending(`[ACCEPT OFFER]: ${context.event.blockNumber}`)
   const event = unwrap(context, getAcceptOfferEvent)
-  logger.debug(`offer: ${JSON.stringify({ ...event, price: String(event.amount)  }, null, 2)}`)
-  const id = offerIdOf(event)
+  logger.debug(`offer: ${JSON.stringify({ ...event, amount: String(event.amount)  }, null, 2)}`)
+  const tokenId = tokenIdOf(event)
+  const id = createOfferId(tokenId, event.caller)
   const entity = ensure<Offer>(await get(context.store, Offer, id))
   plsBe(real, entity)
 
@@ -296,7 +298,8 @@ export async function handleOfferAccept(context: Context): Promise<void> {
   entity.updatedAt = event.timestamp
 
   logger.success(`[ACCEPT OFFER] for ${id} by ${event.caller}} for ${String(event.amount)}`)
-  const currentOwner = entity.nft.currentOwner
+  
+  const currentOwner = ensure<NE>(await get(context.store, NE, tokenId)).currentOwner
 
   await context.store.save(entity)
   const meta = String(event.amount || '')
@@ -307,7 +310,8 @@ export async function handleOfferWithdraw(context: Context): Promise<void> {
   logger.pending(`[WITHDRAW OFFER]: ${context.event.blockNumber}`)
   const event = unwrap(context, getWithdrawOfferEvent)
   logger.debug(`offer no: ${JSON.stringify(event, null, 2)}`)
-  const id = offerIdOf(event)
+  const tokenId = tokenIdOf(event)
+  const id = createOfferId(tokenId, event.caller)
   const entity = ensure<Offer>(await get(context.store, Offer, id))
   plsBe(real, entity)
 
@@ -315,7 +319,7 @@ export async function handleOfferWithdraw(context: Context): Promise<void> {
   entity.updatedAt = event.timestamp
 
   logger.success(`[WITHDRAW OFFER] for ${id} by ${event.caller}} for ${String(entity.price)}`)
-  const currentOwner = entity.nft.currentOwner
+  const currentOwner = ensure<NE>(await get(context.store, NE, tokenId)).currentOwner
 
   await context.store.save(entity)
   const meta = String(entity.price || '')

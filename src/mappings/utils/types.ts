@@ -147,6 +147,8 @@ const offerIdFrom = (collectionId: string, id: string, caller: string) => create
 
 export const offerIdOf = (call: CallWith<BaseOfferEvent>) => offerIdFrom(call.collectionId, call.sn, call.caller)
 
+export const tokenIdOf = (base: BaseTokenEvent) => createTokenId(base.collectionId, base.sn)
+
 export type TokenMetadata = {
   name?: string
   description: string
