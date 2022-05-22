@@ -65,7 +65,7 @@ exec:
 	docker exec -it snek-db-1 psql -U postgres -d squid
 
 update-deps:
-	npx taze
+	npx npm-check-updates -u
 
 where-chain:
 	echo "https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Fbasilisk-kodadot.hydration.cloud#/explorer" | pbcopy
