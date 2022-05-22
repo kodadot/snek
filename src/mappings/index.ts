@@ -292,6 +292,7 @@ export async function handleOfferAccept(context: Context): Promise<void> {
   const tokenId = tokenIdOf(event)
   const id = createOfferId(tokenId, event.caller)
   const entity = ensure<Offer>(await get(context.store, Offer, id))
+  
   plsBe(real, entity)
 
   entity.status = OfferStatus.ACCEPTED

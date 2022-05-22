@@ -46,6 +46,6 @@ export function plsNotBe<T extends AbstractEntity>(callback: (arg: T) => boolean
 export function needTo<T extends AbstractEntity>(callback: (arg: T) => boolean, entity: T, positive: boolean = true) {
   const entityName = entityOf(entity)
   if (positive ? !callback(entity) : callback(entity)) {
-    throw new ReferenceError(`[PROBLEM] Entity ${entityName} needs ${positive ? '' : 'not'} to be ${callback.name}`)
+    throw new ReferenceError(`[PROBLEM] Entity ${entityName} needs ${positive ? '' : 'not'}to be ${callback.name}`)
   }
 }
