@@ -12,7 +12,7 @@ import {
   OfferStatus,
 } from '../model'
 import { CollectionType } from '../model/generated/_collectionType'
-import { plsBe, plsNotBe, real, remintable } from './utils/consolidator'
+import { needTo, plsBe, plsNotBe, real, remintable } from './utils/consolidator'
 import { create, get, getOrCreate } from './utils/entity'
 import { createTokenId, unwrap } from './utils/extract'
 import {
@@ -290,7 +290,13 @@ export async function handleOfferAccept(context: Context): Promise<void> {
   const event = unwrap(context, getAcceptOfferEvent)
   logger.debug(`offer: ${JSON.stringify({ ...event, amount: String(event.amount)  }, null, 2)}`)
   const tokenId = tokenIdOf(event)
-  const id = createOfferId(tokenId, event.caller)
+
+  if (!event.maker) {
+    logger.error(`[ACCEPT OFFER] no maker for ${tokenId}`)
+    return
+  }
+
+  const id = createOfferId(tokenId, event.maker)
   const entity = ensure<Offer>(await get(context.store, Offer, id))
   
   plsBe(real, entity)
