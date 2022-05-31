@@ -84,13 +84,28 @@ type CollectionEvent implements EventType @entity {
   collection: CollectionEntity!
 }
 
+type OfferEvent @entity {
+  id: ID!
+  blockNumber: BigInt
+  caller: String!
+  currentOwner: String # currentOwner
+  interaction: OfferInteraction!
+  meta: String!
+  offer: Offer!
+  timestamp: DateTime!
+}
+
 type Offer @entity {
   id: ID! # should be addr-id-amount?
-  caller: String!
-  nft: NFTEntity!
   blockNumber: BigInt!
+  caller: String!
+  createdAt: DateTime!
+  events: [OfferEvent!] @derivedFrom(field: "offer")
   expiration: BigInt!
+  nft: NFTEntity!
   price: BigInt! 
+  status: OfferStatus!
+  updatedAt: DateTime
 }
 
 enum Interaction {
@@ -102,9 +117,7 @@ enum Interaction {
   SEND
   CONSUME
   DESTROY
-  OFFER
-  ACCEPT_OFFER # OFFER
-  CANCEL_OFFER # OFFER
+  OFFER # ACCEPT OFFER
   PAY_ROYALTY
   ROYALTY
 }
@@ -115,6 +128,19 @@ enum CollectionType {
   Redeemable
   Auction
   HydraHeads
+}
+
+enum OfferInteraction {
+  CREATE
+  ACCEPT
+  CANCEL
+}
+
+enum OfferStatus {
+  ACTIVE
+  ACCEPTED
+  EXPIRED
+  WITHDRAWN
 }
 
 # Implement in the later stages 

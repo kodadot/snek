@@ -97,6 +97,11 @@ export function getWithdrawOfferEvent(ctx: Context): BaseOfferEvent {
 
 export function getAcceptOfferEvent(ctx: Context): AcceptOfferEvent {
   const event = new MarketplaceOfferAcceptedEvent(ctx);
-  const [caller, classId, instanceId, amount] = event.asLatest;
-  return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount };
+  if (event.isV39) {
+    const [caller, classId, instanceId, amount] = event.asV39;
+    return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, maker: '' };
+  }
+
+  const [caller, classId, instanceId, amount, maker] = event.asLatest;
+  return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, maker: addressOf(maker) };
 }

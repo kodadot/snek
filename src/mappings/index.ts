@@ -7,9 +7,12 @@ import {
   MetadataEntity as Metadata,
   NFTEntity as NE,
   Offer,
+  OfferEvent,
+  OfferInteraction,
+  OfferStatus,
 } from '../model'
 import { CollectionType } from '../model/generated/_collectionType'
-import { plsBe, plsNotBe, real, remintable } from './utils/consolidator'
+import { needTo, plsBe, plsNotBe, real, remintable } from './utils/consolidator'
 import { create, get, getOrCreate } from './utils/entity'
 import { createTokenId, unwrap } from './utils/extract'
 import {
@@ -40,6 +43,8 @@ import {
   eventFrom,
   eventId,
   Interaction,
+  tokenIdOf,
+  offerIdOf,
   Optional,
   TokenMetadata,
 } from './utils/types'
@@ -182,7 +187,7 @@ export async function handleTokenBurn(context: Context): Promise<void> {
   plsBe(real, entity)
 
   entity.burned = true
-  logger.success(`[BURN] ${id} by ${event.caller}}`)
+  logger.success(`[BURN] ${id} by ${event.caller}`)
   await context.store.save(entity)
   const meta = entity.metadata ?? ''
   await createEvent(entity, Interaction.CONSUME, event, meta, context.store)
@@ -214,7 +219,7 @@ export async function handleTokenBuy(context: Context): Promise<void> {
   entity.price = undefined // not sure if this is correct
   entity.currentOwner = event.caller
 
-  logger.success(`[BUY] ${id} by ${event.caller}}`)
+  logger.success(`[BUY] ${id} by ${event.caller}`)
   await context.store.save(entity)
   const meta = entity.metadata ?? ''
   await createEvent(entity, Interaction.BUY, event, meta, context.store, event.currentOwner)
@@ -231,7 +236,7 @@ export async function handleRoyaltyAdd(context: Context): Promise<void> {
   entity.royalty = event.royalty
   entity.recipient = event.recipient
 
-  logger.success(`[ROYALTY] ${id} by ${event.caller}}`)
+  logger.success(`[ROYALTY] ${id} by ${event.caller}`)
   await context.store.save(entity)
   const meta = String(event.royalty || '')
   await createEvent(entity, Interaction.ROYALTY, event, meta, context.store)
@@ -259,30 +264,77 @@ export async function handleOfferPlace(context: Context): Promise<void> {
   plsBe(real, entity)
 
   const offerId = createOfferId(entity.id, event.caller)
-  const offer = create<Offer>(Offer, offerId, { 
-    caller: event.caller,
-    price: event.amount,
-    blockNumber: BigInt(event.blockNumber),
-    expiration: event.expiresAt,
-   })
+  const mayOffer = await get(context.store, Offer, offerId)
 
-  offer.nft = entity
-  logger.success(`[PLACE OFFER] for ${id} by ${event.caller}} for ${String(event.amount)}`)
+  const offer = mayOffer ?? create<Offer>(Offer, offerId, {})
+  offer.caller = event.caller
+  offer.price = event.amount
+  offer.blockNumber = BigInt(event.blockNumber)
+  offer.expiration = event.expiresAt
+  offer.createdAt = event.timestamp
+  offer.status = OfferStatus.ACTIVE
+
+  if (!mayOffer) {
+    offer.nft = entity
+  }
+
+  logger.success(`[PLACE OFFER] for ${id} by ${event.caller} for ${String(event.amount)}`)
   await context.store.save(offer)
   
   const meta = String(event.amount || '')
-  await createEvent(entity, Interaction.OFFER, event, meta, context.store, entity.currentOwner)
+  await createOfferEvent(offer, OfferInteraction.CREATE, event, meta, context.store, entity.currentOwner)
 }
 
-// export async function handleOfferAccept(context: Context): Promise<void> {
-//   logger.pending(`[ACCEPT OFFER]: ${context.event.blockNumber}`)
-//   const event = unwrap(context, getAcceptOfferEvent)
-//   logger.debug(`offer: ${JSON.stringify({ ...event, price: String(event.amount)  }, null, 2)}`)
-//   const id = createOfferId(createTokenId(event.collectionId, event.sn), event.caller) 
-//   const entity = ensure<Offer>(await get(context.store, Offer, id))
-//   // plsBe(real, entity)
+export async function handleOfferAccept(context: Context): Promise<void> {
+  logger.pending(`[ACCEPT OFFER]: ${context.event.blockNumber}`)
+  const event = unwrap(context, getAcceptOfferEvent)
+  logger.debug(`offer: ${JSON.stringify({ ...event, amount: String(event.amount)  }, null, 2)}`)
+  const tokenId = tokenIdOf(event)
 
+  if (!event.maker) {
+    logger.error(`[ACCEPT OFFER] no maker for ${tokenId}`)
+    return
+  }
+
+  const id = createOfferId(tokenId, event.maker)
+  const entity = ensure<Offer>(await get(context.store, Offer, id))
   
+  plsBe(real, entity)
+
+  entity.status = OfferStatus.ACCEPTED
+  entity.updatedAt = event.timestamp
+
+  logger.success(`[ACCEPT OFFER] for ${id} by ${event.caller} for ${String(event.amount)}`)
+  
+  const currentOwner = ensure<NE>(await get(context.store, NE, tokenId)).currentOwner
+
+  await context.store.save(entity)
+  const meta = String(event.amount || '')
+  await createOfferEvent(entity, OfferInteraction.ACCEPT, event, meta, context.store, currentOwner)
+}
+
+export async function handleOfferWithdraw(context: Context): Promise<void> {
+  logger.pending(`[WITHDRAW OFFER]: ${context.event.blockNumber}`)
+  const event = unwrap(context, getWithdrawOfferEvent)
+  logger.debug(`offer no: ${JSON.stringify(event, null, 2)}`)
+  const tokenId = tokenIdOf(event)
+  const id = createOfferId(tokenId, event.caller)
+  const entity = ensure<Offer>(await get(context.store, Offer, id))
+  plsBe(real, entity)
+
+  entity.status = OfferStatus.WITHDRAWN
+  entity.updatedAt = event.timestamp
+
+  logger.success(`[WITHDRAW OFFER] for ${id} by ${event.caller} for ${String(entity.price)}`)
+  const currentOwner = ensure<NE>(await get(context.store, NE, tokenId)).currentOwner
+
+  await context.store.save(entity)
+  const meta = String(entity.price || '')
+  await createOfferEvent(entity, OfferInteraction.CANCEL, event, meta, context.store, currentOwner)
+  // TODO: Set expired offers to expired
+}
+
+// async function markOfferExpired(collectionId: string, sn: string, blockNumber: bigint, store: Store): Promise<void> {
 // }
 
 async function createEvent(
@@ -324,6 +376,30 @@ async function createCollectionEvent(
       collectionEventFrom(interaction, call, meta)
     )
     event.collection = final
+    await store.save(event)
+  } catch (e) {
+    logError(e, (e) =>
+      logger.warn(`[[${interaction}]]: ${final.id} Reason: ${e.message}`)
+    )
+  }
+}
+
+async function createOfferEvent(
+  final: Offer,
+  interaction: OfferInteraction,
+  call: BaseCall,
+  meta: string,
+  store: Store,
+  currentOwner?: string
+) {
+  try {
+    const newEventId = eventId(final.id, interaction)
+    const event = create<OfferEvent>(
+      OfferEvent,
+      newEventId,
+      eventFrom(interaction, call, meta, currentOwner)
+    )
+    event.offer = final
     await store.save(event)
   } catch (e) {
     logError(e, (e) =>
