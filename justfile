@@ -53,13 +53,13 @@ test:
   npm run test:unit
 
 improve TAG:
-	npx sqd squid:update snake@{{TAG}}
+	npx sqd squid:update snekk@{{TAG}}
 
 release TAG:
-	npx sqd squid:release snake@{{TAG}}
+	npx sqd squid:release snekk@{{TAG}}
 
 kill TAG:
-	npx sqd squid:kill "snake@{{TAG}}"
+	npx sqd squid:kill snekk@{{TAG}}
 
 exec:
 	docker exec -it snek-db-1 psql -U postgres -d squid
