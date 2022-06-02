@@ -67,5 +67,8 @@ exec:
 update-deps:
 	npx npm-check-updates -u
 
+tail TAG:
+	npx sqd squid:tail snekk@{{TAG}} -f
+
 where-chain:
 	echo "https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Fbasilisk-kodadot.hydration.cloud#/explorer" | pbcopy
