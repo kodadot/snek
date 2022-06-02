@@ -12,7 +12,7 @@ const processor = new SubstrateProcessor("snek_nft");
 processor.setBatchSize(500);
 processor.setBlockRange({ from: 8700 });
 
-const archive = process.env.ARCHIVE_URL ?? lookupArchive("basilisk")[0].url
+const archive = 'https://basilisk-test.indexer.gc.subsquid.io/v4/graphql' ?? lookupArchive("basilisk")[0].url
 
 logger.note("Welcome to the Processor!", archive);
 
