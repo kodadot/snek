@@ -237,6 +237,12 @@ It is possible to extend `squid-graphql-server(1)` with custom
 [type-graphql](https://typegraphql.com) resolvers and to add request validation.
 More details will be added later.
 
-## Disclaimer
+## Some notes
 
-This is alpha-quality software. Expect some bugs and incompatible changes in coming weeks.
+If you are trying to run your own archive node please use following endpoint:
+`ARCHIVE_URL=http://localhost:4010/v1/graphql`
+
+
+
+
+
