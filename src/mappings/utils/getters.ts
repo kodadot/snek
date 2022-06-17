@@ -6,15 +6,15 @@ import { bigint } from '../../model/generated/marshal'
 
 export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
   const event = new NftClassCreatedEvent(ctx);
-  logger.debug('NftClassCreatedEvent', event.isV39)
-  if (event.isV39) {
-    const { classId, owner, classType } = event.asV39;
-    return { id: classId.toString(), caller: addressOf(owner), type: classType.__kind };
-  }
-  if (event.isV50) {
-    const { classId, owner, metadata, classType } = event.asV50;
-    return { id: classId.toString(), caller: addressOf(owner), metadata: metadata.toString(), type: classType.__kind  };
-  }
+  // logger.debug('NftClassCreatedEvent', event.isV39)
+  // if (event.isV39) {
+  //   const { classId, owner, classType } = event.asV39;
+  //   return { id: classId.toString(), caller: addressOf(owner), type: classType.__kind };
+  // }
+  // if (event.isV50) {
+  //   const { classId, owner, metadata, classType } = event.asV50;
+  //   return { id: classId.toString(), caller: addressOf(owner), metadata: metadata.toString(), type: classType.__kind  };
+  // }
 
   const { classId, owner, metadata, classType } = event.asLatest;
   return { id: classId.toString(), caller: addressOf(owner), metadata: metadata.toString(), type: classType.__kind  };
@@ -22,15 +22,15 @@ export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
 
 export function getCreateTokenEvent(ctx: Context): CreateTokenEvent {
   const event = new NftInstanceMintedEvent(ctx);
-  logger.debug('NftInstanceMintedEvent', event.isV39)
-  if (event.isV39) {
-    const { classId, owner, instanceId } = event.asV39;
-    return { collectionId: classId.toString(), caller: addressOf(owner), sn: instanceId.toString() };
-  }
-  if (event.isV50) {
-    const { classId, owner, instanceId, metadata } = event.asV50;
-    return { collectionId: classId.toString(), caller: addressOf(owner), sn: instanceId.toString(), metadata: metadata.toString() };
-  }
+  // logger.debug('NftInstanceMintedEvent', event.isV39)
+  // if (event.isV39) {
+  //   const { classId, owner, instanceId } = event.asV39;
+  //   return { collectionId: classId.toString(), caller: addressOf(owner), sn: instanceId.toString() };
+  // }
+  // if (event.isV50) {
+  //   const { classId, owner, instanceId, metadata } = event.asV50;
+  //   return { collectionId: classId.toString(), caller: addressOf(owner), sn: instanceId.toString(), metadata: metadata.toString() };
+  // }
 
   const { classId, owner, instanceId, metadata } = event.asLatest;
   return { collectionId: classId.toString(), caller: addressOf(owner), sn: instanceId.toString(), metadata: metadata.toString() };
@@ -80,10 +80,10 @@ export function getPayRoyaltyEvent(ctx: Context): PayRoyaltyEvent {
 
 export function getPlaceOfferEvent(ctx: Context): MakeOfferEvent {
   const event = new MarketplaceOfferPlacedEvent(ctx);
-  if (event.isV39) {
-    const [caller, classId, instanceId, amount] = event.asV39;  
-    return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, expiresAt: BigInt(0), };
-  }
+  // if (event.isV39) {
+  //   const [caller, classId, instanceId, amount] = event.asV39;  
+  //   return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, expiresAt: BigInt(0), };
+  // }
 
   const [caller, classId, instanceId, amount, blockNumber] = event.asLatest;
   return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, expiresAt: BigInt(blockNumber) };
@@ -97,10 +97,10 @@ export function getWithdrawOfferEvent(ctx: Context): BaseOfferEvent {
 
 export function getAcceptOfferEvent(ctx: Context): AcceptOfferEvent {
   const event = new MarketplaceOfferAcceptedEvent(ctx);
-  if (event.isV39) {
-    const [caller, classId, instanceId, amount] = event.asV39;
-    return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, maker: '' };
-  }
+  // if (event.isV39) {
+  //   const [caller, classId, instanceId, amount] = event.asV39;
+  //   return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, maker: '' };
+  // }
 
   const [caller, classId, instanceId, amount, maker] = event.asLatest;
   return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, maker: addressOf(maker) };
