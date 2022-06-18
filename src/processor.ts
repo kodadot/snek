@@ -8,11 +8,11 @@ import * as mappings from './mappings'
 
 const processor = new SubstrateProcessor("snek_nft");
 
-// processor.setTypesBundle("basilisk");
+processor.setTypesBundle("basilisk");
 processor.setBatchSize(500);
 processor.setBlockRange({ from: 6000 });
 
-const archive = 'https://basilisk-test.indexer.gc.subsquid.io/v4/graphql' ?? lookupArchive("basilisk")[0].url
+const archive = 'https://basilisk-test.indexer.gc.subsquid.io/v4/graphql'
 
 logger.note("Welcome to the Processor!", archive);
 
@@ -20,8 +20,6 @@ processor.setDataSource({
   archive,
   chain: "wss://basilisk-kodadot.hydration.cloud",
 });
-
-const dummy = async () => {}
 
 processor.addEventHandler(Event.createClass, mappings.handleCollectionCreate);
 processor.addEventHandler(Event.createInstance, mappings.handleTokenCreate);
