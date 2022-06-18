@@ -237,10 +237,46 @@ It is possible to extend `squid-graphql-server(1)` with custom
 [type-graphql](https://typegraphql.com) resolvers and to add request validation.
 More details will be added later.
 
-## Some notes
+## Archival nodes
 
-If you are trying to run your own archive node please use following endpoint:
-`ARCHIVE_URL=http://localhost:4010/v1/graphql`
+Because subsquid requires an archival indexer to be fast, there are currently 3 options how to do it:
+
+1. Leave it as it is
+
+there is already indexer for base basilisk
+
+2. using archival node for Koda BSX Sandbox :snake:
+
+```.env
+ARCHIVE_URL=https://basilisk-test.indexer.gc.subsquid.io/v4/graphql
+```
+
+3. running your own
+
+```bash
+git clone git@github.com:subsquid/squid-archive-setup.git;
+cd squid-archive-setup/basilisk
+```
+
+in `docker-compose.yml` set url for the chain
+
+```
+-      - WS_PROVIDER_ENDPOINT_URI=wss://basilisk.api.onfinality.io/public-ws
++      - WS_PROVIDER_ENDPOINT_URI=wss://basilisk-kodadot.hydration.cloud
+```
+
+then just
+
+```bash
+docker compose up
+```
+
+and set 
+
+```.env
+ARCHIVE_URL=http://localhost:4010/v1/graphql
+```
+
 
 
 
