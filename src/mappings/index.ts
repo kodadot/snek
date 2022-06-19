@@ -245,7 +245,7 @@ export async function handleRoyaltyAdd(context: Context): Promise<void> {
 export async function handleRoyaltyPay(context: Context): Promise<void> {
   logger.pending(`[PAY ROYALTY]: ${context.event.blockNumber}`)
   const event = unwrap(context, getPayRoyaltyEvent)
-  logger.debug(`pay: ${JSON.stringify(event, null, 2)}`)
+  logger.debug(`pay: ${JSON.stringify({ ...event, amount: String(event.amount) }, null, 2)}`)
   const id = createTokenId(event.collectionId, event.sn)
   const entity = ensure<NE>(await get(context.store, NE, id))
   plsBe(real, entity)
