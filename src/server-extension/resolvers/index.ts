@@ -1,6 +1,7 @@
 import { Field, ObjectType, Query, Resolver } from "type-graphql";
 import type { EntityManager } from "typeorm";
 import { WalletResolver } from "./walletResolver";
+import { OfferStatsResolver } from "./offerStatsResolver";
 
 @ObjectType()
 export class Hello {
@@ -22,4 +23,4 @@ export class HelloResolver {
   }
 }
 
-export { WalletResolver };
+export { WalletResolver, OfferStatsResolver };
