@@ -26,6 +26,7 @@
     "nanoid": "^3.3.4",
     "pg": "^8.7.3",
     "signale": "^1.4.0",
+    "type-graphql": "^1.2.0-rc.1",
     "typeorm": "^0.2.41"
   },
   "devDependencies": {
