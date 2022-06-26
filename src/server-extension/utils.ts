@@ -1,10 +1,10 @@
-import type { EntityManager, EntityTarget, Repository } from "typeorm";
+import type { EntityManager, EntityTarget, Repository } from 'typeorm';
 
 export async function makeQuery<E, V>(
   txManager: () => Promise<EntityManager>,
   entity: EntityTarget<E>,
   query: string,
-  args?: any[]
+  args?: any[],
 ): Promise<V> {
   const manager = await txManager();
   const repository = manager.getRepository(entity);
@@ -14,7 +14,7 @@ export async function makeQuery<E, V>(
 export async function genericRepositoryQuery<T, V>(
   repository: Repository<T>,
   query: string,
-  args?: any[]
+  args?: any[],
 ): Promise<V> {
   return repository.query(query, args) as Promise<V>;
 }
@@ -27,5 +27,5 @@ export async function genericRepositoryQuery<T, V>(
 export function toSqlInParams(list: string[]): string {
   return JSON.stringify(list)
     .replace(/\"/g, "'")
-    .replace(/[\[|\]]/g, "");
+    .replace(/[\[|\]]/g, '');
 }

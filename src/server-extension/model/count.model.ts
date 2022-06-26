@@ -1,8 +1,8 @@
-import { Field, ObjectType } from "type-graphql";
+import { Field, ObjectType } from 'type-graphql';
 
 @ObjectType()
 export class CountEntity {
-  @Field(() => Number, { nullable: false, name: "totalCount" })
+  @Field(() => Number, { nullable: false, name: 'totalCount' })
   total!: number;
 
   constructor(totalCount: number) {

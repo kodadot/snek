@@ -1,51 +1,51 @@
-import { CollectionEntity, NFTEntity, Offer } from '../../model/generated'
+import { CollectionEntity, NFTEntity, Offer } from '../../model/generated';
 
-type Entity = CollectionEntity | NFTEntity
-type AbstractEntity = Entity | Offer
+type Entity = CollectionEntity | NFTEntity;
+type AbstractEntity = Entity | Offer;
 
 export function real<T>(entity: T | undefined): boolean {
-  return !!entity
+  return !!entity;
 }
 
 export function burned({ burned }: Entity): boolean {
-  return burned
+  return burned;
 }
 
 export function created(entity: Entity): boolean {
-  return Object.keys(entity).length === 1 && entity.id !== undefined
+  return Object.keys(entity).length === 1 && entity.id !== undefined;
 }
 
 export function entityOf(entity: AbstractEntity): string {
   if (entity instanceof CollectionEntity) {
-    return 'Collection'
+    return 'Collection';
   }
 
   if (entity instanceof NFTEntity) {
-    return 'NFT'
+    return 'NFT';
   }
 
   if (entity instanceof Offer) {
-    return 'Offer'
+    return 'Offer';
   }
 
-  return ''
+  return '';
 }
 
 export function remintable(entity: Entity): boolean {
-  return burned(entity) || created(entity)
+  return burned(entity) || created(entity);
 }
 
 export function plsBe<T extends AbstractEntity>(callback: (arg: T) => boolean, entity: T) {
-  return needTo(callback, entity, true)
+  return needTo(callback, entity, true);
 }
 
 export function plsNotBe<T extends AbstractEntity>(callback: (arg: T) => boolean, entity: T) {
-  return needTo(callback, entity, false)
+  return needTo(callback, entity, false);
 }
 
-export function needTo<T extends AbstractEntity>(callback: (arg: T) => boolean, entity: T, positive: boolean = true) {
-  const entityName = entityOf(entity)
+export function needTo<T extends AbstractEntity>(callback: (arg: T) => boolean, entity: T, positive = true) {
+  const entityName = entityOf(entity);
   if (positive ? !callback(entity) : callback(entity)) {
-    throw new ReferenceError(`[PROBLEM] Entity ${entityName} needs ${positive ? '' : 'not'}to be ${callback.name}`)
+    throw new ReferenceError(`[PROBLEM] Entity ${entityName} needs ${positive ? '' : 'not'}to be ${callback.name}`);
   }
 }

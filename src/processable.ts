@@ -1,4 +1,4 @@
-export enum Event { 
+export enum Event {
   createClass = 'nft.ClassCreated',
   createInstance = 'nft.InstanceMinted',
   transfer = 'nft.InstanceTransferred',

@@ -1,24 +1,24 @@
 import {
   SubstrateProcessor,
-} from "@subsquid/substrate-processor";
-import { lookupArchive } from "@subsquid/archive-registry";
-import { Event } from './processable'
-import logger from './mappings/utils/logger'
-import * as mappings from './mappings'
+} from '@subsquid/substrate-processor';
+import { lookupArchive } from '@subsquid/archive-registry';
+import { Event } from './processable';
+import logger from './mappings/utils/logger';
+import * as mappings from './mappings';
 
-const processor = new SubstrateProcessor("snek_nft");
+const processor = new SubstrateProcessor('snek_nft');
 
-processor.setTypesBundle("basilisk");
+processor.setTypesBundle('basilisk');
 processor.setBatchSize(500);
 processor.setBlockRange({ from: 6000 });
 
-const archive = 'https://basilisk-test.indexer.gc.subsquid.io/v4/graphql'
+const archive = 'https://basilisk-test.indexer.gc.subsquid.io/v4/graphql';
 
-logger.note("Welcome to the Processor!", archive);
+logger.note('Welcome to the Processor!', archive);
 
 processor.setDataSource({
   archive,
-  chain: "wss://basilisk-kodadot.hydration.cloud",
+  chain: 'wss://basilisk-kodadot.hydration.cloud',
 });
 
 processor.addEventHandler(Event.createClass, mappings.handleCollectionCreate);

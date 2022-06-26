@@ -1,6 +1,6 @@
-
-import { BaseCall, CallWith, Context, UnwrapFunc } from './types'
-
+import {
+  BaseCall, CallWith, Context, UnwrapFunc,
+} from './types';
 
 // function toBaseCall(extrinsic: ExtrinsicHandlerContext): BaseCall {
 //   const caller = extrinsic.extrinsic.signer.toString();
@@ -10,15 +10,13 @@ import { BaseCall, CallWith, Context, UnwrapFunc } from './types'
 //   return { caller, blockNumber, timestamp };
 // }
 
-
 function toBaseEvent(event: Context): BaseCall {
-  const caller = event.extrinsic?.signer.toString() || ''; 
+  const caller = event.extrinsic?.signer.toString() || '';
   const blockNumber = event.block.height.toString();
   const timestamp = new Date(event.block.timestamp);
 
   return { caller, blockNumber, timestamp };
 }
-
 
 export function unwrap<T>(ctx: Context, unwrapFn: UnwrapFunc<T>): CallWith<T> {
   const baseCall = toBaseEvent(ctx);
@@ -26,5 +24,4 @@ export function unwrap<T>(ctx: Context, unwrapFn: UnwrapFunc<T>): CallWith<T> {
   return { ...baseCall, ...unwrapped };
 }
 
-export const createTokenId = (collection: string, id: string) => `${collection}-${id}`
-
+export const createTokenId = (collection: string, id: string) => `${collection}-${id}`;

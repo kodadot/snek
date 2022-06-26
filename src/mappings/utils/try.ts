@@ -1,12 +1,9 @@
-import logger, { logError } from './logger'
+import logger, { logError } from './logger';
 
 export function safelyTry(handler: any) {
   try {
-    handler()
+    handler();
   } catch (e) {
-    logError(e, (e) =>
-      logger.warn(`[[${handler.name}]]: Reason: ${e.message}`)
-    )
+    logError(e, (e) => logger.warn(`[[${handler.name}]]: Reason: ${e.message}`));
   }
-} 
-
+}
