@@ -217,12 +217,12 @@ export async function handleTokenBuy(context: Context): Promise<void> {
   const id = createTokenId(event.collectionId, event.sn);
   const entity = ensure<NE>(await get(context.store, NE, id));
   plsBe(real, entity);
-  entity.price = undefined; // not sure if this is correct
+  entity.price = null; // not sure if this is correct
   entity.currentOwner = event.caller;
 
   logger.success(`[BUY] ${id} by ${event.caller}`);
   await context.store.save(entity);
-  const meta = entity.metadata ?? '';
+  const meta = event.price?.toString() || '';
   await createEvent(entity, Interaction.BUY, event, meta, context.store, event.currentOwner);
 }
 
