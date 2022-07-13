@@ -4,7 +4,6 @@ import { Interaction } from '../../model/generated/_interaction';
 import { Attribute } from '../../model/generated/_attribute';
 import { CollectionType } from '../../model/generated/_collectionType';
 import { OfferInteraction } from '../../model';
-import { createTokenId } from './extract';
 
 export type BaseCall = {
   caller: string;
@@ -142,6 +141,8 @@ export type SanitizerFunc = (url: string) => string;
 export function ensure<T>(value: any): T {
   return value as T;
 }
+
+export const createTokenId = (collection: string, id: string): string => `${collection}-${id}`;
 
 export const eventId = (id: string, event: Interaction | OfferInteraction) => `${id}-${event}-${nanoid()}`;
 

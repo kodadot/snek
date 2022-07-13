@@ -35,15 +35,15 @@ export function remintable(entity: Entity): boolean {
   return burned(entity) || created(entity);
 }
 
-export function plsBe<T extends AbstractEntity>(callback: (arg: T) => boolean, entity: T) {
+export function plsBe<T extends AbstractEntity>(callback: (arg: T) => boolean, entity: T): void {
   return needTo(callback, entity, true);
 }
 
-export function plsNotBe<T extends AbstractEntity>(callback: (arg: T) => boolean, entity: T) {
+export function plsNotBe<T extends AbstractEntity>(callback: (arg: T) => boolean, entity: T): void {
   return needTo(callback, entity, false);
 }
 
-export function needTo<T extends AbstractEntity>(callback: (arg: T) => boolean, entity: T, positive = true) {
+export function needTo<T extends AbstractEntity>(callback: (arg: T) => boolean, entity: T, positive = true): void {
   const entityName = entityOf(entity);
   if (positive ? !callback(entity) : callback(entity)) {
     throw new ReferenceError(`[PROBLEM] Entity ${entityName} needs ${positive ? '' : 'not'}to be ${callback.name}`);
