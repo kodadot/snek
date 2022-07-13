@@ -70,7 +70,7 @@ export function create<T extends EntityWithId>(
   entityConstructor: EntityConstructor<T>,
   id: string,
   init: Partial<T>,
-) {
+): T {
   const entity = new entityConstructor();
   entity.id = id;
   Object.assign(entity, init);

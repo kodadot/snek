@@ -5,8 +5,6 @@ import { addressOf } from './helper';
 import {
   BurnTokenEvent, CreateCollectionEvent, CreateTokenEvent, DestroyCollectionEvent, TransferTokenEvent, Context, ListTokenEvent, BuyTokenEvent, AddRoyaltyEvent, PayRoyaltyEvent, BaseOfferEvent, MakeOfferEvent, AcceptOfferEvent,
 } from './types';
-import logger from './logger';
-import { bigint } from '../../model/generated/marshal';
 
 export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
   const event = new NftClassCreatedEvent(ctx);

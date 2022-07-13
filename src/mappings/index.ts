@@ -12,11 +12,9 @@ import {
   OfferStatus,
 } from '../model';
 import { CollectionType } from '../model/generated/_collectionType';
-import {
-  needTo, plsBe, plsNotBe, real, remintable,
-} from './utils/consolidator';
+import { plsBe, real, remintable } from './utils/consolidator';
 import { create, get, getOrCreate } from './utils/entity';
-import { createTokenId, unwrap } from './utils/extract';
+import { unwrap } from './utils/extract';
 import {
   getAcceptOfferEvent,
   getAddRoyaltyEvent,
@@ -40,15 +38,10 @@ import {
   collectionEventFrom,
   CollectionInteraction,
   Context,
-  createOfferId,
-  ensure,
+  createOfferId, createTokenId, ensure,
   eventFrom,
   eventId,
-  Interaction,
-  tokenIdOf,
-  offerIdOf,
-  Optional,
-  TokenMetadata,
+  Interaction, Optional, tokenIdOf, TokenMetadata,
 } from './utils/types';
 
 async function handleMetadata(
@@ -96,7 +89,7 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
   final.updatedAt = event.timestamp;
   final.type = event.type as CollectionType; // unsafe
 
-  logger.debug(`metadata: ${event.metadata}`);
+  logger.debug(`metadata: ${final.metadata}`);
 
   if (final.metadata) {
     const metadata = await handleMetadata(final.metadata, context.store);
@@ -149,7 +142,7 @@ export async function handleTokenCreate(context: Context): Promise<void> {
   final.createdAt = event.timestamp;
   final.updatedAt = event.timestamp;
 
-  logger.debug(`metadata: ${event.metadata}`);
+  logger.debug(`metadata: ${final.metadata}`);
 
   if (final.metadata) {
     const metadata = await handleMetadata(final.metadata, context.store);
@@ -217,12 +210,12 @@ export async function handleTokenBuy(context: Context): Promise<void> {
   const id = createTokenId(event.collectionId, event.sn);
   const entity = ensure<NE>(await get(context.store, NE, id));
   plsBe(real, entity);
-  entity.price = undefined; // not sure if this is correct
+  entity.price = BigInt(0);
   entity.currentOwner = event.caller;
 
   logger.success(`[BUY] ${id} by ${event.caller}`);
   await context.store.save(entity);
-  const meta = entity.metadata ?? '';
+  const meta = event.price?.toString() || '';
   await createEvent(entity, Interaction.BUY, event, meta, context.store, event.currentOwner);
 }
 
