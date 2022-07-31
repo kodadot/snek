@@ -44,6 +44,8 @@ import {
   Interaction, Optional, tokenIdOf, TokenMetadata,
 } from './utils/types';
 
+import { Extrinsic } from '../processable';
+
 async function handleMetadata(
   id: string,
   store: Store,
@@ -156,6 +158,10 @@ export async function handleTokenCreate(context: Context): Promise<void> {
 }
 
 export async function handleTokenTransfer(context: Context): Promise<void> {
+  if (context.extrinsic && [Extrinsic.acceptOffer, Extrinsic.buy].includes(context.extrinsic?.name)) {
+    return;
+  }
+
   logger.pending(`[SEND]: ${context.event.blockNumber}`);
   const event = unwrap(context, getTransferTokenEvent);
   logger.debug(`send: ${JSON.stringify(event, null, 2)}`);
