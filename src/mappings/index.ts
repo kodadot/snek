@@ -159,6 +159,7 @@ export async function handleTokenCreate(context: Context): Promise<void> {
 
 export async function handleTokenTransfer(context: Context): Promise<void> {
   if (context.extrinsic && [Extrinsic.acceptOffer, Extrinsic.buy].includes(context.extrinsic?.name as Extrinsic)) {
+    logger.info(`[SEND] SKIP: ${context.event.blockNumber}, because of ${context.extrinsic?.name}`);
     return;
   }
 
