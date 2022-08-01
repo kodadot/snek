@@ -11,13 +11,19 @@ processor.setTypesBundle('basilisk');
 processor.setBatchSize(500);
 processor.setBlockRange({ from: 6000 });
 
-const archive = 'https://basilisk-rococo.play.hydration.cloud/v1/graphql';
+// Sandbox
+const archive = 'https://basilisk-test.indexer.gc.subsquid.io/v4/graphql';
+const chain = 'wss://basilisk-kodadot.hydration.cloud';
+
+// Rococo
+// const archive = 'https://basilisk-rococo.play.hydration.cloud/v1/graphql';
+// const chain = 'wss://rpc-01.basilisk-rococo.hydradx.io';
 
 logger.note('Welcome to the Processor!', archive);
 
 processor.setDataSource({
   archive,
-  chain: 'wss://rpc-01.basilisk-rococo.hydradx.io',
+  chain,
 });
 
 processor.addEventHandler(Event.createClass, mappings.handleCollectionCreate);
