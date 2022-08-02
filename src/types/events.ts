@@ -1,6 +1,9 @@
 import assert from 'assert'
 import {EventContext, Result, deprecateLatest} from './support'
+import * as v43 from './v43'
 import * as v48 from './v48'
+import * as v55 from './v55'
+import * as v62 from './v62'
 
 export class MarketplaceOfferAcceptedEvent {
   constructor(private ctx: EventContext) {
@@ -22,14 +25,59 @@ export class MarketplaceOfferAcceptedEvent {
     return this.ctx._chain.decodeEvent(this.ctx.event)
   }
 
-  get isLatest(): boolean {
-    deprecateLatest()
-    return this.isV48
+  /**
+   * Offer was accepted \[sender, class_id, instance_id\]
+   */
+  get isV43(): boolean {
+    return this.ctx._chain.getEventHash('marketplace.OfferAccepted') === '426271b0ff71255c125e9a4ea897d86d39682c8454bbff4c6c9a8d50e0d966a4'
   }
 
-  get asLatest(): [v48.AccountId32, bigint, bigint, bigint, v48.AccountId32] {
+  /**
+   * Offer was accepted \[sender, class_id, instance_id\]
+   */
+  get asV43(): [v43.AccountId32, bigint, bigint, bigint] {
+    assert(this.isV43)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  /**
+   * Offer was accepted
+   */
+  get isV55(): boolean {
+    return this.ctx._chain.getEventHash('marketplace.OfferAccepted') === '809213614dd888d0b0df83a1b4bb816a4bb8f7d702f40d7145c4c9532e70508e'
+  }
+
+  /**
+   * Offer was accepted
+   */
+  get asV55(): {who: v55.AccountId32, class: bigint, instance: bigint, amount: bigint} {
+    assert(this.isV55)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  /**
+   * Offer was accepted
+   */
+  get isV62(): boolean {
+    return this.ctx._chain.getEventHash('marketplace.OfferAccepted') === 'f0c64969aa0bb38598d60ee40e1c6befae4abc5b1835302ebc1b957c05eb0c42'
+  }
+
+  /**
+   * Offer was accepted
+   */
+  get asV62(): {who: v62.AccountId32, class: bigint, instance: bigint, amount: bigint, maker: v62.AccountId32} {
+    assert(this.isV62)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
     deprecateLatest()
-    return this.asV48
+    return this.isV62
+  }
+
+  get asLatest(): {who: v62.AccountId32, class: bigint, instance: bigint, amount: bigint, maker: v62.AccountId32} {
+    deprecateLatest()
+    return this.asV62
   }
 }
 
@@ -53,14 +101,29 @@ export class MarketplaceOfferPlacedEvent {
     return this.ctx._chain.decodeEvent(this.ctx.event)
   }
 
-  get isLatest(): boolean {
-    deprecateLatest()
-    return this.isV48
+  /**
+   * Offer was placed on a token
+   */
+  get isV55(): boolean {
+    return this.ctx._chain.getEventHash('marketplace.OfferPlaced') === 'e16435d4410d4a6b6ffce5b4169856dae7831e563e44572ff395cd265d9d64d1'
   }
 
-  get asLatest(): [v48.AccountId32, bigint, bigint, bigint, number] {
+  /**
+   * Offer was placed on a token
+   */
+  get asV55(): {who: v55.AccountId32, class: bigint, instance: bigint, amount: bigint, expires: number} {
+    assert(this.isV55)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
     deprecateLatest()
-    return this.asV48
+    return this.isV55
+  }
+
+  get asLatest(): {who: v55.AccountId32, class: bigint, instance: bigint, amount: bigint, expires: number} {
+    deprecateLatest()
+    return this.asV55
   }
 }
 
@@ -84,14 +147,29 @@ export class MarketplaceOfferWithdrawnEvent {
     return this.ctx._chain.decodeEvent(this.ctx.event)
   }
 
-  get isLatest(): boolean {
-    deprecateLatest()
-    return this.isV48
+  /**
+   * Offer was withdrawn
+   */
+  get isV55(): boolean {
+    return this.ctx._chain.getEventHash('marketplace.OfferWithdrawn') === '669141c2bfed250cfd51ec61736d5b23f65d22716737b27cfa84f9a287f1412f'
   }
 
-  get asLatest(): [v48.AccountId32, bigint, bigint] {
+  /**
+   * Offer was withdrawn
+   */
+  get asV55(): {who: v55.AccountId32, class: bigint, instance: bigint} {
+    assert(this.isV55)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
     deprecateLatest()
-    return this.asV48
+    return this.isV55
+  }
+
+  get asLatest(): {who: v55.AccountId32, class: bigint, instance: bigint} {
+    deprecateLatest()
+    return this.asV55
   }
 }
 
@@ -115,14 +193,29 @@ export class MarketplaceRoyaltyAddedEvent {
     return this.ctx._chain.decodeEvent(this.ctx.event)
   }
 
-  get isLatest(): boolean {
-    deprecateLatest()
-    return this.isV48
+  /**
+   * Marketplace data has been added
+   */
+  get isV55(): boolean {
+    return this.ctx._chain.getEventHash('marketplace.RoyaltyAdded') === 'f0b773a6ad41ebc0b1145b9a33782c7e6ea900db44e465cd5ee41e90a342ce57'
   }
 
-  get asLatest(): [bigint, bigint, v48.AccountId32, number] {
+  /**
+   * Marketplace data has been added
+   */
+  get asV55(): {class: bigint, instance: bigint, author: v55.AccountId32, royalty: number} {
+    assert(this.isV55)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
     deprecateLatest()
-    return this.asV48
+    return this.isV55
+  }
+
+  get asLatest(): {class: bigint, instance: bigint, author: v55.AccountId32, royalty: number} {
+    deprecateLatest()
+    return this.asV55
   }
 }
 
@@ -146,14 +239,29 @@ export class MarketplaceRoyaltyPaidEvent {
     return this.ctx._chain.decodeEvent(this.ctx.event)
   }
 
-  get isLatest(): boolean {
-    deprecateLatest()
-    return this.isV48
+  /**
+   * Royalty hs been paid to the author
+   */
+  get isV55(): boolean {
+    return this.ctx._chain.getEventHash('marketplace.RoyaltyPaid') === '3f9760ce8b8d78244eecfd769b57213a52326480392d53bcbaef555fda8245b2'
   }
 
-  get asLatest(): [bigint, bigint, v48.AccountId32, number, bigint] {
+  /**
+   * Royalty hs been paid to the author
+   */
+  get asV55(): {class: bigint, instance: bigint, author: v55.AccountId32, royalty: number, royaltyAmount: bigint} {
+    assert(this.isV55)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
     deprecateLatest()
-    return this.asV48
+    return this.isV55
+  }
+
+  get asLatest(): {class: bigint, instance: bigint, author: v55.AccountId32, royalty: number, royaltyAmount: bigint} {
+    deprecateLatest()
+    return this.asV55
   }
 }
 
@@ -177,14 +285,29 @@ export class MarketplaceTokenPriceUpdatedEvent {
     return this.ctx._chain.decodeEvent(this.ctx.event)
   }
 
-  get isLatest(): boolean {
-    deprecateLatest()
-    return this.isV48
+  /**
+   * The price for a token was updated
+   */
+  get isV55(): boolean {
+    return this.ctx._chain.getEventHash('marketplace.TokenPriceUpdated') === '36db2c5ce4786a5437e40968bfcb5727b1548bed0fec7d93b771e5f589c2233a'
   }
 
-  get asLatest(): [v48.AccountId32, bigint, bigint, (bigint | undefined)] {
+  /**
+   * The price for a token was updated
+   */
+  get asV55(): {who: v55.AccountId32, class: bigint, instance: bigint, price: (bigint | undefined)} {
+    assert(this.isV55)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
     deprecateLatest()
-    return this.asV48
+    return this.isV55
+  }
+
+  get asLatest(): {who: v55.AccountId32, class: bigint, instance: bigint, price: (bigint | undefined)} {
+    deprecateLatest()
+    return this.asV55
   }
 }
 
@@ -208,14 +331,29 @@ export class MarketplaceTokenSoldEvent {
     return this.ctx._chain.decodeEvent(this.ctx.event)
   }
 
-  get isLatest(): boolean {
-    deprecateLatest()
-    return this.isV48
+  /**
+   * Token was sold to a new owner
+   */
+  get isV55(): boolean {
+    return this.ctx._chain.getEventHash('marketplace.TokenSold') === 'c30b6db0fb1c37eb14b31c9148a9b2c3afdbe6f034f90a5f7160a284a8388c46'
   }
 
-  get asLatest(): [v48.AccountId32, v48.AccountId32, bigint, bigint, bigint] {
+  /**
+   * Token was sold to a new owner
+   */
+  get asV55(): {owner: v55.AccountId32, buyer: v55.AccountId32, class: bigint, instance: bigint, price: bigint} {
+    assert(this.isV55)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
     deprecateLatest()
-    return this.asV48
+    return this.isV55
+  }
+
+  get asLatest(): {owner: v55.AccountId32, buyer: v55.AccountId32, class: bigint, instance: bigint, price: bigint} {
+    deprecateLatest()
+    return this.asV55
   }
 }
 
@@ -239,14 +377,29 @@ export class NftClassCreatedEvent {
     return this.ctx._chain.decodeEvent(this.ctx.event)
   }
 
-  get isLatest(): boolean {
-    deprecateLatest()
-    return this.isV48
+  /**
+   * A class was created \[owner, class_id, class_type\]
+   */
+  get isV62(): boolean {
+    return this.ctx._chain.getEventHash('nft.ClassCreated') === '7adeb3f2ae9b2b9c39201542a741e44b5484fadd52179e412e45be77a794f225'
   }
 
-  get asLatest(): {owner: v48.AccountId32, classId: bigint, classType: v48.ClassType, metadata: Uint8Array} {
+  /**
+   * A class was created \[owner, class_id, class_type\]
+   */
+  get asV62(): {owner: v62.AccountId32, classId: bigint, classType: v62.ClassType} {
+    assert(this.isV62)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
     deprecateLatest()
-    return this.asV48
+    return this.isV62
+  }
+
+  get asLatest(): {owner: v62.AccountId32, classId: bigint, classType: v62.ClassType} {
+    deprecateLatest()
+    return this.asV62
   }
 }
 
@@ -332,14 +485,29 @@ export class NftInstanceMintedEvent {
     return this.ctx._chain.decodeEvent(this.ctx.event)
   }
 
-  get isLatest(): boolean {
-    deprecateLatest()
-    return this.isV48
+  /**
+   * An instance was minted \[owner, class_id, instance_id\]
+   */
+  get isV62(): boolean {
+    return this.ctx._chain.getEventHash('nft.InstanceMinted') === 'cbf0740ecac063f0cc91759153cc494f3d948025e716ccd16da079129444cc1d'
   }
 
-  get asLatest(): {owner: v48.AccountId32, classId: bigint, instanceId: bigint, metadata: Uint8Array} {
+  /**
+   * An instance was minted \[owner, class_id, instance_id\]
+   */
+  get asV62(): {owner: v62.AccountId32, classId: bigint, instanceId: bigint} {
+    assert(this.isV62)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
     deprecateLatest()
-    return this.asV48
+    return this.isV62
+  }
+
+  get asLatest(): {owner: v62.AccountId32, classId: bigint, instanceId: bigint} {
+    deprecateLatest()
+    return this.asV62
   }
 }
 
