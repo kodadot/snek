@@ -6,7 +6,7 @@ export const lastEventQuery = `SELECT
     e.current_owner,
     me.image as image,
     MAX(e.timestamp) as timestamp,
-    MAX(e.meta::bigint) as value
+    MAX(e.meta) as value
 
 FROM event e
     JOIN nft_entity ne on e.nft_id = ne.id
