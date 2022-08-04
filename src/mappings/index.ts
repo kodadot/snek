@@ -273,7 +273,12 @@ export async function handleOfferPlace(context: Context): Promise<void> {
   offer.blockNumber = BigInt(event.blockNumber);
   offer.expiration = event.expiresAt;
   offer.createdAt = event.timestamp;
-  offer.status = OfferStatus.ACTIVE;
+
+  if (context.event.blockNumber <= offer.expiration) {
+    offer.status = OfferStatus.EXPIRED;
+  } else {
+    offer.status = OfferStatus.ACTIVE;
+  }
 
   if (!mayOffer) {
     offer.nft = entity;
@@ -302,7 +307,13 @@ export async function handleOfferAccept(context: Context): Promise<void> {
 
   plsBe(real, entity);
 
-  entity.status = OfferStatus.ACCEPTED;
+  if (context.event.blockNumber <= entity.expiration) {
+    entity.status = OfferStatus.EXPIRED;
+  } else {
+    entity.status = OfferStatus.WITHDRAWN;
+  }
+  logger.success(JSON.stringify(entity, null, 2));
+
   entity.updatedAt = event.timestamp;
 
   logger.success(`[ACCEPT OFFER] for ${id} by ${event.caller} for ${String(event.amount)}`);
@@ -323,7 +334,11 @@ export async function handleOfferWithdraw(context: Context): Promise<void> {
   const entity = ensure<Offer>(await get(context.store, Offer, id));
   plsBe(real, entity);
 
-  entity.status = OfferStatus.WITHDRAWN;
+  if (context.event.blockNumber <= entity.expiration) {
+    entity.status = OfferStatus.EXPIRED;
+  } else {
+    entity.status = OfferStatus.ACCEPTED;
+  }
   entity.updatedAt = event.timestamp;
 
   logger.success(`[WITHDRAW OFFER] for ${id} by ${event.caller} for ${String(entity.price)}`);
