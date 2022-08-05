@@ -12,14 +12,15 @@ processor.setBatchSize(500);
 processor.setBlockRange({ from: 6000 });
 
 // Sandbox
-const archive = 'https://basilisk-test.indexer.gc.subsquid.io/v4/graphql';
-const chain = 'wss://basilisk-kodadot.hydration.cloud';
+// const archive = 'https://basilisk-test.indexer.gc.subsquid.io/v4/graphql';
+// const chain = 'wss://basilisk-kodadot.hydration.cloud';
 
 // Rococo
-// const archive = 'https://basilisk-rococo.play.hydration.cloud/v1/graphql';
-// const chain = 'wss://rpc-01.basilisk-rococo.hydradx.io';
+const archive = 'https://basilisk-rococo.play.hydration.cloud/v1/graphql';
+const chain = 'wss://rpc-01.basilisk-rococo.hydradx.io';
 
-logger.note('Welcome to the Processor!', archive);
+const network = /rococo/.test(archive) ? 'ROCOCO' : 'SANDBOX';
+logger.note('Welcome to the Processor!', network);
 
 processor.setDataSource({
   archive,
