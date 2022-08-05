@@ -70,7 +70,9 @@ export function getDestroyCollectionEvent(ctx: Context): DestroyCollectionEvent 
 
 export function getListTokenEvent(ctx: Context): ListTokenEvent {
   const event = new MarketplaceTokenPriceUpdatedEvent(ctx);
-  const [owner, classId, instanceId, price] = event.asLatest;
+  const {
+    who: owner, class: classId, instance: instanceId, price,
+  } = event.asLatest;
   return {
     collectionId: classId.toString(), caller: addressOf(owner), sn: instanceId.toString(), price,
   };
@@ -78,7 +80,9 @@ export function getListTokenEvent(ctx: Context): ListTokenEvent {
 
 export function getBuyTokenEvent(ctx: Context): BuyTokenEvent {
   const event = new MarketplaceTokenSoldEvent(ctx);
-  const [from, to, classId, instanceId, price] = event.asLatest;
+  const {
+    owner: from, buyer: to, class: classId, instance: instanceId, price,
+  } = event.asLatest;
   return {
     collectionId: classId.toString(), caller: addressOf(to), sn: instanceId.toString(), price: BigInt(price ?? 0), currentOwner: addressOf(from),
   };
@@ -86,7 +90,9 @@ export function getBuyTokenEvent(ctx: Context): BuyTokenEvent {
 
 export function getAddRoyaltyEvent(ctx: Context): AddRoyaltyEvent {
   const event = new MarketplaceRoyaltyAddedEvent(ctx);
-  const [classId, instanceId, recipient, royalty] = event.asLatest;
+  const {
+    class: classId, instance: instanceId, author: recipient, royalty,
+  } = event.asLatest;
   return {
     collectionId: classId.toString(), sn: instanceId.toString(), recipient: addressOf(recipient), royalty,
   };
@@ -94,7 +100,9 @@ export function getAddRoyaltyEvent(ctx: Context): AddRoyaltyEvent {
 
 export function getPayRoyaltyEvent(ctx: Context): PayRoyaltyEvent {
   const event = new MarketplaceRoyaltyPaidEvent(ctx);
-  const [classId, instanceId, recipient, royalty, amount] = event.asLatest;
+  const {
+    class: classId, instance: instanceId, author: recipient, royalty, royaltyAmount: amount,
+  } = event.asLatest;
   return {
     collectionId: classId.toString(), sn: instanceId.toString(), recipient: addressOf(recipient), royalty, amount,
   };
@@ -103,11 +111,13 @@ export function getPayRoyaltyEvent(ctx: Context): PayRoyaltyEvent {
 export function getPlaceOfferEvent(ctx: Context): MakeOfferEvent {
   const event = new MarketplaceOfferPlacedEvent(ctx);
   // if (event.isV39) {
-  //   const [caller, classId, instanceId, amount] = event.asV39;
+  //   const [caller, class: classId, instance: instanceId,, amount] = event.asV39;
   //   return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, expiresAt: BigInt(0), };
   // }
 
-  const [caller, classId, instanceId, amount, blockNumber] = event.asLatest;
+  const {
+    who: caller, class: classId, instance: instanceId, amount, expires: blockNumber,
+  } = event.asLatest;
   return {
     collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, expiresAt: BigInt(blockNumber),
   };
@@ -115,18 +125,20 @@ export function getPlaceOfferEvent(ctx: Context): MakeOfferEvent {
 
 export function getWithdrawOfferEvent(ctx: Context): BaseOfferEvent {
   const event = new MarketplaceOfferWithdrawnEvent(ctx);
-  const [caller, classId, instanceId] = event.asLatest;
+  const { who: caller, class: classId, instance: instanceId } = event.asLatest;
   return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller) };
 }
 
 export function getAcceptOfferEvent(ctx: Context): AcceptOfferEvent {
   const event = new MarketplaceOfferAcceptedEvent(ctx);
   // if (event.isV39) {
-  //   const [caller, classId, instanceId, amount] = event.asV39;
+  //   const [caller, class: classId, instance: instanceId,, amount] = event.asV39;
   //   return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, maker: '' };
   // }
 
-  const [caller, classId, instanceId, amount, maker] = event.asLatest;
+  const {
+    who: caller, class: classId, instance: instanceId, amount, maker,
+  } = event.asLatest;
   return {
     collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, maker: addressOf(maker),
   };
