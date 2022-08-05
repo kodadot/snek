@@ -4,6 +4,7 @@ import * as v43 from './v43'
 import * as v48 from './v48'
 import * as v55 from './v55'
 import * as v62 from './v62'
+import * as v71 from './v71'
 
 export class MarketplaceOfferAcceptedEvent {
   constructor(private ctx: EventContext) {
@@ -392,14 +393,29 @@ export class NftClassCreatedEvent {
     return this.ctx._chain.decodeEvent(this.ctx.event)
   }
 
-  get isLatest(): boolean {
-    deprecateLatest()
-    return this.isV62
+  /**
+   * A class was created
+   */
+  get isV71(): boolean {
+    return this.ctx._chain.getEventHash('nft.ClassCreated') === '964234ae203d3207b740072bc8630eee21c72fe7995f3fc03e62f0bb443cca32'
   }
 
-  get asLatest(): {owner: v62.AccountId32, classId: bigint, classType: v62.ClassType} {
+  /**
+   * A class was created
+   */
+  get asV71(): {owner: v71.AccountId32, classId: bigint, classType: v71.ClassType, metadata: Uint8Array} {
+    assert(this.isV71)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
     deprecateLatest()
-    return this.asV62
+    return this.isV71
+  }
+
+  get asLatest(): {owner: v71.AccountId32, classId: bigint, classType: v71.ClassType, metadata: Uint8Array} {
+    deprecateLatest()
+    return this.asV71
   }
 }
 
@@ -500,14 +516,29 @@ export class NftInstanceMintedEvent {
     return this.ctx._chain.decodeEvent(this.ctx.event)
   }
 
-  get isLatest(): boolean {
-    deprecateLatest()
-    return this.isV62
+  /**
+   * An instance was minted
+   */
+  get isV71(): boolean {
+    return this.ctx._chain.getEventHash('nft.InstanceMinted') === 'eb2d7da6cd031b1051bd4c0ebcbe8cd70b244f54737e21a7f8279dccee6fa006'
   }
 
-  get asLatest(): {owner: v62.AccountId32, classId: bigint, instanceId: bigint} {
+  /**
+   * An instance was minted
+   */
+  get asV71(): {owner: v71.AccountId32, classId: bigint, instanceId: bigint, metadata: Uint8Array} {
+    assert(this.isV71)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
     deprecateLatest()
-    return this.asV62
+    return this.isV71
+  }
+
+  get asLatest(): {owner: v71.AccountId32, classId: bigint, instanceId: bigint, metadata: Uint8Array} {
+    deprecateLatest()
+    return this.asV71
   }
 }
 
