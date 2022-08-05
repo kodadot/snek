@@ -9,14 +9,23 @@ import {
 export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
   const event = new NftClassCreatedEvent(ctx);
   // logger.debug('NftClassCreatedEvent', event.isV39)
-  // if (event.isV39) {
-  //   const { classId, owner, classType } = event.asV39;
-  //   return { id: classId.toString(), caller: addressOf(owner), type: classType.__kind };
-  // }
-  // if (event.isV50) {
-  //   const { classId, owner, metadata, classType } = event.asV50;
-  //   return { id: classId.toString(), caller: addressOf(owner), metadata: metadata.toString(), type: classType.__kind  };
-  // }
+  if (event.isV48) {
+    const {
+      classId, owner, metadata, classType,
+    } = event.asV48;
+    return {
+      id: classId.toString(), caller: addressOf(owner), metadata: metadata.toString(), type: classType.__kind,
+    };
+  }
+
+  if (event.isV62) {
+    const {
+      classId, owner, classType,
+    } = event.asV62;
+    return {
+      id: classId.toString(), caller: addressOf(owner), metadata: undefined, type: classType.__kind,
+    };
+  }
 
   const {
     classId, owner, metadata, classType,
