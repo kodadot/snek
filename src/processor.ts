@@ -4,6 +4,7 @@ import {
 import { Event } from './processable';
 import logger from './mappings/utils/logger';
 import * as mappings from './mappings';
+import * as assetMappings from './mappings/assetRegistry';
 
 const processor = new SubstrateProcessor('snek_nft');
 
@@ -39,5 +40,8 @@ processor.addEventHandler(Event.withdrawOffer, mappings.handleOfferWithdraw);
 processor.addEventHandler(Event.acceptOffer, mappings.handleOfferAccept);
 processor.addEventHandler(Event.addRoyalty, mappings.handleRoyaltyAdd);
 processor.addEventHandler(Event.payRoyalty, mappings.handleRoyaltyPay);
+processor.addEventHandler(Event.registerAsset, assetMappings.handleAssetRegister);
+processor.addEventHandler(Event.updateAsset, assetMappings.handleAssetUpdate);
+processor.addEventHandler(Event.setAssetMetadata, assetMappings.handleAssetMetadata);
 
 processor.run();
