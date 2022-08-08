@@ -1,9 +1,21 @@
+import { BlockHandlerContext } from '@subsquid/substrate-processor';
 import { AssetEntity } from '../../model';
 import { create, get } from '../utils/entity';
 import { unwrap } from '../utils/extract';
 import logger from '../utils/logger';
 import { Context } from '../utils/types';
 import { getAssetMetadataEvent, getAssetRegisterEvent, getAssetUpdateEvent } from './getters';
+
+export async function forceCreateBasiliskAsset(context: BlockHandlerContext): Promise<void> {
+  logger.pending(`[REGISTER BASILISK]: ${context.block.height}`);
+  const asset = create<AssetEntity>(AssetEntity, '0', {
+    name: 'BSX',
+    symbol: 'BSX',
+    decimals: 12,
+  });
+  logger.success(`[ASSET REGISTER]: by ${asset.id} is ${asset.name}`);
+  await context.store.save<AssetEntity>(asset);
+}
 
 export async function handleAssetRegister(context: Context): Promise<void> {
   logger.pending(`[ASSET REGISTER]: ${context.event.blockNumber}`);
