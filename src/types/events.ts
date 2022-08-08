@@ -6,6 +6,144 @@ import * as v55 from './v55'
 import * as v62 from './v62'
 import * as v71 from './v71'
 
+export class AssetRegistryMetadataSetEvent {
+  constructor(private ctx: EventContext) {
+    assert(this.ctx.event.name === 'assetRegistry.MetadataSet')
+  }
+
+  /**
+   * Metadata set for an asset. \[asset_id, symbol, decimals\]
+   */
+  get isV48(): boolean {
+    return this.ctx._chain.getEventHash('assetRegistry.MetadataSet') === 'cad7da1bfdc997e45555af3932618a9edaf0bdcedd143aba212bd33a734a2ff9'
+  }
+
+  /**
+   * Metadata set for an asset. \[asset_id, symbol, decimals\]
+   */
+  get asV48(): [number, Uint8Array, number] {
+    assert(this.isV48)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  /**
+   * Metadata set for an asset.
+   */
+  get isV55(): boolean {
+    return this.ctx._chain.getEventHash('assetRegistry.MetadataSet') === '5733a2ab6f544e91ef9651644e4a8f3fc7257fa3a961ba51dd1f0c862b7a7a0a'
+  }
+
+  /**
+   * Metadata set for an asset.
+   */
+  get asV55(): {assetId: number, symbol: Uint8Array, decimals: number} {
+    assert(this.isV55)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
+    deprecateLatest()
+    return this.isV55
+  }
+
+  get asLatest(): {assetId: number, symbol: Uint8Array, decimals: number} {
+    deprecateLatest()
+    return this.asV55
+  }
+}
+
+export class AssetRegistryRegisteredEvent {
+  constructor(private ctx: EventContext) {
+    assert(this.ctx.event.name === 'assetRegistry.Registered')
+  }
+
+  /**
+   * Asset was registered. \[asset_id, name, type\]
+   */
+  get isV48(): boolean {
+    return this.ctx._chain.getEventHash('assetRegistry.Registered') === '510495ed7e324b369098067e61ab7fafe595b625beb491dd78b4bef707e70be0'
+  }
+
+  /**
+   * Asset was registered. \[asset_id, name, type\]
+   */
+  get asV48(): [number, Uint8Array, v48.AssetType] {
+    assert(this.isV48)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  /**
+   * Asset was registered.
+   */
+  get isV55(): boolean {
+    return this.ctx._chain.getEventHash('assetRegistry.Registered') === '630ef237faec740bf89f2ba6fec4038447ad86f6dfd1d9b5df4dcfdd30d82d78'
+  }
+
+  /**
+   * Asset was registered.
+   */
+  get asV55(): {assetId: number, assetName: Uint8Array, assetType: v55.AssetType} {
+    assert(this.isV55)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
+    deprecateLatest()
+    return this.isV55
+  }
+
+  get asLatest(): {assetId: number, assetName: Uint8Array, assetType: v55.AssetType} {
+    deprecateLatest()
+    return this.asV55
+  }
+}
+
+export class AssetRegistryUpdatedEvent {
+  constructor(private ctx: EventContext) {
+    assert(this.ctx.event.name === 'assetRegistry.Updated')
+  }
+
+  /**
+   * Asset was updated. \[asset_id, name, type\]
+   */
+  get isV48(): boolean {
+    return this.ctx._chain.getEventHash('assetRegistry.Updated') === '510495ed7e324b369098067e61ab7fafe595b625beb491dd78b4bef707e70be0'
+  }
+
+  /**
+   * Asset was updated. \[asset_id, name, type\]
+   */
+  get asV48(): [number, Uint8Array, v48.AssetType] {
+    assert(this.isV48)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  /**
+   * Asset was updated.
+   */
+  get isV55(): boolean {
+    return this.ctx._chain.getEventHash('assetRegistry.Updated') === '630ef237faec740bf89f2ba6fec4038447ad86f6dfd1d9b5df4dcfdd30d82d78'
+  }
+
+  /**
+   * Asset was updated.
+   */
+  get asV55(): {assetId: number, assetName: Uint8Array, assetType: v55.AssetType} {
+    assert(this.isV55)
+    return this.ctx._chain.decodeEvent(this.ctx.event)
+  }
+
+  get isLatest(): boolean {
+    deprecateLatest()
+    return this.isV55
+  }
+
+  get asLatest(): {assetId: number, assetName: Uint8Array, assetType: v55.AssetType} {
+    deprecateLatest()
+    return this.asV55
+  }
+}
+
 export class MarketplaceOfferAcceptedEvent {
   constructor(private ctx: EventContext) {
     assert(this.ctx.event.name === 'marketplace.OfferAccepted')
