@@ -28,18 +28,18 @@ processor.setDataSource({
   chain,
 });
 
-// processor.addEventHandler(Event.createClass, mappings.handleCollectionCreate);
-// processor.addEventHandler(Event.createInstance, mappings.handleTokenCreate);
-// processor.addEventHandler(Event.transfer, mappings.handleTokenTransfer);
-// processor.addEventHandler(Event.burn, mappings.handleTokenBurn);
-// processor.addEventHandler(Event.destroy, mappings.handleCollectionDestroy);
-// processor.addEventHandler(Event.priceUpdate, mappings.handleTokenList);
-// processor.addEventHandler(Event.sold, mappings.handleTokenBuy);
-// processor.addEventHandler(Event.placeOffer, mappings.handleOfferPlace);
-// processor.addEventHandler(Event.withdrawOffer, mappings.handleOfferWithdraw);
-// processor.addEventHandler(Event.acceptOffer, mappings.handleOfferAccept);
-// processor.addEventHandler(Event.addRoyalty, mappings.handleRoyaltyAdd);
-// processor.addEventHandler(Event.payRoyalty, mappings.handleRoyaltyPay);
+processor.addEventHandler(Event.createClass, mappings.handleCollectionCreate);
+processor.addEventHandler(Event.createInstance, mappings.handleTokenCreate);
+processor.addEventHandler(Event.transfer, mappings.handleTokenTransfer);
+processor.addEventHandler(Event.burn, mappings.handleTokenBurn);
+processor.addEventHandler(Event.destroy, mappings.handleCollectionDestroy);
+processor.addEventHandler(Event.priceUpdate, mappings.handleTokenList);
+processor.addEventHandler(Event.sold, mappings.handleTokenBuy);
+processor.addEventHandler(Event.placeOffer, mappings.handleOfferPlace);
+processor.addEventHandler(Event.withdrawOffer, mappings.handleOfferWithdraw);
+processor.addEventHandler(Event.acceptOffer, mappings.handleOfferAccept);
+processor.addEventHandler(Event.addRoyalty, mappings.handleRoyaltyAdd);
+processor.addEventHandler(Event.payRoyalty, mappings.handleRoyaltyPay);
 
 processor.addPreHook({ range: { from: 6000, to: 6000 } }, assetMappings.forceCreateBasiliskAsset);
 processor.addEventHandler(Event.registerAsset, assetMappings.handleAssetRegister);
