@@ -8,7 +8,7 @@ type CollectionEntity @entity {
   issuer: String!
   meta: MetadataEntity
   metadata: String
-  name: String
+  name: String @index
   nfts: [NFTEntity!] @derivedFrom(field: "collection")
   updatedAt: DateTime!
   type: CollectionType!
@@ -20,14 +20,14 @@ type NFTEntity @entity {
   burned: Boolean!
   collection: CollectionEntity!
   createdAt: DateTime!
-  currentOwner: String!
+  currentOwner: String! @index
   events: [Event!] @derivedFrom(field: "nft")
   offers: [Offer!] @derivedFrom(field: "nft")
   hash: String! @index
   issuer: String!
   meta: MetadataEntity
   metadata: String
-  name: String
+  name: String @index
   price: BigInt
   royalty: Int
   recipient: String
