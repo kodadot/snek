@@ -39,6 +39,7 @@ export class CollectionEntity {
   @Column_("text", {nullable: true})
   metadata!: string | undefined | null
 
+  @Index_()
   @Column_("text", {nullable: true})
   name!: string | undefined | null
 
