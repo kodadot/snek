@@ -1,6 +1,6 @@
 export const lastEventQuery = `SELECT
     DISTINCT ne.id as id,
-    ne.name as name,
+    COALESCE (ne.name, me.name, '') as name,
     ne.issuer as issuer,
     ne.metadata as metadata,
     e.current_owner,
