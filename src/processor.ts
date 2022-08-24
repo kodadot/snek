@@ -1,15 +1,18 @@
 import {
   SubstrateProcessor,
 } from '@subsquid/substrate-processor';
+import { FullTypeormDatabase as Database } from '@subsquid/typeorm-store';
 import { Event } from './processable';
 import logger from './mappings/utils/logger';
 import * as mappings from './mappings';
 import * as assetMappings from './mappings/assetRegistry';
+import 'dotenv/config';
 
-const processor = new SubstrateProcessor('snek_nft');
+const database = new Database();
+const processor = new SubstrateProcessor(database);
 
 processor.setTypesBundle('basilisk');
-processor.setBatchSize(500);
+processor.setBatchSize(50);
 processor.setBlockRange({ from: 6000 });
 
 // Sandbox
@@ -17,8 +20,12 @@ processor.setBlockRange({ from: 6000 });
 // const chain = 'wss://basilisk-kodadot.hydration.cloud';
 
 // Rococo
-const archive = 'https://basilisk-rococo.play.hydration.cloud/v1/graphql';
-const chain = 'wss://rpc-01.basilisk-rococo.hydradx.io';
+const archive = process.env.ARCHIVE_URL;
+const chain = process.env.NODE_URL;
+
+if (!archive || !chain) {
+  throw new Error('ARCHIVE_URL and NODE_URL must be set');
+}
 
 const network = /rococo/.test(archive) ? 'ROCOCO' : 'SANDBOX';
 logger.note('Welcome to the Processor!', network);
