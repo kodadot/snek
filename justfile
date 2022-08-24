@@ -32,7 +32,7 @@ ksmVersion: explore
 
 explore:
 	npx squid-substrate-metadata-explorer \
-		--chain wss://basilisk-kodadot.hydration.cloud \
+		--chain $NODE_URL \
 		--archive $ARCHIVE_URL \
 		--out kusamaVersions.json
 

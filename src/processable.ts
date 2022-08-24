@@ -11,6 +11,9 @@ export enum Event {
   acceptOffer = 'marketplace.OfferAccepted',
   payRoyalty = 'marketplace.RoyaltyPaid',
   addRoyalty = 'marketplace.RoyaltyAdded',
+  registerAsset = 'assetRegistry.Registered',
+  updateAsset = 'assetRegistry.Updated',
+  setAssetMetadata = 'assetRegistry.MetadataSet',
 }
 
 export enum Extrinsic {

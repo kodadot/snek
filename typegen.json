@@ -14,7 +14,10 @@
     "marketplace.RoyaltyPaid",
     "marketplace.OfferPlaced",
     "marketplace.OfferWithdrawn",
-    "marketplace.OfferAccepted"
+    "marketplace.OfferAccepted",
+    "assetRegistry.Registered",
+    "assetRegistry.Updated",
+    "assetRegistry.MetadataSet"
   ],
   "calls": []
 }
