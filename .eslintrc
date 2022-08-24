@@ -19,7 +19,7 @@
     "no-console": "off",
     // Not a big fan of constant refactoring that will happen after adding/removing 'this' from some random method
     "class-methods-use-this": "off",
-    "id-length": [ "error", { "exceptions": [ "_", /* placeholder */ "a", /* sort */ "b", /* sort */ "i" /* loop */ ] } ],
+    "id-length": [ "error", { "exceptions": [ "_", /* placeholder */ "a", /* sort */ "b", /* sort */ "i" /* loop */ , "e"] } ],
     // Setting fields directly seems fine for entities, makes the implementation simple
     "no-param-reassign": "off",
     // airbnb disallows for-of async iteration which is very questionable
@@ -33,7 +33,7 @@
     // makes a mess
     "@typescript-eslint/no-use-before-define": "off",
     "semi": "off",
-    "max-len": "off"
+    "max-len": "off",
   },
   "ignorePatterns": [
     "src/model/generated",
