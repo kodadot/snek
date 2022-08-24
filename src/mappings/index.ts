@@ -11,6 +11,7 @@ import {
   OfferStatus,
 } from '../model';
 import { CollectionType } from '../model/generated/_collectionType';
+import { Extrinsic } from '../processable'
 import { plsBe, real, remintable } from './utils/consolidator';
 import { create, get, getOrCreate } from './utils/entity';
 import { unwrap } from './utils/extract';
@@ -157,10 +158,10 @@ export async function handleTokenCreate(context: Context): Promise<void> {
 }
 
 export async function handleTokenTransfer(context: Context): Promise<void> {
-  // if (context.extrinsic && [Extrinsic.acceptOffer, Extrinsic.buy].includes(context.extrinsic?.name as Extrinsic)) {
-  //   logger.info(`[SEND] SKIP: ${context.block.height}, because of ${context.extrinsic?.name}`);
-  //   return;
-  // }
+  if (context.event.call && [Extrinsic.acceptOffer, Extrinsic.buy].includes(context.event.call?.name as Extrinsic)) {
+    logger.info(`[SEND] SKIP: ${context.block.height}, because of ${context.event.call?.name}`);
+    return;
+  }
 
   logger.pending(`[SEND]: ${context.block.height}`);
   const event = unwrap(context, getTransferTokenEvent);
