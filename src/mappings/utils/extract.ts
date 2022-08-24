@@ -11,10 +11,10 @@ import {
 //   return { caller, blockNumber, timestamp };
 // }
 
-function toBaseEvent(event: Context): BaseCall {
-  const caller = addressOf(event.event.extrinsic?.signature?.address);
-  const blockNumber = event.block.height.toString();
-  const timestamp = new Date(event.block.timestamp);
+function toBaseEvent(ctx: Context): BaseCall {
+  const caller = addressOf(ctx.event.extrinsic?.signature?.address);
+  const blockNumber = ctx.block.height.toString();
+  const timestamp = new Date(ctx.block.timestamp);
 
   return { caller, blockNumber, timestamp };
 }
