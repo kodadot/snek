@@ -27,6 +27,7 @@ export class NFTEntity {
   @Column_("timestamp with time zone", {nullable: false})
   createdAt!: Date
 
+  @Index_()
   @Column_("text", {nullable: false})
   currentOwner!: string
 
@@ -50,6 +51,7 @@ export class NFTEntity {
   @Column_("text", {nullable: true})
   metadata!: string | undefined | null
 
+  @Index_()
   @Column_("text", {nullable: true})
   name!: string | undefined | null
 
