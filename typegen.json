@@ -1,7 +1,6 @@
 {
   "outDir": "src/types",
-  "chainVersions": "kusamaVersions.json",
-  "typesBundle": "kusama",
+  "specVersions": "kusamaVersions.jsonl",
   "events": [
     "nft.ClassCreated",
     "nft.InstanceMinted",
