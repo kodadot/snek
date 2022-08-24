@@ -11,7 +11,7 @@ import {
   OfferStatus,
 } from '../model';
 import { CollectionType } from '../model/generated/_collectionType';
-import { Extrinsic } from '../processable'
+import { Extrinsic } from '../processable';
 import { plsBe, real, remintable } from './utils/consolidator';
 import { create, get, getOrCreate } from './utils/entity';
 import { unwrap } from './utils/extract';
@@ -44,7 +44,6 @@ import {
   Interaction, Optional, tokenIdOf, TokenMetadata,
   Store,
 } from './utils/types';
-
 
 async function handleMetadata(
   id: string,

@@ -8,4 +8,5 @@ export const logError = (e: Error | unknown, cb: ErrorCallback) => {
   }
 };
 
+// eslint-disable-next-line import/no-default-export
 export default singale;

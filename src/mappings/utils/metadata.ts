@@ -57,10 +57,12 @@ export const fetchMimeType = async (ipfsLink?: string, sanitizer: SanitizerFunc 
   try {
     const { headers } = await api.head(assetUrl);
     return headers['content-type'];
-  } catch (e: any) {
+  } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     logger.warn(`[MIME TYPE] Unable to access type of ${assetUrl}\n\nReason ${e.message}`);
     return undefined;
   }
 };
 
+// eslint-disable-next-line import/no-default-export
 export default api;
