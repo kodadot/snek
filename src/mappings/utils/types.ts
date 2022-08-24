@@ -1,5 +1,6 @@
 import { EventHandlerContext } from '@subsquid/substrate-processor';
 import { nanoid } from 'nanoid';
+import { EntityManager } from 'typeorm';
 import { Interaction } from '../../model/generated/_interaction';
 import { Attribute } from '../../model/generated/_attribute';
 import { CollectionType } from '../../model/generated/_collectionType';
@@ -40,7 +41,8 @@ export function attributeFrom(attribute: MetadataAttribute): Attribute {
   });
 }
 
-export type Context = EventHandlerContext;
+export type Store = EntityManager;
+export type Context = EventHandlerContext<Store>;
 
 export type Optional<T> = T | null;
 
