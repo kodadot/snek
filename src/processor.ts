@@ -16,12 +16,12 @@ processor.setBatchSize(50);
 processor.setBlockRange({ from: 6000 });
 
 // Sandbox
-// const archive = 'https://basilisk-test.indexer.gc.subsquid.io/v4/graphql';
-// const chain = 'wss://basilisk-kodadot.hydration.cloud';
+const ARCHIVE_URL = 'https://basilisk-rococo-firesquid.play.hydration.cloud/graphql';
+const NODE_URL = 'wss://rpc-01.basilisk-rococo.hydradx.io';
 
 // Rococo
-const archive = process.env.ARCHIVE_URL;
-const chain = process.env.NODE_URL;
+const archive = process.env.ARCHIVE_URL || ARCHIVE_URL;
+const chain = process.env.NODE_URL || NODE_URL;
 
 if (!archive || !chain) {
   throw new Error('ARCHIVE_URL and NODE_URL must be set');
