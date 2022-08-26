@@ -17,15 +17,15 @@ export enum Event {
 }
 
 export enum Extrinsic {
-  createClass = 'NFT.createClass',
+  createClass = 'NFT.create_class',
   mint = 'NFT.mint',
   transfer = 'NFT.transfer',
   burn = 'NFT.burn',
-  destroyClass = 'NFT.destroyClass',
-  acceptOffer = 'Marketplace.acceptOffer',
-  addRoyalty = 'Marketplace.addRoyalty',
+  destroyClass = 'NFT.destroy_class',
+  acceptOffer = 'Marketplace.accept_offer',
+  addRoyalty = 'Marketplace.add_royalty',
   buy = 'Marketplace.buy',
-  makeOffer = 'Marketplace.makeOffer',
-  setPrice = 'Marketplace.setPrice',
-  withdrawOffer = 'Marketplace.withdrawOffer',
+  makeOffer = 'Marketplace.make_offer',
+  setPrice = 'Marketplace.set_price',
+  withdrawOffer = 'Marketplace.withdraw_offer',
 }
