@@ -11,8 +11,6 @@ export interface AssetType_PoolShare {
   value: [number, number]
 }
 
-export type AccountId32 = Uint8Array
-
 export type ClassType = ClassType_Marketplace | ClassType_LiquidityMining | ClassType_Redeemable | ClassType_Auction | ClassType_HydraHeads
 
 export interface ClassType_Marketplace {

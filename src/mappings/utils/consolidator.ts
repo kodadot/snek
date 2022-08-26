@@ -7,8 +7,8 @@ export function real<T>(entity: T | undefined): boolean {
   return !!entity;
 }
 
-export function burned({ burned }: Entity): boolean {
-  return burned;
+export function burned({ burned: isBurned }: Entity): boolean {
+  return isBurned;
 }
 
 export function created(entity: Entity): boolean {

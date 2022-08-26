@@ -10,5 +10,3 @@ export interface AssetType_PoolShare {
   __kind: 'PoolShare'
   value: [number, number]
 }
-
-export type AccountId32 = Uint8Array

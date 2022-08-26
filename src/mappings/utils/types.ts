@@ -1,5 +1,6 @@
 import { EventHandlerContext } from '@subsquid/substrate-processor';
 import { nanoid } from 'nanoid';
+import { EntityManager } from 'typeorm';
 import { Interaction } from '../../model/generated/_interaction';
 import { Attribute } from '../../model/generated/_attribute';
 import { CollectionType } from '../../model/generated/_collectionType';
@@ -40,7 +41,8 @@ export function attributeFrom(attribute: MetadataAttribute): Attribute {
   });
 }
 
-export type Context = EventHandlerContext;
+export type Store = EntityManager;
+export type Context = EventHandlerContext<Store>;
 
 export type Optional<T> = T | null;
 
@@ -138,21 +140,21 @@ export type SomethingWithOptionalMeta = {
 export type UnwrapFunc<T> = (ctx: Context) => T;
 export type SanitizerFunc = (url: string) => string;
 
-export function ensure<T>(value: any): T {
+export function ensure<T>(value: unknown): T {
   return value as T;
 }
 
 export const createTokenId = (collection: string, id: string): string => `${collection}-${id}`;
 
-export const eventId = (id: string, event: Interaction | OfferInteraction) => `${id}-${event}-${nanoid()}`;
+export const eventId = (id: string, event: Interaction | OfferInteraction): string => `${id}-${event}-${nanoid()}`;
 
-export const createOfferId = (id: string, caller: string) => `${id}-${caller}`;
+export const createOfferId = (id: string, caller: string): string => `${id}-${caller}`;
 
 const offerIdFrom = (collectionId: string, id: string, caller: string) => createOfferId(createTokenId(collectionId, id), caller);
 
-export const offerIdOf = (call: CallWith<BaseOfferEvent>) => offerIdFrom(call.collectionId, call.sn, call.caller);
+export const offerIdOf = (call: CallWith<BaseOfferEvent>): string => offerIdFrom(call.collectionId, call.sn, call.caller);
 
-export const tokenIdOf = (base: BaseTokenEvent) => createTokenId(base.collectionId, base.sn);
+export const tokenIdOf = (base: BaseTokenEvent): string => createTokenId(base.collectionId, base.sn);
 
 export type TokenMetadata = {
   name?: string
