@@ -10,6 +10,9 @@ export function isEmpty(obj: Record<string, unknown>): boolean {
 
 export function addressOf(address: Uint8Array | string): string {
   const value = typeof address === 'string' ? decodeHex(address) : address;
+  if (!value) {
+    return '';
+  }
   return ss58.codec('basilisk').encode(value);
 }
 
