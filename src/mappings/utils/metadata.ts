@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import { ensure, SanitizerFunc, SomethingWithMeta } from './types';
-import logger from './logger';
+import logger, { logError } from './logger';
 
 export const BASE_URL = 'https://kodadot.mypinata.cloud/';
 
@@ -58,8 +58,7 @@ export const fetchMimeType = async (ipfsLink?: string, sanitizer: SanitizerFunc 
     const { headers } = await api.head(assetUrl);
     return headers['content-type'];
   } catch (e) {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    logger.warn(`[MIME TYPE] Unable to access type of ${assetUrl}\n\nReason ${e.message}`);
+    logError(e, (err) => logger.warn(`[MIME TYPE] Unable to access type of ${assetUrl}\n\nReason ${err.message}`));
     return undefined;
   }
 };
