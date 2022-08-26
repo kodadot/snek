@@ -2,11 +2,11 @@ import {
   SubstrateProcessor,
 } from '@subsquid/substrate-processor';
 import { FullTypeormDatabase as Database } from '@subsquid/typeorm-store';
-import { Event } from './processable';
-import logger from './mappings/utils/logger';
+import 'dotenv/config';
 import * as mappings from './mappings';
 import * as assetMappings from './mappings/assetRegistry';
-import 'dotenv/config';
+import logger from './mappings/utils/logger';
+import { Event } from './processable';
 
 const database = new Database();
 const processor = new SubstrateProcessor(database);
@@ -54,3 +54,9 @@ processor.addEventHandler(Event.updateAsset, assetMappings.handleAssetUpdate);
 processor.addEventHandler(Event.setAssetMetadata, assetMappings.handleAssetMetadata);
 
 processor.run();
+
+// export const setup: DataSelection<EventDataRequest> = {
+//   data: {
+//     event: true,
+//   },
+// }
