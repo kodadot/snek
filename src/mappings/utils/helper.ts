@@ -19,3 +19,7 @@ export function addressOf(address: Uint8Array | string): string {
 export function metadataOf({ metadata }: SomethingWithOptionalMeta): string {
   return metadata ?? '';
 }
+
+export function oneOf<T>(one: T, two: T): T {
+  return one || two;
+}
