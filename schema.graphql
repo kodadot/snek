@@ -177,7 +177,7 @@ type Series @entity {
 #   volume: BigInt
 # }
 
-# type CacheStatus @entity {
-#   id: ID!
-#   lastBlockTimestamp: DateTime!
-# }
+type CacheStatus @entity {
+  id: ID!
+  lastBlockTimestamp: DateTime!
+}
