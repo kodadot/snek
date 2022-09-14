@@ -43,11 +43,11 @@ export class SeriesResolver {
 	async seriesInsightTable(
 		@Arg('limit', { nullable: true, defaultValue: 10 }) limit: number,
 		@Arg('offset', { nullable: true, defaultValue: 0 }) offset: number,
-		@Arg('orderBy', { nullable: true, defaultValue: 'total' }) orderBy: OrderBy,
-		@Arg('orderDirection', { nullable: true, defaultValue: 'DESC' }) orderDirection: OrderDirection,
-		@Arg('dateRange', { nullable: false, defaultValue: '7 DAY' }) dateRange: DateRange
+		@Arg('orderBy', { nullable: true, defaultValue: OrderBy.total }) orderBy: OrderBy,
+		@Arg('orderDirection', { nullable: true, defaultValue: OrderDirection.DESC }) orderDirection: OrderDirection,
+		@Arg('dateRange', { nullable: false, defaultValue: DateRange.WEEK }) dateRange: DateRange
 	): Promise<SeriesEntity[]> {
-		const computedDateRange = dateRange === 'ALL DAY' ? '' : `AND e.timestamp >= NOW() - INTERVAL '${dateRange}'`
+		const computedDateRange = dateRange === DateRange.ALL_DAY ? '' : `AND e.timestamp >= NOW() - INTERVAL '${dateRange}'`
 		const query = `SELECT
         ce.id, ce.name, ce.meta_id as metadata, me.image, ce.issuer, 
         COUNT(distinct ne.meta_id) as unique, 
@@ -73,9 +73,12 @@ export class SeriesResolver {
 	}
 
 	@Query(() => [LastEventEntity])
-	async seriesInsightBuyHistory(@Arg('ids', () => [String!], { nullable: false }) ids: CollectionIDs, @Arg('dateRange', { nullable: false, defaultValue: '7 DAY' }) dateRange: DateRange) {
+	async seriesInsightBuyHistory(
+        @Arg('ids', () => [String!], { nullable: false }) ids: CollectionIDs, 
+        @Arg('dateRange', { nullable: false, defaultValue: DateRange.WEEK }) dateRange: DateRange
+    ) {
 		const idList = toSqlInParams(ids)
-		const computedDateRange = dateRange === 'ALL DAY' ? '' : `AND e.timestamp >= NOW() - INTERVAL '${dateRange}'`
+		const computedDateRange = dateRange === DateRange.ALL_DAY ? '' : `AND e.timestamp >= NOW() - INTERVAL '${dateRange}'`
 		const manager = await this.tx()
 		const result = await manager.getRepository(NFTEntity).query(collectionEventHistory(idList, computedDateRange))
 		return result
