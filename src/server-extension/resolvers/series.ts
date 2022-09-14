@@ -41,8 +41,8 @@ export class SeriesResolver {
 	// TODO: calculate score sold * (unique / total)
 	@Query(() => [SeriesEntity])
 	async seriesInsightTable(
-		@Arg('limit', { nullable: true, defaultValue: null }) limit: number,
-		@Arg('offset', { nullable: true, defaultValue: null }) offset: string,
+		@Arg('limit', { nullable: true, defaultValue: 10 }) limit: number,
+		@Arg('offset', { nullable: true, defaultValue: 0 }) offset: number,
 		@Arg('orderBy', { nullable: true, defaultValue: 'total' }) orderBy: OrderBy,
 		@Arg('orderDirection', { nullable: true, defaultValue: 'DESC' }) orderDirection: OrderDirection,
 		@Arg('dateRange', { nullable: false, defaultValue: '7 DAY' }) dateRange: DateRange
