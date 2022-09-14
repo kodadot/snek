@@ -1,8 +1,8 @@
-import { Arg, Query, Resolver, FieldResolver, Root } from 'type-graphql'
+import { Arg, Query, Resolver } from 'type-graphql'
 import type { EntityManager } from 'typeorm'
-import { NFTEntity, Interaction } from '../../model/generated'
+import { NFTEntity } from '../../model/generated'
 import { SeriesEntity } from '../model/series.model'
-import { HistoryEntity } from '../model/event.model'
+import { LastEventEntity } from '../model/event.model'
 import { collectionEventHistory } from '../query/event'
 import { makeQuery, toSqlInParams } from '../utils'
 
@@ -72,7 +72,7 @@ export class SeriesResolver {
 		return result
 	}
 
-	@Query(() => [HistoryEntity])
+	@Query(() => [LastEventEntity])
 	async seriesInsightBuyHistory(@Arg('ids', () => [String!], { nullable: false }) ids: CollectionIDs, @Arg('dateRange', { nullable: false, defaultValue: '7 DAY' }) dateRange: DateRange) {
 		const idList = toSqlInParams(ids)
 		const computedDateRange = dateRange === 'ALL DAY' ? '' : `AND e.timestamp >= NOW() - INTERVAL '${dateRange}'`
