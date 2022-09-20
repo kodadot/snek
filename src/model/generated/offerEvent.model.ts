@@ -28,7 +28,7 @@ export class OfferEvent {
   meta!: string
 
   @Index_()
-  @ManyToOne_(() => Offer, {nullable: false})
+  @ManyToOne_(() => Offer, {nullable: true})
   offer!: Offer
 
   @Column_("timestamp with time zone", {nullable: false})
