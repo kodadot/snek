@@ -1,8 +1,11 @@
 import assert from 'assert'
 import {Chain, ChainContext, EventContext, Event, Result} from './support'
-import * as v42 from './v42'
+import * as v16 from './v16'
+import * as v25 from './v25'
+import * as v38 from './v38'
+import * as v43 from './v43'
 import * as v55 from './v55'
-import * as v62 from './v62'
+import * as v65 from './v65'
 import * as v71 from './v71'
 
 export class AssetRegistryMetadataSetEvent {
@@ -19,17 +22,17 @@ export class AssetRegistryMetadataSetEvent {
   }
 
   /**
-   * Metadata set for an asset. \[asset_id, symbol, decimals\]
+   *  Metadata set for an asset. \[asset_id, symbol, decimals\]
    */
-  get isV42(): boolean {
+  get isV16(): boolean {
     return this._chain.getEventHash('AssetRegistry.MetadataSet') === 'cad7da1bfdc997e45555af3932618a9edaf0bdcedd143aba212bd33a734a2ff9'
   }
 
   /**
-   * Metadata set for an asset. \[asset_id, symbol, decimals\]
+   *  Metadata set for an asset. \[asset_id, symbol, decimals\]
    */
-  get asV42(): [number, Uint8Array, number] {
-    assert(this.isV42)
+  get asV16(): [number, Uint8Array, number] {
+    assert(this.isV16)
     return this._chain.decodeEvent(this.event)
   }
 
@@ -63,17 +66,32 @@ export class AssetRegistryRegisteredEvent {
   }
 
   /**
+   *  Asset was registered. \[asset_id, name, type\]
+   */
+  get isV16(): boolean {
+    return this._chain.getEventHash('AssetRegistry.Registered') === 'dc8e055a7e1702e0b8c894848d6e7751ce3ecf5d547d7fbdede900d335880a32'
+  }
+
+  /**
+   *  Asset was registered. \[asset_id, name, type\]
+   */
+  get asV16(): [number, Uint8Array, v16.AssetType] {
+    assert(this.isV16)
+    return this._chain.decodeEvent(this.event)
+  }
+
+  /**
    * Asset was registered. \[asset_id, name, type\]
    */
-  get isV42(): boolean {
+  get isV25(): boolean {
     return this._chain.getEventHash('AssetRegistry.Registered') === '510495ed7e324b369098067e61ab7fafe595b625beb491dd78b4bef707e70be0'
   }
 
   /**
    * Asset was registered. \[asset_id, name, type\]
    */
-  get asV42(): [number, Uint8Array, v42.AssetType] {
-    assert(this.isV42)
+  get asV25(): [number, Uint8Array, v25.AssetType] {
+    assert(this.isV25)
     return this._chain.decodeEvent(this.event)
   }
 
@@ -107,17 +125,32 @@ export class AssetRegistryUpdatedEvent {
   }
 
   /**
+   *  Asset was updated. \[asset_id, name, type\]
+   */
+  get isV16(): boolean {
+    return this._chain.getEventHash('AssetRegistry.Updated') === 'dc8e055a7e1702e0b8c894848d6e7751ce3ecf5d547d7fbdede900d335880a32'
+  }
+
+  /**
+   *  Asset was updated. \[asset_id, name, type\]
+   */
+  get asV16(): [number, Uint8Array, v16.AssetType] {
+    assert(this.isV16)
+    return this._chain.decodeEvent(this.event)
+  }
+
+  /**
    * Asset was updated. \[asset_id, name, type\]
    */
-  get isV42(): boolean {
+  get isV25(): boolean {
     return this._chain.getEventHash('AssetRegistry.Updated') === '510495ed7e324b369098067e61ab7fafe595b625beb491dd78b4bef707e70be0'
   }
 
   /**
    * Asset was updated. \[asset_id, name, type\]
    */
-  get asV42(): [number, Uint8Array, v42.AssetType] {
-    assert(this.isV42)
+  get asV25(): [number, Uint8Array, v25.AssetType] {
+    assert(this.isV25)
     return this._chain.decodeEvent(this.event)
   }
 
@@ -153,15 +186,15 @@ export class MarketplaceOfferAcceptedEvent {
   /**
    * Offer was accepted \[sender, class_id, instance_id\]
    */
-  get isV42(): boolean {
+  get isV43(): boolean {
     return this._chain.getEventHash('Marketplace.OfferAccepted') === '426271b0ff71255c125e9a4ea897d86d39682c8454bbff4c6c9a8d50e0d966a4'
   }
 
   /**
    * Offer was accepted \[sender, class_id, instance_id\]
    */
-  get asV42(): [Uint8Array, bigint, bigint, bigint] {
-    assert(this.isV42)
+  get asV43(): [Uint8Array, bigint, bigint, bigint] {
+    assert(this.isV43)
     return this._chain.decodeEvent(this.event)
   }
 
@@ -183,15 +216,15 @@ export class MarketplaceOfferAcceptedEvent {
   /**
    * Offer was accepted
    */
-  get isV62(): boolean {
+  get isV65(): boolean {
     return this._chain.getEventHash('Marketplace.OfferAccepted') === 'f0c64969aa0bb38598d60ee40e1c6befae4abc5b1835302ebc1b957c05eb0c42'
   }
 
   /**
    * Offer was accepted
    */
-  get asV62(): {who: Uint8Array, class: bigint, instance: bigint, amount: bigint, maker: Uint8Array} {
-    assert(this.isV62)
+  get asV65(): {who: Uint8Array, class: bigint, instance: bigint, amount: bigint, maker: Uint8Array} {
+    assert(this.isV65)
     return this._chain.decodeEvent(this.event)
   }
 }
@@ -212,15 +245,15 @@ export class MarketplaceOfferPlacedEvent {
   /**
    * Offer was placed on a token \[offerer, class_id, instance_id, price, expires\]
    */
-  get isV42(): boolean {
+  get isV43(): boolean {
     return this._chain.getEventHash('Marketplace.OfferPlaced') === '0c0020b8a59f4c44bfafff6516e075c67efa07d49d2257040c27bd47de251831'
   }
 
   /**
    * Offer was placed on a token \[offerer, class_id, instance_id, price, expires\]
    */
-  get asV42(): [Uint8Array, bigint, bigint, bigint, number] {
-    assert(this.isV42)
+  get asV43(): [Uint8Array, bigint, bigint, bigint, number] {
+    assert(this.isV43)
     return this._chain.decodeEvent(this.event)
   }
 
@@ -256,15 +289,15 @@ export class MarketplaceOfferWithdrawnEvent {
   /**
    * Offer was withdrawn \[sender, class_id, instance_id\]
    */
-  get isV42(): boolean {
+  get isV43(): boolean {
     return this._chain.getEventHash('Marketplace.OfferWithdrawn') === '0f263bfdefa394edfb38d20d33662423a2e0902235b599f9b2b0292f157f0902'
   }
 
   /**
    * Offer was withdrawn \[sender, class_id, instance_id\]
    */
-  get asV42(): [Uint8Array, bigint, bigint] {
-    assert(this.isV42)
+  get asV43(): [Uint8Array, bigint, bigint] {
+    assert(this.isV43)
     return this._chain.decodeEvent(this.event)
   }
 
@@ -300,15 +333,15 @@ export class MarketplaceRoyaltyAddedEvent {
   /**
    * Marketplace data has been added \[class_type, sender, class_id, instance_id\]
    */
-  get isV42(): boolean {
+  get isV43(): boolean {
     return this._chain.getEventHash('Marketplace.RoyaltyAdded') === 'b25c5b1351882b8049f26b3ffe8318b0c04beabe7f3b1174b983af490abf68f7'
   }
 
   /**
    * Marketplace data has been added \[class_type, sender, class_id, instance_id\]
    */
-  get asV42(): [bigint, bigint, Uint8Array, number] {
-    assert(this.isV42)
+  get asV43(): [bigint, bigint, Uint8Array, number] {
+    assert(this.isV43)
     return this._chain.decodeEvent(this.event)
   }
 
@@ -344,15 +377,15 @@ export class MarketplaceRoyaltyPaidEvent {
   /**
    * Royalty hs been paid to the author \[class_id, instance_id, author, royalty, royalty_amount\]
    */
-  get isV42(): boolean {
+  get isV43(): boolean {
     return this._chain.getEventHash('Marketplace.RoyaltyPaid') === '82293205d464a489606def2289dde2ad7444a78cb3ae19f599a2160d68a0b720'
   }
 
   /**
    * Royalty hs been paid to the author \[class_id, instance_id, author, royalty, royalty_amount\]
    */
-  get asV42(): [bigint, bigint, Uint8Array, number, bigint] {
-    assert(this.isV42)
+  get asV43(): [bigint, bigint, Uint8Array, number, bigint] {
+    assert(this.isV43)
     return this._chain.decodeEvent(this.event)
   }
 
@@ -388,15 +421,15 @@ export class MarketplaceTokenPriceUpdatedEvent {
   /**
    * The price for a token was updated \[owner, class_id, instance_id, price\]
    */
-  get isV42(): boolean {
+  get isV43(): boolean {
     return this._chain.getEventHash('Marketplace.TokenPriceUpdated') === '4100700286e3b39a636551e9e9872940d3c125d1b8729ac058742455e638fbe2'
   }
 
   /**
    * The price for a token was updated \[owner, class_id, instance_id, price\]
    */
-  get asV42(): [Uint8Array, bigint, bigint, (bigint | undefined)] {
-    assert(this.isV42)
+  get asV43(): [Uint8Array, bigint, bigint, (bigint | undefined)] {
+    assert(this.isV43)
     return this._chain.decodeEvent(this.event)
   }
 
@@ -432,15 +465,15 @@ export class MarketplaceTokenSoldEvent {
   /**
    * Token was sold to a new owner \[owner, buyer, class_id, instance_id, price\]
    */
-  get isV42(): boolean {
+  get isV43(): boolean {
     return this._chain.getEventHash('Marketplace.TokenSold') === '4a3bc2182538af0cb911036daeda76c419c2f42491eda8f66b9ca681035507c0'
   }
 
   /**
    * Token was sold to a new owner \[owner, buyer, class_id, instance_id, price\]
    */
-  get asV42(): [Uint8Array, Uint8Array, bigint, bigint, bigint] {
-    assert(this.isV42)
+  get asV43(): [Uint8Array, Uint8Array, bigint, bigint, bigint] {
+    assert(this.isV43)
     return this._chain.decodeEvent(this.event)
   }
 
@@ -476,30 +509,45 @@ export class NftClassCreatedEvent {
   /**
    * A class was created \[owner, class_id, class_type\]
    */
-  get isV42(): boolean {
-    return this._chain.getEventHash('NFT.ClassCreated') === '964234ae203d3207b740072bc8630eee21c72fe7995f3fc03e62f0bb443cca32'
-  }
-
-  /**
-   * A class was created \[owner, class_id, class_type\]
-   */
-  get asV42(): {owner: Uint8Array, classId: bigint, classType: v42.ClassType, metadata: Uint8Array} {
-    assert(this.isV42)
-    return this._chain.decodeEvent(this.event)
-  }
-
-  /**
-   * A class was created \[owner, class_id, class_type\]
-   */
-  get isV62(): boolean {
+  get isV38(): boolean {
     return this._chain.getEventHash('NFT.ClassCreated') === '7adeb3f2ae9b2b9c39201542a741e44b5484fadd52179e412e45be77a794f225'
   }
 
   /**
    * A class was created \[owner, class_id, class_type\]
    */
-  get asV62(): {owner: Uint8Array, classId: bigint, classType: v62.ClassType} {
-    assert(this.isV62)
+  get asV38(): {owner: Uint8Array, classId: bigint, classType: v38.ClassType} {
+    assert(this.isV38)
+    return this._chain.decodeEvent(this.event)
+  }
+
+  /**
+   * A class was created \[owner, class_id, class_type\]
+   */
+  get isV43(): boolean {
+    return this._chain.getEventHash('NFT.ClassCreated') === '964234ae203d3207b740072bc8630eee21c72fe7995f3fc03e62f0bb443cca32'
+  }
+
+  /**
+   * A class was created \[owner, class_id, class_type\]
+   */
+  get asV43(): {owner: Uint8Array, classId: bigint, classType: v43.ClassType, metadata: Uint8Array} {
+    assert(this.isV43)
+    return this._chain.decodeEvent(this.event)
+  }
+
+  /**
+   * A class was created \[owner, class_id, class_type\]
+   */
+  get isV65(): boolean {
+    return this._chain.getEventHash('NFT.ClassCreated') === '7adeb3f2ae9b2b9c39201542a741e44b5484fadd52179e412e45be77a794f225'
+  }
+
+  /**
+   * A class was created \[owner, class_id, class_type\]
+   */
+  get asV65(): {owner: Uint8Array, classId: bigint, classType: v65.ClassType} {
+    assert(this.isV65)
     return this._chain.decodeEvent(this.event)
   }
 
@@ -535,15 +583,15 @@ export class NftClassDestroyedEvent {
   /**
    * A class was destroyed \[class_id\]
    */
-  get isV42(): boolean {
+  get isV38(): boolean {
     return this._chain.getEventHash('NFT.ClassDestroyed') === '51309f98603f5eeb2eb07f9373848f1874c4bfaea4a29b0e0d21dd93b98da94a'
   }
 
   /**
    * A class was destroyed \[class_id\]
    */
-  get asV42(): {owner: Uint8Array, classId: bigint} {
-    assert(this.isV42)
+  get asV38(): {owner: Uint8Array, classId: bigint} {
+    assert(this.isV38)
     return this._chain.decodeEvent(this.event)
   }
 }
@@ -564,15 +612,15 @@ export class NftInstanceBurnedEvent {
   /**
    * An instance was burned \[sender, class_id, instance_id\]
    */
-  get isV42(): boolean {
+  get isV38(): boolean {
     return this._chain.getEventHash('NFT.InstanceBurned') === 'cbf0740ecac063f0cc91759153cc494f3d948025e716ccd16da079129444cc1d'
   }
 
   /**
    * An instance was burned \[sender, class_id, instance_id\]
    */
-  get asV42(): {owner: Uint8Array, classId: bigint, instanceId: bigint} {
-    assert(this.isV42)
+  get asV38(): {owner: Uint8Array, classId: bigint, instanceId: bigint} {
+    assert(this.isV38)
     return this._chain.decodeEvent(this.event)
   }
 }
@@ -593,30 +641,45 @@ export class NftInstanceMintedEvent {
   /**
    * An instance was minted \[owner, class_id, instance_id\]
    */
-  get isV42(): boolean {
-    return this._chain.getEventHash('NFT.InstanceMinted') === 'eb2d7da6cd031b1051bd4c0ebcbe8cd70b244f54737e21a7f8279dccee6fa006'
-  }
-
-  /**
-   * An instance was minted \[owner, class_id, instance_id\]
-   */
-  get asV42(): {owner: Uint8Array, classId: bigint, instanceId: bigint, metadata: Uint8Array} {
-    assert(this.isV42)
-    return this._chain.decodeEvent(this.event)
-  }
-
-  /**
-   * An instance was minted \[owner, class_id, instance_id\]
-   */
-  get isV62(): boolean {
+  get isV38(): boolean {
     return this._chain.getEventHash('NFT.InstanceMinted') === 'cbf0740ecac063f0cc91759153cc494f3d948025e716ccd16da079129444cc1d'
   }
 
   /**
    * An instance was minted \[owner, class_id, instance_id\]
    */
-  get asV62(): {owner: Uint8Array, classId: bigint, instanceId: bigint} {
-    assert(this.isV62)
+  get asV38(): {owner: Uint8Array, classId: bigint, instanceId: bigint} {
+    assert(this.isV38)
+    return this._chain.decodeEvent(this.event)
+  }
+
+  /**
+   * An instance was minted \[owner, class_id, instance_id\]
+   */
+  get isV43(): boolean {
+    return this._chain.getEventHash('NFT.InstanceMinted') === 'eb2d7da6cd031b1051bd4c0ebcbe8cd70b244f54737e21a7f8279dccee6fa006'
+  }
+
+  /**
+   * An instance was minted \[owner, class_id, instance_id\]
+   */
+  get asV43(): {owner: Uint8Array, classId: bigint, instanceId: bigint, metadata: Uint8Array} {
+    assert(this.isV43)
+    return this._chain.decodeEvent(this.event)
+  }
+
+  /**
+   * An instance was minted \[owner, class_id, instance_id\]
+   */
+  get isV65(): boolean {
+    return this._chain.getEventHash('NFT.InstanceMinted') === 'cbf0740ecac063f0cc91759153cc494f3d948025e716ccd16da079129444cc1d'
+  }
+
+  /**
+   * An instance was minted \[owner, class_id, instance_id\]
+   */
+  get asV65(): {owner: Uint8Array, classId: bigint, instanceId: bigint} {
+    assert(this.isV65)
     return this._chain.decodeEvent(this.event)
   }
 
@@ -652,15 +715,15 @@ export class NftInstanceTransferredEvent {
   /**
    * An instance was transferred \[from, to, class_id, instance_id\]
    */
-  get isV42(): boolean {
+  get isV38(): boolean {
     return this._chain.getEventHash('NFT.InstanceTransferred') === 'e0a071978a33a540c15a46174c5018087ae648a19419f54dab0cb069ce949563'
   }
 
   /**
    * An instance was transferred \[from, to, class_id, instance_id\]
    */
-  get asV42(): {from: Uint8Array, to: Uint8Array, classId: bigint, instanceId: bigint} {
-    assert(this.isV42)
+  get asV38(): {from: Uint8Array, to: Uint8Array, classId: bigint, instanceId: bigint} {
+    assert(this.isV38)
     return this._chain.decodeEvent(this.event)
   }
 }
