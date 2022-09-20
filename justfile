@@ -23,7 +23,7 @@ build:
 	npm run build
 
 codegen:
-	npx sqd codegen
+	npx squid-typeorm-codegen
 
 typegen: ksmVersion
 	npx squid-substrate-typegen typegen.json
