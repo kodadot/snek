@@ -16,6 +16,12 @@ export function addressOf(address: Uint8Array | string): string {
   return ss58.codec('basilisk').encode(value);
 }
 
+export function camelCase(str: string): string {
+	return str.replace(/([_][a-z])/gi, ($1) => {
+		return $1.toUpperCase().replace('_', '')
+	})
+}
+
 export function metadataOf({ metadata }: SomethingWithOptionalMeta): string {
   return metadata ?? '';
 }

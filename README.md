@@ -34,6 +34,8 @@ node -r dotenv/config lib/processor.js
 #    To start the graphql server open the separate terminal
 #    and run
 npx squid-graphql-server
+
+# 7. Now you can see the resuls by visiting the localhost:4350/graphql
 ```
 
 ## Dev flow
