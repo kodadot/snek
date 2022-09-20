@@ -9,19 +9,29 @@ import {
 export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
   const event = new NftClassCreatedEvent(ctx);
   // logger.debug('NftClassCreatedEvent', event.isV39)
-  if (event.isV42) {
+  if (event.isV38) {
+    const {
+      classId, owner, classType,
+    } = event.asV38;
+    return {
+      id: classId.toString(), caller: addressOf(owner), metadata: undefined, type: classType.__kind,
+    };
+  }
+
+  if (event.isV43) {
     const {
       classId, owner, metadata, classType,
-    } = event.asV42;
+    } = event.asV43;
     return {
       id: classId.toString(), caller: addressOf(owner), metadata: metadata.toString(), type: classType.__kind,
     };
   }
 
-  if (event.isV62) {
+  if (event.isV65) {
     const {
       classId, owner, classType,
-    } = event.asV62;
+    } = event.asV65;
+
     return {
       id: classId.toString(), caller: addressOf(owner), metadata: undefined, type: classType.__kind,
     };
@@ -59,7 +69,7 @@ export function getTransferTokenEvent(ctx: Context): TransferTokenEvent {
   const event = new NftInstanceTransferredEvent(ctx);
   const {
     classId, instanceId, from, to,
-  } = event.asV42;
+  } = event.asV38;
   return {
     collectionId: classId.toString(), caller: addressOf(from), sn: instanceId.toString(), to: addressOf(to),
   };
@@ -67,13 +77,13 @@ export function getTransferTokenEvent(ctx: Context): TransferTokenEvent {
 
 export function getBurnTokenEvent(ctx: Context): BurnTokenEvent {
   const event = new NftInstanceBurnedEvent(ctx);
-  const { classId, instanceId, owner } = event.asV42;
+  const { classId, instanceId, owner } = event.asV38;
   return { collectionId: classId.toString(), caller: addressOf(owner), sn: instanceId.toString() };
 }
 
 export function getDestroyCollectionEvent(ctx: Context): DestroyCollectionEvent {
   const event = new NftClassDestroyedEvent(ctx);
-  const { classId, owner } = event.asV42;
+  const { classId, owner } = event.asV38;
   return { id: classId.toString(), caller: addressOf(owner) };
 }
 
@@ -147,7 +157,7 @@ export function getAcceptOfferEvent(ctx: Context): AcceptOfferEvent {
 
   const {
     who: caller, class: classId, instance: instanceId, amount, maker,
-  } = event.asV62;
+  } = event.asV65;
   return {
     collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, maker: addressOf(maker),
   };
