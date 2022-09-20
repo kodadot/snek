@@ -18,12 +18,12 @@ processor.setBatchSize(50);
 processor.setBlockRange({ from: STARTING_BLOCK });
 
 // Prod
-const ARCHIVE_URL = 'https://basilisk-firesquid.play.hydration.cloud/graphql';
-const NODE_URL = 'wss://rpc.basilisk.cloud';
+// const ARCHIVE_URL = 'https://basilisk-firesquid.play.hydration.cloud/graphql';
+// const NODE_URL = 'wss://rpc.basilisk.cloud';
 
 // Rococo
-// const ARCHIVE_URL = 'https://basilisk-rococo-firesquid.play.hydration.cloud/graphql';
-// const NODE_URL = 'wss://rococo-basilisk-rpc.hydration.dev';
+const ARCHIVE_URL = 'https://basilisk-rococo-firesquid.play.hydration.cloud/graphql';
+const NODE_URL = 'wss://rococo-basilisk-rpc.hydration.dev';
 
 const archive = process.env.ARCHIVE_URL || ARCHIVE_URL;
 const chain = process.env.NODE_URL || NODE_URL;
