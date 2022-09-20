@@ -151,20 +151,20 @@ type AssetEntity @entity {
 }
 
 # Implement in the later stages 
-# type Series @entity {
-#   id: ID!
-#   unique: Int!
-#   uniqueCollectors: Int!
-#   sold: Int! @index
-#   total: Int!
-#   averagePrice: Float
-#   floorPrice: BigInt
-#   buys: Int
-#   volume: BigInt
-#   name: String! @index
-#   metadata: String
-#   image: String
-# }
+type Series @entity {
+  id: ID!
+  unique: Int!
+  uniqueCollectors: Int!
+  sold: Int! @index
+  total: Int!
+  averagePrice: Float
+  floorPrice: BigInt
+  buys: Int
+  volume: BigInt
+  name: String! @index
+  metadata: String
+  image: String
+}
 
 # type Spotlight @entity {
 #   id: ID!
@@ -177,7 +177,7 @@ type AssetEntity @entity {
 #   volume: BigInt
 # }
 
-# type CacheStatus @entity {
-#   id: ID!
-#   lastBlockTimestamp: DateTime!
-# }
+type CacheStatus @entity {
+  id: ID!
+  lastBlockTimestamp: DateTime!
+}
