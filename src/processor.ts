@@ -15,11 +15,14 @@ processor.setTypesBundle('basilisk');
 processor.setBatchSize(50);
 processor.setBlockRange({ from: 1790000 });
 
-// Sandbox
-const ARCHIVE_URL = 'https://basilisk-rococo-firesquid.play.hydration.cloud/graphql';
-const NODE_URL = 'wss://rpc-01.basilisk-rococo.hydradx.io';
+// Prod
+// const ARCHIVE_URL = 'https://basilisk-firesquid.play.hydration.cloud/graphql';
+// const NODE_URL = 'wss://rpc.basilisk.cloud';
 
 // Rococo
+const ARCHIVE_URL = 'https://basilisk-rococo-firesquid.play.hydration.cloud/graphql';
+const NODE_URL = 'wss://rococo-basilisk-rpc.hydration.dev';
+
 const archive = process.env.ARCHIVE_URL || ARCHIVE_URL;
 const chain = process.env.NODE_URL || NODE_URL;
 
