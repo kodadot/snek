@@ -13,7 +13,7 @@ const processor = new SubstrateProcessor(database);
 
 processor.setTypesBundle('basilisk');
 processor.setBatchSize(50);
-processor.setBlockRange({ from: 6000 });
+processor.setBlockRange({ from: 1790000 });
 
 // Sandbox
 const ARCHIVE_URL = 'https://basilisk-rococo-firesquid.play.hydration.cloud/graphql';
@@ -48,7 +48,7 @@ processor.addEventHandler(Event.acceptOffer, mappings.handleOfferAccept);
 processor.addEventHandler(Event.addRoyalty, mappings.handleRoyaltyAdd);
 processor.addEventHandler(Event.payRoyalty, mappings.handleRoyaltyPay);
 
-processor.addPreHook({ range: { from: 6000, to: 6000 } }, assetMappings.forceCreateBasiliskAsset);
+processor.addPreHook({ range: { from: 1790000, to: 1790000 } }, assetMappings.forceCreateBasiliskAsset);
 processor.addEventHandler(Event.registerAsset, assetMappings.handleAssetRegister);
 processor.addEventHandler(Event.updateAsset, assetMappings.handleAssetUpdate);
 processor.addEventHandler(Event.setAssetMetadata, assetMappings.handleAssetMetadata);
