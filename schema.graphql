@@ -166,16 +166,16 @@ type Series @entity {
   image: String
 }
 
-# type Spotlight @entity {
-#   id: ID!
-#   collections: Int!
-#   uniqueCollectors: Int!
-#   unique: Int!
-#   sold: Int! @index
-#   total: Int!
-#   average: Float 
-#   volume: BigInt
-# }
+type Spotlight @entity {
+  id: ID!
+  collections: Int!
+  uniqueCollectors: Int!
+  unique: Int!
+  sold: Int! @index
+  total: Int!
+  average: Float 
+  volume: BigInt
+}
 
 type CacheStatus @entity {
   id: ID!
