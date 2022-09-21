@@ -11,6 +11,13 @@ export function getAssetRegisterEvent(ctx: Context): AssetRegisterEvent {
     };
   }
 
+  if (event.isV25) {
+    const [id, name, type] = event.asV25;
+    return {
+      id: id.toString(), name: name.toString(), type: type.__kind, isToken: type.__kind === 'Token',
+    };
+  }
+
   const { assetId: id, assetName: name, assetType: type } = event.asV55;
   return {
     id: id.toString(), name: name.toString(), type: type.__kind, isToken: type.__kind === 'Token',
@@ -19,6 +26,13 @@ export function getAssetRegisterEvent(ctx: Context): AssetRegisterEvent {
 
 export function getAssetUpdateEvent(ctx: Context): AssetRegisterEvent {
   const event = new AssetRegistryUpdatedEvent(ctx);
+  if (event.isV16) {
+    const [id, name, type] = event.asV16;
+    return {
+      id: id.toString(), name: name.toString(), type: type.__kind, isToken: type.__kind === 'Token',
+    };
+  }
+
   if (event.isV16) {
     const [id, name, type] = event.asV16;
     return {
