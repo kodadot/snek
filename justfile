@@ -43,6 +43,9 @@ quickstart: migrate process
 
 new-schema: codegen build update-db
 
+prod TAG:
+	gh pr create --base release-{{TAG}}
+
 migrate:
 	npx squid-typeorm-migration apply
 
