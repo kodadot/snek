@@ -26,8 +26,14 @@ export class LastEventEntity {
   @Field(() => String, { nullable: true })
   image!: string;
 
-  @Field(() => String, {nullable: true, name: 'animationUrl'})
-  animation_url!: string | undefined | null
+  @Field(() => String, { nullable: true, name: 'animationUrl' })
+  animation_url!: string | undefined | null;
+
+  @Field(() => String, { nullable: false, name: 'collectionId' })
+  collection_id!: string;
+
+  @Field(() => String, { nullable: false, name: 'collectionName' })
+  collection_name!: string;
 
   constructor(props: Partial<LastEventEntity>) {
     Object.assign(this, props);
