@@ -23,7 +23,7 @@ build:
 	npm run build
 
 codegen:
-	npx sqd codegen
+	npx squid-typeorm-codegen
 
 typegen: ksmVersion
 	npx squid-substrate-typegen typegen.json
@@ -42,6 +42,9 @@ reset: migrate
 quickstart: migrate process
 
 new-schema: codegen build update-db
+
+prod TAG:
+	gh pr create --base release-{{TAG}}
 
 migrate:
 	npx squid-typeorm-migration apply
