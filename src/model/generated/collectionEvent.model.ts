@@ -31,6 +31,6 @@ export class CollectionEvent {
   meta!: string
 
   @Index_()
-  @ManyToOne_(() => CollectionEntity, {nullable: false})
+  @ManyToOne_(() => CollectionEntity, {nullable: true})
   collection!: CollectionEntity
 }

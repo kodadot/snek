@@ -1,6 +1,11 @@
-import type { EntityManager, EntityTarget, Repository } from 'typeorm';
+import type {
+  EntityManager,
+  EntityTarget,
+  ObjectLiteral,
+  Repository,
+} from 'typeorm';
 
-export async function makeQuery<E, V>(
+export async function makeQuery<E extends ObjectLiteral, V>(
   txManager: () => Promise<EntityManager>,
   entity: EntityTarget<E>,
   query: string,
@@ -11,7 +16,7 @@ export async function makeQuery<E, V>(
   return genericRepositoryQuery(repository, query, args);
 }
 
-export async function genericRepositoryQuery<T, V>(
+export async function genericRepositoryQuery<T extends ObjectLiteral, V>(
   repository: Repository<T>,
   query: string,
   args?: any[],
@@ -26,6 +31,6 @@ export async function genericRepositoryQuery<T, V>(
  */
 export function toSqlInParams(list: string[]): string {
   return JSON.stringify(list)
-    .replace(/\"/g, "'")
-    .replace(/[\[|\]]/g, '');
+    .replace(/"/g, "'")
+    .replace(/[[|\]]/g, '');
 }

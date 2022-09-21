@@ -29,7 +29,7 @@ export class Offer {
   expiration!: bigint
 
   @Index_()
-  @ManyToOne_(() => NFTEntity, {nullable: false})
+  @ManyToOne_(() => NFTEntity, {nullable: true})
   nft!: NFTEntity
 
   @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
