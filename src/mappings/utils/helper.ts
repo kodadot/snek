@@ -29,3 +29,7 @@ export function metadataOf({ metadata }: SomethingWithOptionalMeta): string {
 export function oneOf<T>(one: T, two: T): T {
   return one || two;
 }
+
+export function toPercent(value: number): number {
+  return value / 100;
+}
