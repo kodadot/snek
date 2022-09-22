@@ -29,7 +29,7 @@ type NFTEntity @entity {
   metadata: String
   name: String @index
   price: BigInt
-  royalty: Int
+  royalty: Float
   recipient: String
   sn: String!
   updatedAt: DateTime!
