@@ -111,7 +111,7 @@ export function getAddRoyaltyEvent(ctx: Context): AddRoyaltyEvent {
   const event = new MarketplaceRoyaltyAddedEvent(ctx);
   const {
     class: classId, instance: instanceId, author: recipient, royalty,
-  } = event.isV55 ? event.asV55 : event.asV75;
+  } = event.isV55 ? event.asV55 : event.asV76;
   return {
     collectionId: classId.toString(), sn: instanceId.toString(), recipient: addressOf(recipient), royalty: event.isV55 ? royalty : toPercent(royalty),
   };
@@ -121,7 +121,7 @@ export function getPayRoyaltyEvent(ctx: Context): PayRoyaltyEvent {
   const event = new MarketplaceRoyaltyPaidEvent(ctx);
   const {
     class: classId, instance: instanceId, author: recipient, royalty, royaltyAmount: amount,
-  } = event.isV55 ? event.asV55 : event.asV75;
+  } = event.isV55 ? event.asV55 : event.asV76;
   return {
     collectionId: classId.toString(), sn: instanceId.toString(), recipient: addressOf(recipient), royalty: event.isV55 ? royalty : toPercent(royalty), amount,
   };
