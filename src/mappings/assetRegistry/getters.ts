@@ -33,8 +33,8 @@ export function getAssetUpdateEvent(ctx: Context): AssetRegisterEvent {
     };
   }
 
-  if (event.isV16) {
-    const [id, name, type] = event.asV16;
+  if (event.isV25) {
+    const [id, name, type] = event.asV25;
     return {
       id: id.toString(), name: name.toString(), type: type.__kind, isToken: type.__kind === 'Token',
     };

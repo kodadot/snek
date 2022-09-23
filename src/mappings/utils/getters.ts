@@ -1,7 +1,7 @@
 import {
   MarketplaceOfferAcceptedEvent, MarketplaceOfferPlacedEvent, MarketplaceOfferWithdrawnEvent, MarketplaceRoyaltyAddedEvent, MarketplaceRoyaltyPaidEvent, MarketplaceTokenPriceUpdatedEvent, MarketplaceTokenSoldEvent, NftClassCreatedEvent, NftClassDestroyedEvent, NftInstanceBurnedEvent, NftInstanceMintedEvent, NftInstanceTransferredEvent,
 } from '../../types/events';
-import { addressOf } from './helper';
+import { addressOf, toPercent } from './helper';
 import {
   BurnTokenEvent, CreateCollectionEvent, CreateTokenEvent, DestroyCollectionEvent, TransferTokenEvent, Context, ListTokenEvent, BuyTokenEvent, AddRoyaltyEvent, PayRoyaltyEvent, BaseOfferEvent, MakeOfferEvent, AcceptOfferEvent,
 } from './types';
@@ -111,9 +111,9 @@ export function getAddRoyaltyEvent(ctx: Context): AddRoyaltyEvent {
   const event = new MarketplaceRoyaltyAddedEvent(ctx);
   const {
     class: classId, instance: instanceId, author: recipient, royalty,
-  } = event.asV55;
+  } = event.isV55 ? event.asV55 : event.asV76;
   return {
-    collectionId: classId.toString(), sn: instanceId.toString(), recipient: addressOf(recipient), royalty,
+    collectionId: classId.toString(), sn: instanceId.toString(), recipient: addressOf(recipient), royalty: event.isV55 ? royalty : toPercent(royalty),
   };
 }
 
@@ -121,9 +121,9 @@ export function getPayRoyaltyEvent(ctx: Context): PayRoyaltyEvent {
   const event = new MarketplaceRoyaltyPaidEvent(ctx);
   const {
     class: classId, instance: instanceId, author: recipient, royalty, royaltyAmount: amount,
-  } = event.asV55;
+  } = event.isV55 ? event.asV55 : event.asV76;
   return {
-    collectionId: classId.toString(), sn: instanceId.toString(), recipient: addressOf(recipient), royalty, amount,
+    collectionId: classId.toString(), sn: instanceId.toString(), recipient: addressOf(recipient), royalty: event.isV55 ? royalty : toPercent(royalty), amount,
   };
 }
 

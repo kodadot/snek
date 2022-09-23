@@ -359,6 +359,21 @@ export class MarketplaceRoyaltyAddedEvent {
     assert(this.isV55)
     return this._chain.decodeEvent(this.event)
   }
+
+  /**
+   * Marketplace data has been added
+   */
+  get isV76(): boolean {
+    return this._chain.getEventHash('Marketplace.RoyaltyAdded') === '18115ec476316fefe14576ec64313da7708cf5ff92d25bca21c7cb2e50a12098'
+  }
+
+  /**
+   * Marketplace data has been added
+   */
+  get asV76(): {class: bigint, instance: bigint, author: Uint8Array, royalty: number} {
+    assert(this.isV76)
+    return this._chain.decodeEvent(this.event)
+  }
 }
 
 export class MarketplaceRoyaltyPaidEvent {
@@ -401,6 +416,21 @@ export class MarketplaceRoyaltyPaidEvent {
    */
   get asV55(): {class: bigint, instance: bigint, author: Uint8Array, royalty: number, royaltyAmount: bigint} {
     assert(this.isV55)
+    return this._chain.decodeEvent(this.event)
+  }
+
+  /**
+   * Royalty hs been paid to the author
+   */
+  get isV76(): boolean {
+    return this._chain.getEventHash('Marketplace.RoyaltyPaid') === 'c299a673e7fd4c339f13007a754569929c4cf22b3f425157c44da6cb3ede4136'
+  }
+
+  /**
+   * Royalty hs been paid to the author
+   */
+  get asV76(): {class: bigint, instance: bigint, author: Uint8Array, royalty: number, royaltyAmount: bigint} {
+    assert(this.isV76)
     return this._chain.decodeEvent(this.event)
   }
 }
