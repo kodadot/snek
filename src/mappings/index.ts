@@ -44,6 +44,7 @@ import {
   Interaction, Optional, tokenIdOf, TokenMetadata,
   Store,
 } from './utils/types';
+import { updateCache } from './utils/cache';
 
 async function handleMetadata(
   id: string,
@@ -176,6 +177,7 @@ export async function handleTokenTransfer(context: Context): Promise<void> {
   );
   await context.store.save(entity);
   await createEvent(entity, Interaction.SEND, event, event.to || '', context.store, currentOwner);
+  await updateCache(event.timestamp, context.store);
 }
 
 export async function handleTokenBurn(context: Context): Promise<void> {
@@ -191,6 +193,7 @@ export async function handleTokenBurn(context: Context): Promise<void> {
   await context.store.save(entity);
   const meta = entity.metadata ?? '';
   await createEvent(entity, Interaction.CONSUME, event, meta, context.store);
+  await updateCache(event.timestamp, context.store);
 }
 
 export async function handleTokenList(context: Context): Promise<void> {
@@ -223,6 +226,7 @@ export async function handleTokenBuy(context: Context): Promise<void> {
   await context.store.save(entity);
   const meta = event.price?.toString() || '';
   await createEvent(entity, Interaction.BUY, event, meta, context.store, event.currentOwner);
+  await updateCache(event.timestamp, context.store);
 }
 
 export async function handleRoyaltyAdd(context: Context): Promise<void> {
@@ -311,6 +315,7 @@ export async function handleOfferAccept(context: Context): Promise<void> {
   await context.store.save(entity);
   const meta = String(event.amount || '');
   await createOfferEvent(entity, OfferInteraction.ACCEPT, event, meta, context.store, currentOwner);
+  await updateCache(event.timestamp, context.store);
 }
 
 export async function handleOfferWithdraw(context: Context): Promise<void> {
