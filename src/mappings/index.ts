@@ -90,6 +90,8 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
   final.createdAt = event.timestamp;
   final.updatedAt = event.timestamp;
   final.type = event.type as CollectionType; // unsafe
+  final.totalItems = 0;
+  final.totalAvailableItems = 0;
 
   logger.debug(`metadata: ${final.metadata}`);
 
@@ -144,6 +146,9 @@ export async function handleTokenCreate(context: Context): Promise<void> {
   final.createdAt = event.timestamp;
   final.updatedAt = event.timestamp;
 
+  collection.totalAvailableItems += 1;
+  collection.totalItems += 1;
+
   logger.debug(`metadata: ${final.metadata}`);
 
   if (final.metadata) {
@@ -154,6 +159,7 @@ export async function handleTokenCreate(context: Context): Promise<void> {
 
   logger.success(`[MINT] ${final.id}`);
   await context.store.save(final);
+  await context.store.save(collection);
   await createEvent(final, Interaction.MINTNFT, event, '', context.store);
 }
 
@@ -186,11 +192,14 @@ export async function handleTokenBurn(context: Context): Promise<void> {
   logger.debug(`burn: ${JSON.stringify(event, null, 2)}`);
   const id = createTokenId(event.collectionId, event.sn);
   const entity = ensure<NE>(await get(context.store, NE, id));
+  const collection = ensure<CE>(await get<CE>(context.store, CE, event.collectionId));
   plsBe(real, entity);
 
   entity.burned = true;
+  collection.totalAvailableItems -= 1;
   logger.success(`[BURN] ${id} by ${event.caller}`);
   await context.store.save(entity);
+  await context.store.save(collection);
   const meta = entity.metadata ?? '';
   await createEvent(entity, Interaction.CONSUME, event, meta, context.store);
   await updateCache(event.timestamp, context.store);

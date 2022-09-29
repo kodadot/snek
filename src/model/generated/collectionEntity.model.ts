@@ -51,4 +51,10 @@ export class CollectionEntity {
 
   @Column_("varchar", {length: 15, nullable: false})
   type!: CollectionType
+
+  @Column_("int4", {nullable: false})
+  totalItems!: number
+
+  @Column_("int4", {nullable: false})
+  totalAvailableItems!: number
 }
