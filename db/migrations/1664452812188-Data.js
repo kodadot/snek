@@ -1,5 +1,5 @@
-module.exports = class Data1664284417181 {
-  name = 'Data1664284417181'
+module.exports = class Data1664452812188 {
+  name = 'Data1664452812188'
 
   async up(db) {
     await db.query(`CREATE TABLE "collection_event" ("id" character varying NOT NULL, "block_number" numeric, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "caller" text NOT NULL, "current_owner" text, "interaction" character varying(11) NOT NULL, "meta" text NOT NULL, "collection_id" character varying, CONSTRAINT "PK_5071dfbea812b4caade2ede2139" PRIMARY KEY ("id"))`)
@@ -17,13 +17,15 @@ module.exports = class Data1664284417181 {
     await db.query(`CREATE INDEX "IDX_16e57ac8478b6ea1f383e3eb03" ON "nft_entity" ("hash") `)
     await db.query(`CREATE INDEX "IDX_2bfc45b91959a14ab8b2d734cd" ON "nft_entity" ("meta_id") `)
     await db.query(`CREATE INDEX "IDX_54ca209d76ebe11ccc3c4e75d1" ON "nft_entity" ("name") `)
-    await db.query(`CREATE TABLE "collection_entity" ("id" character varying NOT NULL, "block_number" numeric, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL, "current_owner" text NOT NULL, "burned" boolean NOT NULL, "issuer" text NOT NULL, "metadata" text, "name" text, "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL, "type" character varying(15) NOT NULL, "meta_id" character varying, CONSTRAINT "PK_5d44e140c4fcb3d961f9e83405f" PRIMARY KEY ("id"))`)
+    await db.query(`CREATE TABLE "collection_entity" ("id" character varying NOT NULL, "block_number" numeric, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL, "current_owner" text NOT NULL, "burned" boolean NOT NULL, "issuer" text NOT NULL, "metadata" text, "name" text, "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL, "type" character varying(15) NOT NULL, "total_items" integer NOT NULL, "total_available_items" integer NOT NULL, "meta_id" character varying, CONSTRAINT "PK_5d44e140c4fcb3d961f9e83405f" PRIMARY KEY ("id"))`)
     await db.query(`CREATE INDEX "IDX_014542183f297493eab0cd8bdf" ON "collection_entity" ("meta_id") `)
     await db.query(`CREATE INDEX "IDX_b0d709797451c6237e8ec0fee8" ON "collection_entity" ("name") `)
     await db.query(`CREATE TABLE "asset_entity" ("id" character varying NOT NULL, "name" text, "symbol" text, "decimals" integer, CONSTRAINT "PK_038b7b28b83db2205747ef9912e" PRIMARY KEY ("id"))`)
-    await db.query(`CREATE TABLE "series" ("id" character varying NOT NULL, "unique" integer NOT NULL, "unique_collectors" integer NOT NULL, "sold" integer NOT NULL, "total" integer NOT NULL, "average_price" numeric, "floor_price" numeric, "buys" integer, "volume" numeric, "name" text NOT NULL, "metadata" text, "image" text, CONSTRAINT "PK_e725676647382eb54540d7128ba" PRIMARY KEY ("id"))`)
+    await db.query(`CREATE TABLE "series" ("id" character varying NOT NULL, "issuer" text, "unique" integer NOT NULL, "unique_collectors" integer NOT NULL, "sold" integer NOT NULL, "total" integer NOT NULL, "average_price" numeric, "floor_price" numeric, "highest_sale" numeric, "buys" integer, "volume" numeric, "name" text NOT NULL, "metadata" text, "image" text, "emote_count" integer, CONSTRAINT "PK_e725676647382eb54540d7128ba" PRIMARY KEY ("id"))`)
     await db.query(`CREATE INDEX "IDX_e9b94c49c07399bfa4bb6ab1a7" ON "series" ("sold") `)
     await db.query(`CREATE INDEX "IDX_68b808a9039892c61219f868f2" ON "series" ("name") `)
+    await db.query(`CREATE TABLE "spotlight" ("id" character varying NOT NULL, "collections" integer NOT NULL, "unique_collectors" integer NOT NULL, "unique" integer NOT NULL, "sold" integer NOT NULL, "total" integer NOT NULL, "average" numeric, "volume" numeric, CONSTRAINT "PK_bafc41803e508da64ed687ed3b9" PRIMARY KEY ("id"))`)
+    await db.query(`CREATE INDEX "IDX_258db3cbcb3c172be89fcbf674" ON "spotlight" ("sold") `)
     await db.query(`CREATE TABLE "cache_status" ("id" character varying NOT NULL, "last_block_timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, CONSTRAINT "PK_1001e39eb0aa38d043d96f7f4fa" PRIMARY KEY ("id"))`)
     await db.query(`ALTER TABLE "collection_event" ADD CONSTRAINT "FK_93f81f26d6b052b289167b3ae3e" FOREIGN KEY ("collection_id") REFERENCES "collection_entity"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
     await db.query(`ALTER TABLE "event" ADD CONSTRAINT "FK_9380d479563e5a664759359470a" FOREIGN KEY ("nft_id") REFERENCES "nft_entity"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`)
@@ -57,6 +59,8 @@ module.exports = class Data1664284417181 {
     await db.query(`DROP TABLE "series"`)
     await db.query(`DROP INDEX "public"."IDX_e9b94c49c07399bfa4bb6ab1a7"`)
     await db.query(`DROP INDEX "public"."IDX_68b808a9039892c61219f868f2"`)
+    await db.query(`DROP TABLE "spotlight"`)
+    await db.query(`DROP INDEX "public"."IDX_258db3cbcb3c172be89fcbf674"`)
     await db.query(`DROP TABLE "cache_status"`)
     await db.query(`ALTER TABLE "collection_event" DROP CONSTRAINT "FK_93f81f26d6b052b289167b3ae3e"`)
     await db.query(`ALTER TABLE "event" DROP CONSTRAINT "FK_9380d479563e5a664759359470a"`)
