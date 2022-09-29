@@ -146,8 +146,8 @@ export async function handleTokenCreate(context: Context): Promise<void> {
   final.createdAt = event.timestamp;
   final.updatedAt = event.timestamp;
 
-  collection.totalAvailableItems += 1;
   collection.totalItems += 1;
+  collection.totalAvailableItems += 1;
 
   logger.debug(`metadata: ${final.metadata}`);
 
