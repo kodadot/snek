@@ -1,6 +1,34 @@
 import { Field, ObjectType } from 'type-graphql';
 
 @ObjectType()
+export class EventEntity {
+  @Field(() => Date, { nullable: false })
+  date!: Date;
+
+  @Field(() => BigInt, { nullable: true, defaultValue: 0n })
+  max!: bigint;
+
+  @Field(() => Number, { nullable: true, defaultValue: 0 })
+  count!: number;
+
+  constructor(props: Partial<EventEntity>) {
+    Object.assign(this, props);
+  }
+}
+
+@ObjectType()
+export class HistoryEntity {
+  @Field(() => String)
+  id!: string;
+
+  @Field(() => Date)
+  date!: Date;
+
+  @Field(() => Number)
+  count!: number;
+}
+
+@ObjectType()
 export class LastEventEntity {
   @Field(() => String, { nullable: false })
   id!: string;
