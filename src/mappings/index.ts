@@ -277,6 +277,7 @@ export async function handleOfferPlace(context: Context): Promise<void> {
   offer.expiration = event.expiresAt;
   offer.createdAt = event.timestamp;
   offer.status = OfferStatus.ACTIVE;
+  entity.updatedAt = event.timestamp;
 
   if (!mayOffer) {
     offer.nft = entity;
@@ -284,6 +285,7 @@ export async function handleOfferPlace(context: Context): Promise<void> {
 
   logger.success(`[PLACE OFFER] for ${id} by ${event.caller} for ${String(event.amount)}`);
   await context.store.save(offer);
+  await context.store.save(entity);
 
   const meta = String(event.amount || '');
   await createOfferEvent(offer, OfferInteraction.CREATE, event, meta, context.store, entity.currentOwner);
