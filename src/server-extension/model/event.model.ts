@@ -32,7 +32,7 @@ export class LastEventEntity {
   @Field(() => String, { nullable: false, name: 'collectionId' })
   collection_id!: string;
 
-  @Field(() => String, { nullable: false, name: 'collectionName' })
+  @Field(() => String, { nullable: true, name: 'collectionName', defaultValue: '' })
   collection_name!: string;
 
   constructor(props: Partial<LastEventEntity>) {
