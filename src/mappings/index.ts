@@ -55,7 +55,7 @@ async function handleMetadata(
     return meta;
   }
 
-  const metadata = await fetchMetadata<TokenMetadata>({ metadata: id });
+  const metadata = await fetchMetadata<TokenMetadata>(id);
   if (isEmpty(metadata)) {
     return null;
   }
@@ -360,7 +360,7 @@ async function createEvent(
     event.nft = final;
     await store.save(event);
   } catch (e) {
-    logError(e, (e) => logger.warn(`[[${interaction}]]: ${final.id} Reason: ${e.message}`));
+    logError(e, (err) => logger.warn(`[[${interaction}]]: ${final.id} Reason: ${err.message}`));
   }
 }
 
