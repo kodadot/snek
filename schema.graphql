@@ -153,17 +153,20 @@ type AssetEntity @entity {
 # Implement in the later stages 
 type Series @entity {
   id: ID!
+  issuer: String
   unique: Int!
   uniqueCollectors: Int!
   sold: Int! @index
   total: Int!
   averagePrice: Float
   floorPrice: BigInt
+  highestSale: BigInt
   buys: Int
   volume: BigInt
   name: String! @index
   metadata: String
   image: String
+  emoteCount: Int
 }
 
 type Spotlight @entity {
