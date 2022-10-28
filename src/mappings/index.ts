@@ -179,6 +179,8 @@ export async function handleTokenTransfer(context: Context): Promise<void> {
 
   const { currentOwner } = entity;
   entity.currentOwner = event.to;
+  entity.updatedAt = event.timestamp;
+
   logger.success(
     `[SEND] ${id} from ${event.caller} to ${event.to}`,
   );
