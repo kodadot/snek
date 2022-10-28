@@ -89,6 +89,8 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
   final.burned = false;
   final.createdAt = event.timestamp;
   final.updatedAt = event.timestamp;
+  final.nftCount = 0;
+  final.supply = 0;
   final.type = event.type as CollectionType; // unsafe
 
   logger.debug(`metadata: ${final.metadata}`);
@@ -144,6 +146,10 @@ export async function handleTokenCreate(context: Context): Promise<void> {
   final.createdAt = event.timestamp;
   final.updatedAt = event.timestamp;
 
+  collection.updatedAt = event.timestamp;
+  collection.nftCount += 1;
+  collection.supply += 1;
+
   logger.debug(`metadata: ${final.metadata}`);
 
   if (final.metadata) {
@@ -154,6 +160,7 @@ export async function handleTokenCreate(context: Context): Promise<void> {
 
   logger.success(`[MINT] ${final.id}`);
   await context.store.save(final);
+  await context.store.save(collection);
   await createEvent(final, Interaction.MINTNFT, event, '', context.store);
 }
 
@@ -189,8 +196,16 @@ export async function handleTokenBurn(context: Context): Promise<void> {
   plsBe(real, entity);
 
   entity.burned = true;
+  entity.updatedAt = event.timestamp;
   logger.success(`[BURN] ${id} by ${event.caller}`);
+
+  const collection = ensure<CE>(await get<CE>(context.store, CE, event.collectionId));
+  plsBe(real, collection);
+  collection.updatedAt = event.timestamp;
+  collection.supply -= 1;
+
   await context.store.save(entity);
+  await context.store.save(collection);
   const meta = entity.metadata ?? '';
   await createEvent(entity, Interaction.CONSUME, event, meta, context.store);
   await updateCache(event.timestamp, context.store);
@@ -221,9 +236,15 @@ export async function handleTokenBuy(context: Context): Promise<void> {
   plsBe(real, entity);
   entity.price = BigInt(0);
   entity.currentOwner = event.caller;
+  entity.updatedAt = event.timestamp;
+
+  const collection = ensure<CE>(await get<CE>(context.store, CE, event.collectionId));
+  plsBe(real, collection);
+  collection.updatedAt = event.timestamp;
 
   logger.success(`[BUY] ${id} by ${event.caller}`);
   await context.store.save(entity);
+  await context.store.save(collection);
   const meta = event.price?.toString() || '';
   await createEvent(entity, Interaction.BUY, event, meta, context.store, event.currentOwner);
   await updateCache(event.timestamp, context.store);
