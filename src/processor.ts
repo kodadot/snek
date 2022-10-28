@@ -3,6 +3,7 @@ import {
 } from '@subsquid/substrate-processor';
 import { FullTypeormDatabase as Database } from '@subsquid/typeorm-store';
 import 'dotenv/config';
+import { getArchiveUrl, getNodeUrl } from './environment';
 import * as mappings from './mappings';
 import * as assetMappings from './mappings/assetRegistry';
 import logger from './mappings/utils/logger';
@@ -18,8 +19,8 @@ processor.setBatchSize(50);
 processor.setBlockRange({ from: STARTING_BLOCK });
 
 // Prod
-const ARCHIVE_URL = 'https://basilisk-firesquid.play.hydration.cloud/graphql';
-const NODE_URL = 'wss://rpc.basilisk.cloud';
+const ARCHIVE_URL = getArchiveUrl();
+const NODE_URL = getNodeUrl();
 
 // Rococo
 // const ARCHIVE_URL = 'https://basilisk-rococo-firesquid.play.hydration.cloud/graphql';
