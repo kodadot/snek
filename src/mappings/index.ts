@@ -247,7 +247,7 @@ export async function handleTokenBuy(context: Context): Promise<void> {
   logger.success(`[BUY] ${id} by ${event.caller}`);
   await context.store.save(entity);
   await context.store.save(collection);
-  const meta = event.price?.toString() || '';
+  const meta = String(event.price || '');
   await createEvent(entity, Interaction.BUY, event, meta, context.store, event.currentOwner);
   await updateCache(event.timestamp, context.store);
 }
