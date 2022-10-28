@@ -56,7 +56,7 @@ test:
   npm run test:unit
 
 improve TAG:
-	npx sqd squid:update snekk@{{TAG}}
+	npx sqd squid:update snekk@{{TAG}} -e VERSION={{TAG}}
 
 release TAG:
 	npx sqd squid:release snekk@{{TAG}}
@@ -68,7 +68,7 @@ exec:
 	docker exec -it snek-db-1 psql -U postgres -d squid
 
 brutal TAG:
-	npx sqd squid:update snekk@{{TAG}} --hardReset
+	npx sqd squid:update snekk@{{TAG}} --hardReset -e VERSION={{TAG}}
 
 update-deps:
 	npx npm-check-updates -u
