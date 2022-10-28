@@ -11,6 +11,8 @@ type CollectionEntity @entity {
   name: String @index
   nfts: [NFTEntity!] @derivedFrom(field: "collection")
   updatedAt: DateTime!
+  nftCount: Int!
+  supply: Int!
   type: CollectionType!
 }
 
