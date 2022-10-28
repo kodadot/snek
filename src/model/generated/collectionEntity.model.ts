@@ -49,6 +49,12 @@ export class CollectionEntity {
   @Column_("timestamp with time zone", {nullable: false})
   updatedAt!: Date
 
+  @Column_("int4", {nullable: false})
+  nftCount!: number
+
+  @Column_("int4", {nullable: false})
+  supply!: number
+
   @Column_("varchar", {length: 15, nullable: false})
   type!: CollectionType
 }
