@@ -11,7 +11,7 @@ enum Query {
 
   series = `SELECT
       ce.id,
-      ce.name,
+      COALESCE(ce.name, '')              as name,
       ce.meta_id                         as metadata,
       me.image,
       ce.issuer,
