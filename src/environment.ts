@@ -1,4 +1,4 @@
-const VERSION = process.env.VERSION || '005';
+const VERSION = process.env.VERSION || '004';
 // Prod
 const ARCHIVE_URL = 'https://basilisk-firesquid.play.hydration.cloud/graphql';
 const NODE_URL = 'wss://rpc.basilisk.cloud';
