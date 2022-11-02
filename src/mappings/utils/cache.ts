@@ -19,9 +19,9 @@ enum Query {
       COUNT(distinct ne.current_owner)   as unique_collectors,
       COUNT(distinct ne.current_owner)   as sold,
       COUNT(ne.*)                        as total,
-      AVG(ne.price)                      as average_price,
-      MIN(NULLIF(ne.price, 0))           as floor_price,
-      COALESCE(MAX(e.meta :: bigint), 0) as highest_sale,
+      AVG(e.meta::bigint)                      as average_price,
+      MIN(NULLIF(e.meta::bigint, 0))           as floor_price,
+      COALESCE(MAX(e.meta::bigint), 0) as highest_sale,
       COALESCE(SUM(e.meta::bigint), 0)   as volume,
       COUNT(e.*)                         as buys,
       0                                  as emote_count
