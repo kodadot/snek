@@ -3,7 +3,7 @@ import type { EntityManager } from 'typeorm';
 import { handleMetadata } from '../../mappings';
 import { NFTEntity } from '../../model/generated';
 import { URIEntity } from '../model/metadata.model';
-import { missingMetadata } from '../query/metadata';
+import { missingMetadata, updateMissingMetadata } from '../query/metadata';
 import { getStore, makeQuery } from '../utils';
 
 enum Task {
@@ -36,11 +36,13 @@ export class SquidVMResolver {
     const store = await getStore(this.tx);
     for (const uri of uriList) {
       try {
-        const meta = await handleMetadata(uri, store);
+        await handleMetadata(uri, store);
       } catch (e) {
         console.error(`Error while fetching metadata for ${uri}`, e);
       }
     }
+
+    await makeQuery(this.tx, NFTEntity, updateMissingMetadata);
     // TODO: call squidvm to refetch metadata
     return result.length;
   }
