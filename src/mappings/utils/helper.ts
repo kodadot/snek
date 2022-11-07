@@ -17,9 +17,7 @@ export function addressOf(address: Uint8Array | string): string {
 }
 
 export function camelCase(str: string): string {
-	return str.replace(/([_][a-z])/gi, ($1) => {
-		return $1.toUpperCase().replace('_', '')
-	})
+  return str.replace(/([_][a-z])/gi, ($1) => $1.toUpperCase().replace('_', ''));
 }
 
 export function metadataOf({ metadata }: SomethingWithOptionalMeta): string {
