@@ -46,7 +46,7 @@ import {
 } from './utils/types';
 import { updateCache } from './utils/cache';
 
-async function handleMetadata(
+export async function handleMetadata(
   id: string,
   store: Store,
 ): Promise<Optional<Metadata>> {
