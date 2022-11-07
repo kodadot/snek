@@ -24,6 +24,18 @@ export async function genericRepositoryQuery<T extends ObjectLiteral, V>(
   return repository.query(query, args) as Promise<V>;
 }
 
+export async function getRepository<E extends ObjectLiteral>(
+  txManager: () => Promise<EntityManager>,
+  entity: EntityTarget<E>,
+): Promise<Repository<E>> {
+  const manager = await txManager();
+  return manager.getRepository(entity);
+}
+
+export function getStore(txManager: () => Promise<EntityManager>): Promise<EntityManager> {
+  return txManager();
+}
+
 /**
  * @description hack sql IN parameters
  *              https://github.com/kodadot/rubick/pull/72#discussion_r873325836
