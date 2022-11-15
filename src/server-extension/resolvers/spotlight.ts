@@ -1,7 +1,9 @@
-import { Arg, Field, ObjectType, Query, Resolver } from 'type-graphql'
-import type { EntityManager } from 'typeorm'
-import { NFTEntity } from '../../model/generated'
-import { SpotlightEntity } from '../model/spotlight.model'
+import {
+  Arg, Query, Resolver,
+} from 'type-graphql';
+import type { EntityManager } from 'typeorm';
+import { NFTEntity } from '../../model/generated';
+import { SpotlightEntity } from '../model/spotlight.model';
 
 enum OrderBy {
   sold = 'sold',
@@ -40,10 +42,10 @@ export class SpotlightResolver {
     JOIN event e on e.nft_id = ne.id WHERE e.interaction = 'BUY'
     GROUP BY issuer 
     ORDER BY ${orderBy} ${orderDirection}
-    LIMIT $1 OFFSET $2`
-    const manager = await this.tx()
-    const result: SpotlightEntity[] = await manager.getRepository(NFTEntity).query(query, [limit, offset])
+    LIMIT $1 OFFSET $2`;
+    const manager = await this.tx();
+    const result: SpotlightEntity[] = await manager.getRepository(NFTEntity).query(query, [limit, offset]);
 
-    return result
+    return result;
   }
 }

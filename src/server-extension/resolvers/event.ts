@@ -13,8 +13,8 @@ export class EventResolver {
   @Query(() => [LastEventEntity])
   async lastEvent(
     @Arg('interaction', { nullable: true, defaultValue: Interaction.LIST }) interaction: Interaction,
-      @Arg('limit', { nullable: true, defaultValue: 20 }) limit: number,
-      @Arg('offset', { nullable: true, defaultValue: 0 }) offset: number,
+    @Arg('limit', { nullable: true, defaultValue: 20 }) limit: number,
+    @Arg('offset', { nullable: true, defaultValue: 0 }) offset: number,
   ): Promise<[LastEventEntity]> {
     const result: [LastEventEntity] = await makeQuery(this.tx, NFTEntity, lastEventQuery, [interaction, limit, offset]);
     return result;
