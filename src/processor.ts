@@ -54,6 +54,14 @@ processor.addEventHandler(Event.acceptOffer, mappings.handleOfferAccept);
 processor.addEventHandler(Event.addRoyalty, mappings.handleRoyaltyAdd);
 processor.addEventHandler(Event.payRoyalty, mappings.handleRoyaltyPay);
 
+if (network === 'ROCOCO') {
+  processor.addEventHandler(Event.createCollection, mappings.handleCollectionCreate);
+  processor.addEventHandler(Event.createItem, mappings.handleTokenCreate);
+  processor.addEventHandler(Event.transferItem, mappings.handleTokenTransfer);
+  processor.addEventHandler(Event.burnItem, mappings.handleTokenBurn);
+  processor.addEventHandler(Event.destroyCollection, mappings.handleCollectionDestroy);
+}
+
 processor.addPreHook({ range: { from: STARTING_BLOCK, to: STARTING_BLOCK } }, assetMappings.forceCreateBasiliskAsset);
 processor.addEventHandler(Event.registerAsset, assetMappings.handleAssetRegister);
 processor.addEventHandler(Event.updateAsset, assetMappings.handleAssetUpdate);
