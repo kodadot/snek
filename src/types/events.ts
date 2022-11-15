@@ -7,6 +7,7 @@ import * as v43 from './v43'
 import * as v55 from './v55'
 import * as v65 from './v65'
 import * as v71 from './v71'
+import * as v81 from './v81'
 
 export class AssetRegistryMetadataSetEvent {
   private readonly _chain: Chain
@@ -731,6 +732,64 @@ export class NftClassDestroyedEvent {
   }
 }
 
+export class NftCollectionCreatedEvent {
+  private readonly _chain: Chain
+  private readonly event: Event
+
+  constructor(ctx: EventContext)
+  constructor(ctx: ChainContext, event: Event)
+  constructor(ctx: EventContext, event?: Event) {
+    event = event || ctx.event
+    assert(event.name === 'NFT.CollectionCreated')
+    this._chain = ctx._chain
+    this.event = event
+  }
+
+  /**
+   * A collection was created
+   */
+  get isV81(): boolean {
+    return this._chain.getEventHash('NFT.CollectionCreated') === '5a2e9a4ec608a615d139d37eec750564f672644bb59acb15437c132d8601f50e'
+  }
+
+  /**
+   * A collection was created
+   */
+  get asV81(): {owner: Uint8Array, collectionId: bigint, collectionType: v81.CollectionType, metadata: Uint8Array} {
+    assert(this.isV81)
+    return this._chain.decodeEvent(this.event)
+  }
+}
+
+export class NftCollectionDestroyedEvent {
+  private readonly _chain: Chain
+  private readonly event: Event
+
+  constructor(ctx: EventContext)
+  constructor(ctx: ChainContext, event: Event)
+  constructor(ctx: EventContext, event?: Event) {
+    event = event || ctx.event
+    assert(event.name === 'NFT.CollectionDestroyed')
+    this._chain = ctx._chain
+    this.event = event
+  }
+
+  /**
+   * A collection was destroyed
+   */
+  get isV81(): boolean {
+    return this._chain.getEventHash('NFT.CollectionDestroyed') === '1ce7ebf4a743d25ec186314cc2cee8d35f93b7ebc9c6f4f98b51c9e0b3f068f8'
+  }
+
+  /**
+   * A collection was destroyed
+   */
+  get asV81(): {owner: Uint8Array, collectionId: bigint} {
+    assert(this.isV81)
+    return this._chain.decodeEvent(this.event)
+  }
+}
+
 export class NftInstanceBurnedEvent {
   private readonly _chain: Chain
   private readonly event: Event
@@ -859,6 +918,93 @@ export class NftInstanceTransferredEvent {
    */
   get asV38(): {from: Uint8Array, to: Uint8Array, classId: bigint, instanceId: bigint} {
     assert(this.isV38)
+    return this._chain.decodeEvent(this.event)
+  }
+}
+
+export class NftItemBurnedEvent {
+  private readonly _chain: Chain
+  private readonly event: Event
+
+  constructor(ctx: EventContext)
+  constructor(ctx: ChainContext, event: Event)
+  constructor(ctx: EventContext, event?: Event) {
+    event = event || ctx.event
+    assert(event.name === 'NFT.ItemBurned')
+    this._chain = ctx._chain
+    this.event = event
+  }
+
+  /**
+   * An item was burned
+   */
+  get isV81(): boolean {
+    return this._chain.getEventHash('NFT.ItemBurned') === 'cc2524e59629f2095749787873103ec680b128894dfa13b57104a95103c39e1e'
+  }
+
+  /**
+   * An item was burned
+   */
+  get asV81(): {owner: Uint8Array, collectionId: bigint, itemId: bigint} {
+    assert(this.isV81)
+    return this._chain.decodeEvent(this.event)
+  }
+}
+
+export class NftItemMintedEvent {
+  private readonly _chain: Chain
+  private readonly event: Event
+
+  constructor(ctx: EventContext)
+  constructor(ctx: ChainContext, event: Event)
+  constructor(ctx: EventContext, event?: Event) {
+    event = event || ctx.event
+    assert(event.name === 'NFT.ItemMinted')
+    this._chain = ctx._chain
+    this.event = event
+  }
+
+  /**
+   * An item was minted
+   */
+  get isV81(): boolean {
+    return this._chain.getEventHash('NFT.ItemMinted') === 'a6adccc786541b02e84cef34247b4fad9498016f10d6c61928bdb2ffa6b280b0'
+  }
+
+  /**
+   * An item was minted
+   */
+  get asV81(): {owner: Uint8Array, collectionId: bigint, itemId: bigint, metadata: Uint8Array} {
+    assert(this.isV81)
+    return this._chain.decodeEvent(this.event)
+  }
+}
+
+export class NftItemTransferredEvent {
+  private readonly _chain: Chain
+  private readonly event: Event
+
+  constructor(ctx: EventContext)
+  constructor(ctx: ChainContext, event: Event)
+  constructor(ctx: EventContext, event?: Event) {
+    event = event || ctx.event
+    assert(event.name === 'NFT.ItemTransferred')
+    this._chain = ctx._chain
+    this.event = event
+  }
+
+  /**
+   * An item was transferred
+   */
+  get isV81(): boolean {
+    return this._chain.getEventHash('NFT.ItemTransferred') === '42e3860a872fb66ff33fe6addd638c24d3be922b3da558aa8670d7754c1f069b'
+  }
+
+  /**
+   * An item was transferred
+   */
+  get asV81(): {from: Uint8Array, to: Uint8Array, collectionId: bigint, itemId: bigint} {
+    assert(this.isV81)
     return this._chain.decodeEvent(this.event)
   }
 }
