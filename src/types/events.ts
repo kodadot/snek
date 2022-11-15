@@ -1,5 +1,5 @@
 import assert from 'assert'
-import {Chain, ChainContext, EventContext, Event, Result} from './support'
+import {Chain, ChainContext, EventContext, Event, Result, Option} from './support'
 import * as v16 from './v16'
 import * as v25 from './v25'
 import * as v38 from './v38'
@@ -69,7 +69,7 @@ export class AssetRegistryRegisteredEvent {
    *  Asset was registered. \[asset_id, name, type\]
    */
   get isV16(): boolean {
-    return this._chain.getEventHash('AssetRegistry.Registered') === 'dc8e055a7e1702e0b8c894848d6e7751ce3ecf5d547d7fbdede900d335880a32'
+    return this._chain.getEventHash('AssetRegistry.Registered') === 'baaca4ca65e3a329f2bd4da1bb290a37ffe550080fa6f022db8adef5413812c2'
   }
 
   /**
@@ -128,7 +128,7 @@ export class AssetRegistryUpdatedEvent {
    *  Asset was updated. \[asset_id, name, type\]
    */
   get isV16(): boolean {
-    return this._chain.getEventHash('AssetRegistry.Updated') === 'dc8e055a7e1702e0b8c894848d6e7751ce3ecf5d547d7fbdede900d335880a32'
+    return this._chain.getEventHash('AssetRegistry.Updated') === 'baaca4ca65e3a329f2bd4da1bb290a37ffe550080fa6f022db8adef5413812c2'
   }
 
   /**
@@ -227,6 +227,21 @@ export class MarketplaceOfferAcceptedEvent {
     assert(this.isV65)
     return this._chain.decodeEvent(this.event)
   }
+
+  /**
+   * Offer was accepted
+   */
+  get isV81(): boolean {
+    return this._chain.getEventHash('Marketplace.OfferAccepted') === 'eae1197c912d392e55b9ac86f19cb7e8165cdb1100c1b0b20af7b1fb67cef1ca'
+  }
+
+  /**
+   * Offer was accepted
+   */
+  get asV81(): {who: Uint8Array, collection: bigint, item: bigint, amount: bigint, maker: Uint8Array} {
+    assert(this.isV81)
+    return this._chain.decodeEvent(this.event)
+  }
 }
 
 export class MarketplaceOfferPlacedEvent {
@@ -271,6 +286,21 @@ export class MarketplaceOfferPlacedEvent {
     assert(this.isV55)
     return this._chain.decodeEvent(this.event)
   }
+
+  /**
+   * Offer was placed on a token
+   */
+  get isV81(): boolean {
+    return this._chain.getEventHash('Marketplace.OfferPlaced') === '98823704ea62ccb131ec6305a396c309c632f68d2ea4d6706a8185e4d195314c'
+  }
+
+  /**
+   * Offer was placed on a token
+   */
+  get asV81(): {who: Uint8Array, collection: bigint, item: bigint, amount: bigint, expires: number} {
+    assert(this.isV81)
+    return this._chain.decodeEvent(this.event)
+  }
 }
 
 export class MarketplaceOfferWithdrawnEvent {
@@ -313,6 +343,21 @@ export class MarketplaceOfferWithdrawnEvent {
    */
   get asV55(): {who: Uint8Array, class: bigint, instance: bigint} {
     assert(this.isV55)
+    return this._chain.decodeEvent(this.event)
+  }
+
+  /**
+   * Offer was withdrawn
+   */
+  get isV81(): boolean {
+    return this._chain.getEventHash('Marketplace.OfferWithdrawn') === 'ee93cc05328a6d2834c0a788c41b829d2a6b45200ac9477bdd40eca698e8e0ef'
+  }
+
+  /**
+   * Offer was withdrawn
+   */
+  get asV81(): {who: Uint8Array, collection: bigint, item: bigint} {
+    assert(this.isV81)
     return this._chain.decodeEvent(this.event)
   }
 }
@@ -374,6 +419,21 @@ export class MarketplaceRoyaltyAddedEvent {
     assert(this.isV76)
     return this._chain.decodeEvent(this.event)
   }
+
+  /**
+   * Marketplace data has been added
+   */
+  get isV81(): boolean {
+    return this._chain.getEventHash('Marketplace.RoyaltyAdded') === '5e4ab73965bd5a972b14b44fef4552c644677f7e2a0973c09c185dc3cbe68566'
+  }
+
+  /**
+   * Marketplace data has been added
+   */
+  get asV81(): {collection: bigint, item: bigint, author: Uint8Array, royalty: number} {
+    assert(this.isV81)
+    return this._chain.decodeEvent(this.event)
+  }
 }
 
 export class MarketplaceRoyaltyPaidEvent {
@@ -433,6 +493,21 @@ export class MarketplaceRoyaltyPaidEvent {
     assert(this.isV76)
     return this._chain.decodeEvent(this.event)
   }
+
+  /**
+   * Royalty hs been paid to the author
+   */
+  get isV81(): boolean {
+    return this._chain.getEventHash('Marketplace.RoyaltyPaid') === 'b593f90234c934574d11488293030b10e208d4846d2dbae9219f0445f53a71f3'
+  }
+
+  /**
+   * Royalty hs been paid to the author
+   */
+  get asV81(): {collection: bigint, item: bigint, author: Uint8Array, royalty: number, royaltyAmount: bigint} {
+    assert(this.isV81)
+    return this._chain.decodeEvent(this.event)
+  }
 }
 
 export class MarketplaceTokenPriceUpdatedEvent {
@@ -477,6 +552,21 @@ export class MarketplaceTokenPriceUpdatedEvent {
     assert(this.isV55)
     return this._chain.decodeEvent(this.event)
   }
+
+  /**
+   * The price for a token was updated
+   */
+  get isV81(): boolean {
+    return this._chain.getEventHash('Marketplace.TokenPriceUpdated') === '3b9bed77760f1818f97f7faecbfdb6f0b7bba944b7fa3c02e85d5e99f26fe81b'
+  }
+
+  /**
+   * The price for a token was updated
+   */
+  get asV81(): {who: Uint8Array, collection: bigint, item: bigint, price: (bigint | undefined)} {
+    assert(this.isV81)
+    return this._chain.decodeEvent(this.event)
+  }
 }
 
 export class MarketplaceTokenSoldEvent {
@@ -519,6 +609,21 @@ export class MarketplaceTokenSoldEvent {
    */
   get asV55(): {owner: Uint8Array, buyer: Uint8Array, class: bigint, instance: bigint, price: bigint} {
     assert(this.isV55)
+    return this._chain.decodeEvent(this.event)
+  }
+
+  /**
+   * Token was sold to a new owner
+   */
+  get isV81(): boolean {
+    return this._chain.getEventHash('Marketplace.TokenSold') === '7a6d20f671c26f7acbc95164fe57b2fe6785320c0556d8f75673307e477f4f3a'
+  }
+
+  /**
+   * Token was sold to a new owner
+   */
+  get asV81(): {owner: Uint8Array, buyer: Uint8Array, collection: bigint, item: bigint, price: bigint} {
+    assert(this.isV81)
     return this._chain.decodeEvent(this.event)
   }
 }
