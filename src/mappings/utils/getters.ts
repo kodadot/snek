@@ -89,9 +89,18 @@ export function getDestroyCollectionEvent(ctx: Context): DestroyCollectionEvent 
 
 export function getListTokenEvent(ctx: Context): ListTokenEvent {
   const event = new MarketplaceTokenPriceUpdatedEvent(ctx);
+  if (event.isV55) {
+    const {
+      who: owner, class: classId, instance: instanceId, price,
+    } = event.asV55;
+    return {
+      collectionId: classId.toString(), caller: addressOf(owner), sn: instanceId.toString(), price,
+    };
+  }
+
   const {
-    who: owner, class: classId, instance: instanceId, price,
-  } = event.asV55;
+    who: owner, collection: classId, item: instanceId, price,
+  } = event.asV81;
   return {
     collectionId: classId.toString(), caller: addressOf(owner), sn: instanceId.toString(), price,
   };
@@ -99,9 +108,27 @@ export function getListTokenEvent(ctx: Context): ListTokenEvent {
 
 export function getBuyTokenEvent(ctx: Context): BuyTokenEvent {
   const event = new MarketplaceTokenSoldEvent(ctx);
+
+  if (event.isV43) {
+    const [
+      from, to, classId, instanceId, price,
+    ] = event.asV43;
+    return {
+      collectionId: classId.toString(), caller: addressOf(to), sn: instanceId.toString(), price: BigInt(price ?? 0), currentOwner: addressOf(from),
+    };
+  }
+
+  if (event.isV55) {
+    const {
+      owner: from, buyer: to, class: classId, instance: instanceId, price,
+    } = event.asV55;
+    return {
+      collectionId: classId.toString(), caller: addressOf(to), sn: instanceId.toString(), price: BigInt(price ?? 0), currentOwner: addressOf(from),
+    };
+  }
   const {
-    owner: from, buyer: to, class: classId, instance: instanceId, price,
-  } = event.asV55;
+    owner: from, buyer: to, collection: classId, item: instanceId, price,
+  } = event.asV81;
   return {
     collectionId: classId.toString(), caller: addressOf(to), sn: instanceId.toString(), price: BigInt(price ?? 0), currentOwner: addressOf(from),
   };
@@ -109,9 +136,19 @@ export function getBuyTokenEvent(ctx: Context): BuyTokenEvent {
 
 export function getAddRoyaltyEvent(ctx: Context): AddRoyaltyEvent {
   const event = new MarketplaceRoyaltyAddedEvent(ctx);
+
+  if (event.isV55 || event.isV76) {
+    const {
+      class: classId, instance: instanceId, author: recipient, royalty,
+    } = event.isV55 ? event.asV55 : event.asV76;
+    return {
+      collectionId: classId.toString(), sn: instanceId.toString(), recipient: addressOf(recipient), royalty: event.isV55 ? royalty : toPercent(royalty),
+    };
+  }
+
   const {
-    class: classId, instance: instanceId, author: recipient, royalty,
-  } = event.isV55 ? event.asV55 : event.asV76;
+    collection: classId, item: instanceId, author: recipient, royalty,
+  } = event.asV81;
   return {
     collectionId: classId.toString(), sn: instanceId.toString(), recipient: addressOf(recipient), royalty: event.isV55 ? royalty : toPercent(royalty),
   };
@@ -119,9 +156,18 @@ export function getAddRoyaltyEvent(ctx: Context): AddRoyaltyEvent {
 
 export function getPayRoyaltyEvent(ctx: Context): PayRoyaltyEvent {
   const event = new MarketplaceRoyaltyPaidEvent(ctx);
+  if (event.isV55 || event.isV76) {
+    const {
+      class: classId, instance: instanceId, author: recipient, royalty, royaltyAmount: amount,
+    } = event.isV55 ? event.asV55 : event.asV76;
+    return {
+      collectionId: classId.toString(), sn: instanceId.toString(), recipient: addressOf(recipient), royalty: event.isV55 ? royalty : toPercent(royalty), amount,
+    };
+  }
+
   const {
-    class: classId, instance: instanceId, author: recipient, royalty, royaltyAmount: amount,
-  } = event.isV55 ? event.asV55 : event.asV76;
+    collection: classId, item: instanceId, author: recipient, royalty, royaltyAmount: amount,
+  } = event.asV81;
   return {
     collectionId: classId.toString(), sn: instanceId.toString(), recipient: addressOf(recipient), royalty: event.isV55 ? royalty : toPercent(royalty), amount,
   };
@@ -134,9 +180,18 @@ export function getPlaceOfferEvent(ctx: Context): MakeOfferEvent {
   //   return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, expiresAt: BigInt(0), };
   // }
 
+  if (event.isV55) {
+    const {
+      who: caller, class: classId, instance: instanceId, amount, expires: blockNumber,
+    } = event.asV55;
+    return {
+      collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, expiresAt: BigInt(blockNumber),
+    };
+  }
+
   const {
-    who: caller, class: classId, instance: instanceId, amount, expires: blockNumber,
-  } = event.asV55;
+    who: caller, collection: classId, item: instanceId, amount, expires: blockNumber,
+  } = event.asV81;
   return {
     collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, expiresAt: BigInt(blockNumber),
   };
@@ -144,7 +199,12 @@ export function getPlaceOfferEvent(ctx: Context): MakeOfferEvent {
 
 export function getWithdrawOfferEvent(ctx: Context): BaseOfferEvent {
   const event = new MarketplaceOfferWithdrawnEvent(ctx);
-  const { who: caller, class: classId, instance: instanceId } = event.asV55;
+  if (event.isV55) {
+    const { who: caller, class: classId, instance: instanceId } = event.asV55;
+    return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller) };
+  }
+
+  const { who: caller, collection: classId, item: instanceId } = event.asV81;
   return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller) };
 }
 
@@ -154,10 +214,18 @@ export function getAcceptOfferEvent(ctx: Context): AcceptOfferEvent {
   //   const [caller, class: classId, instance: instanceId,, amount] = event.asV39;
   //   return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, maker: '' };
   // }
+  if (event.isV55) {
+    const {
+      who: caller, class: classId, instance: instanceId, amount, maker,
+    } = event.asV65;
+    return {
+      collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, maker: addressOf(maker),
+    };
+  }
 
   const {
-    who: caller, class: classId, instance: instanceId, amount, maker,
-  } = event.asV65;
+    who: caller, collection: classId, item: instanceId, amount, maker,
+  } = event.asV81;
   return {
     collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, maker: addressOf(maker),
   };
