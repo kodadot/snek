@@ -59,7 +59,9 @@ export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
 export function getCreateTokenEvent(ctx: Context): CreateTokenEvent {
   if (isNewUnique(ctx, Event.createItem)) {
     const event = new NftItemMintedEvent(ctx);
-    const { itemId: instanceId, collectionId: classId, owner, metadata } = event.asV81;
+    const {
+      itemId: instanceId, collectionId: classId, owner, metadata,
+    } = event.asV81;
     return {
       collectionId: classId.toString(), caller: addressOf(owner), sn: instanceId.toString(), metadata: metadata.toString(),
     };
