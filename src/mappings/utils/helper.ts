@@ -1,6 +1,6 @@
 import * as ss58 from '@subsquid/ss58';
 import { decodeHex } from '@subsquid/substrate-processor';
-import { Event } from '../../processable'
+import { Event } from '../../processable';
 import { Context, SomethingWithOptionalMeta } from './types';
 
 export function isEmpty(obj: Record<string, unknown>): boolean {
