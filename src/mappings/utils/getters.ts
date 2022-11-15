@@ -1,12 +1,23 @@
+import { Event } from '../../processable';
 import {
-  MarketplaceOfferAcceptedEvent, MarketplaceOfferPlacedEvent, MarketplaceOfferWithdrawnEvent, MarketplaceRoyaltyAddedEvent, MarketplaceRoyaltyPaidEvent, MarketplaceTokenPriceUpdatedEvent, MarketplaceTokenSoldEvent, NftClassCreatedEvent, NftClassDestroyedEvent, NftInstanceBurnedEvent, NftInstanceMintedEvent, NftInstanceTransferredEvent,
+  MarketplaceOfferAcceptedEvent, MarketplaceOfferPlacedEvent, MarketplaceOfferWithdrawnEvent, MarketplaceRoyaltyAddedEvent, MarketplaceRoyaltyPaidEvent, MarketplaceTokenPriceUpdatedEvent, MarketplaceTokenSoldEvent, NftClassCreatedEvent, NftClassDestroyedEvent, NftCollectionCreatedEvent, NftCollectionDestroyedEvent, NftInstanceBurnedEvent, NftInstanceMintedEvent, NftInstanceTransferredEvent, NftItemBurnedEvent, NftItemMintedEvent, NftItemTransferredEvent,
 } from '../../types/events';
-import { addressOf, toPercent } from './helper';
+import { addressOf, isNewUnique, toPercent } from './helper';
 import {
   BurnTokenEvent, CreateCollectionEvent, CreateTokenEvent, DestroyCollectionEvent, TransferTokenEvent, Context, ListTokenEvent, BuyTokenEvent, AddRoyaltyEvent, PayRoyaltyEvent, BaseOfferEvent, MakeOfferEvent, AcceptOfferEvent,
 } from './types';
 
 export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
+  if (isNewUnique(ctx, Event.createCollection)) {
+    const event = new NftCollectionCreatedEvent(ctx);
+    const {
+      collectionId: classId, owner, collectionType: classType,
+    } = event.asV81;
+    return {
+      id: classId.toString(), caller: addressOf(owner), metadata: undefined, type: classType.__kind,
+    };
+  }
+
   const event = new NftClassCreatedEvent(ctx);
   // logger.debug('NftClassCreatedEvent', event.isV39)
   if (event.isV42) {
@@ -36,6 +47,16 @@ export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
 }
 
 export function getCreateTokenEvent(ctx: Context): CreateTokenEvent {
+  if (isNewUnique(ctx, Event.createItem)) {
+    const event = new NftItemMintedEvent(ctx);
+    const {
+      itemId: instanceId, collectionId: classId, owner, metadata,
+    } = event.asV81;
+    return {
+      collectionId: classId.toString(), caller: addressOf(owner), sn: instanceId.toString(), metadata: metadata.toString(),
+    };
+  }
+
   const event = new NftInstanceMintedEvent(ctx);
   // logger.debug('NftInstanceMintedEvent', event.isV39)
   // if (event.isV39) {
@@ -56,6 +77,16 @@ export function getCreateTokenEvent(ctx: Context): CreateTokenEvent {
 }
 
 export function getTransferTokenEvent(ctx: Context): TransferTokenEvent {
+  if (isNewUnique(ctx, Event.transferItem)) {
+    const event = new NftItemTransferredEvent(ctx);
+    const {
+      collectionId, itemId, from, to,
+    } = event.asV81;
+    return {
+      collectionId: collectionId.toString(), caller: addressOf(from), sn: itemId.toString(), to: addressOf(to),
+    };
+  }
+
   const event = new NftInstanceTransferredEvent(ctx);
   const {
     classId, instanceId, from, to,
@@ -66,12 +97,24 @@ export function getTransferTokenEvent(ctx: Context): TransferTokenEvent {
 }
 
 export function getBurnTokenEvent(ctx: Context): BurnTokenEvent {
+  if (isNewUnique(ctx, Event.burnItem)) {
+    const event = new NftItemBurnedEvent(ctx);
+    const { collectionId, itemId, owner } = event.asV81;
+    return { collectionId: collectionId.toString(), caller: addressOf(owner), sn: itemId.toString() };
+  }
+
   const event = new NftInstanceBurnedEvent(ctx);
   const { classId, instanceId, owner } = event.asV42;
   return { collectionId: classId.toString(), caller: addressOf(owner), sn: instanceId.toString() };
 }
 
 export function getDestroyCollectionEvent(ctx: Context): DestroyCollectionEvent {
+  if (isNewUnique(ctx, Event.destroyCollection)) {
+    const event = new NftCollectionDestroyedEvent(ctx);
+    const { collectionId, owner } = event.asV81;
+    return { id: collectionId.toString(), caller: addressOf(owner) };
+  }
+
   const event = new NftClassDestroyedEvent(ctx);
   const { classId, owner } = event.asV42;
   return { id: classId.toString(), caller: addressOf(owner) };
