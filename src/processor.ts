@@ -15,7 +15,6 @@ const processor = new SubstrateProcessor(database);
 const STARTING_BLOCK = 6000; // 6000 or 1790000 for Prod
 
 processor.setTypesBundle('basilisk');
-processor.setBatchSize(50);
 processor.setBlockRange({ from: STARTING_BLOCK });
 
 // Prod
