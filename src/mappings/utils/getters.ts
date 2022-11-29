@@ -259,6 +259,15 @@ export function getAcceptOfferEvent(ctx: Context): AcceptOfferEvent {
   // }
   if (event.isV55) {
     const {
+      who: caller, class: classId, instance: instanceId, amount,
+    } = event.asV55;
+    return {
+      collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, maker: addressOf(caller),
+    };
+  }
+
+  if (event.isV65) {
+    const {
       who: caller, class: classId, instance: instanceId, amount, maker,
     } = event.asV65;
     return {
