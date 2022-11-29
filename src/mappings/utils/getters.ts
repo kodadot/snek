@@ -11,10 +11,10 @@ export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
   if (isNewUnique(ctx, Event.createCollection)) {
     const event = new NftCollectionCreatedEvent(ctx);
     const {
-      collectionId: classId, owner, collectionType: classType,
+      collectionId: classId, owner, collectionType: classType, metadata,
     } = event.asV81;
     return {
-      id: classId.toString(), caller: addressOf(owner), metadata: undefined, type: classType.__kind,
+      id: classId.toString(), caller: addressOf(owner), metadata: metadata.toString(), type: classType.__kind,
     };
   }
 
