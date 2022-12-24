@@ -1,5 +1,5 @@
 export enum OfferInteraction {
-  CREATE = "CREATE",
-  ACCEPT = "ACCEPT",
-  CANCEL = "CANCEL",
+    CREATE = "CREATE",
+    ACCEPT = "ACCEPT",
+    CANCEL = "CANCEL",
 }
