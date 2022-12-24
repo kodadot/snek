@@ -15,7 +15,6 @@ const processor = new SubstrateProcessor(database);
 const STARTING_BLOCK = 6000; // 6000 or 1790000 for Prod
 
 processor.setTypesBundle('basilisk');
-processor.setBatchSize(50);
 processor.setBlockRange({ from: STARTING_BLOCK });
 
 // Prod
@@ -58,9 +57,9 @@ processor.addEventHandler(Event.destroyCollection, mappings.handleCollectionDest
 // Marketplace
 processor.addEventHandler(Event.priceUpdate, mappings.handleTokenList);
 processor.addEventHandler(Event.sold, mappings.handleTokenBuy);
-processor.addEventHandler(Event.placeOffer, mappings.handleOfferPlace);
-processor.addEventHandler(Event.withdrawOffer, mappings.handleOfferWithdraw);
-processor.addEventHandler(Event.acceptOffer, mappings.handleOfferAccept);
+// processor.addEventHandler(Event.placeOffer, mappings.handleOfferPlace);
+// processor.addEventHandler(Event.withdrawOffer, mappings.handleOfferWithdraw);
+// processor.addEventHandler(Event.acceptOffer, mappings.handleOfferAccept);
 processor.addEventHandler(Event.addRoyalty, mappings.handleRoyaltyAdd);
 processor.addEventHandler(Event.payRoyalty, mappings.handleRoyaltyPay);
 
