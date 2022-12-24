@@ -4,14 +4,10 @@
   "private": true,
   "scripts": {
     "build": "rm -rf lib && tsc",
-    "init": "node db/init.js",
+    "update": "npx npm-check-updates --filter /subsquid/ --upgrade && npm i -f",
     "db:migrate": "npx squid-typeorm-migration apply",
-    "schema:reset": "",
-    "processor:migrate": "echo skip",
     "processor:start": "node lib/processor.js",
-    "query-node:start": "squid-graphql-server",
-    "lint": "npm run lint:prod -- --fix",
-    "lint:prod": "eslint . --ext .ts --ignore-path .gitignore --max-warnings 0",
+    "query-node:start": "squid-graphql-server --subscriptions --max-response-size 10000 --dumb-cache in-memory --dumb-cache-ttl 1000 --dumb-cache-size 100 --dumb-cache-max-age 1000",
     "test": "vitest --run --dir tests"
   },
   "dependencies": {
