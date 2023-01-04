@@ -4,7 +4,7 @@ import {
 } from '../../types/events';
 import { addressOf, isNewUnique, toPercent } from './helper';
 import {
-  BurnTokenEvent, CreateCollectionEvent, CreateTokenEvent, DestroyCollectionEvent, TransferTokenEvent, Context, ListTokenEvent, BuyTokenEvent, AddRoyaltyEvent, PayRoyaltyEvent, BaseOfferEvent, MakeOfferEvent, AcceptOfferEvent,
+  BurnTokenEvent, CreateCollectionEvent, CreateTokenEvent, DestroyCollectionEvent, TransferTokenEvent, Context, ListTokenEvent, BuyTokenEvent, AddRoyaltyEvent, PayRoyaltyEvent, WithdrawOfferEvent, MakeOfferEvent, AcceptOfferEvent,
 } from './types';
 
 export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
@@ -219,15 +219,16 @@ export function getPlaceOfferEvent(ctx: Context): MakeOfferEvent {
   };
 }
 
-export function getWithdrawOfferEvent(ctx: Context): BaseOfferEvent {
+export function getWithdrawOfferEvent(ctx: Context): WithdrawOfferEvent {
   const event = new MarketplaceOfferWithdrawnEvent(ctx);
+
   if (event.isV55) {
     const { who: caller, class: classId, instance: instanceId } = event.asV55;
-    return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller) };
+    return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), maker: addressOf(String(ctx.event.call?.args.maker)) };
   }
 
   const { who: caller, collection: classId, item: instanceId } = event.asV81;
-  return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller) };
+  return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), maker: addressOf(ctx.event.call?.args.maker) };
 }
 
 export function getAcceptOfferEvent(ctx: Context): AcceptOfferEvent {
