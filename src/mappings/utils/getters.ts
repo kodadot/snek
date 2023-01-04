@@ -224,7 +224,7 @@ export function getWithdrawOfferEvent(ctx: Context): WithdrawOfferEvent {
 
   if (event.isV55) {
     const { who: caller, class: classId, instance: instanceId } = event.asV55;
-    return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), maker: addressOf(String(ctx.event.call?.args.maker)) };
+    return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), maker: addressOf(ctx.event.call?.args.maker) };
   }
 
   const { who: caller, collection: classId, item: instanceId } = event.asV81;
