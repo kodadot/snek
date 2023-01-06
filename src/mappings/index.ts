@@ -288,7 +288,7 @@ export async function handleOfferPlace(context: Context): Promise<void> {
   // logger.debug(`offer: ${JSON.stringify({ ...event, price: String(event.amount), expiresAt: String(event.expiresAt)  }, null, 2)}`)
   const id = createTokenId(event.collectionId, event.sn);
   const entity = ensure<NE>(await get(context.store, NE, id));
-  
+
   // entity doesn't need to exist
   // plsBe(real, entity);
 
@@ -303,7 +303,7 @@ export async function handleOfferPlace(context: Context): Promise<void> {
   offer.createdAt = event.timestamp;
   offer.status = OfferStatus.ACTIVE;
 
-  if (!mayOffer) {
+  if (!mayOffer && entity) {
     offer.nft = entity;
   }
 
@@ -311,7 +311,7 @@ export async function handleOfferPlace(context: Context): Promise<void> {
   await context.store.save(offer);
 
   const meta = String(event.amount || '');
-  await createOfferEvent(offer, OfferInteraction.CREATE, event, meta, context.store, entity.currentOwner);
+  await createOfferEvent(offer, OfferInteraction.CREATE, event, meta, context.store, entity ? entity.currentOwner : '');
 }
 
 export async function handleOfferAccept(context: Context): Promise<void> {
@@ -350,8 +350,8 @@ export async function handleOfferWithdraw(context: Context): Promise<void> {
   const tokenId = tokenIdOf(event);
   const { currentOwner } = ensure<NE>(await get(context.store, NE, tokenId));
 
-  const offerMaker = currentOwner === event.caller ? event.maker : event.caller ;
-  const id = createOfferId(tokenId, offerMaker)
+  const offerMaker = currentOwner === event.caller ? event.maker : event.caller;
+  const id = createOfferId(tokenId, offerMaker);
 
   const entity = ensure<Offer>(await get(context.store, Offer, id));
   plsBe(real, entity);
