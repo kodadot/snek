@@ -57,9 +57,9 @@ processor.addEventHandler(Event.destroyCollection, mappings.handleCollectionDest
 // Marketplace
 processor.addEventHandler(Event.priceUpdate, mappings.handleTokenList);
 processor.addEventHandler(Event.sold, mappings.handleTokenBuy);
-// processor.addEventHandler(Event.placeOffer, mappings.handleOfferPlace);
-// processor.addEventHandler(Event.withdrawOffer, mappings.handleOfferWithdraw);
-// processor.addEventHandler(Event.acceptOffer, mappings.handleOfferAccept);
+processor.addEventHandler(Event.placeOffer, mappings.handleOfferPlace);
+processor.addEventHandler(Event.withdrawOffer, mappings.handleOfferWithdraw);
+processor.addEventHandler(Event.acceptOffer, mappings.handleOfferAccept);
 processor.addEventHandler(Event.addRoyalty, mappings.handleRoyaltyAdd);
 processor.addEventHandler(Event.payRoyalty, mappings.handleRoyaltyPay);
 

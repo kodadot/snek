@@ -288,9 +288,11 @@ export async function handleOfferPlace(context: Context): Promise<void> {
   // logger.debug(`offer: ${JSON.stringify({ ...event, price: String(event.amount), expiresAt: String(event.expiresAt)  }, null, 2)}`)
   const id = createTokenId(event.collectionId, event.sn);
   const entity = ensure<NE>(await get(context.store, NE, id));
-  plsBe(real, entity);
 
-  const offerId = createOfferId(entity.id, event.caller);
+  // entity doesn't need to exist
+  // plsBe(real, entity);
+
+  const offerId = createOfferId(id, event.caller);
   const mayOffer = await get(context.store, Offer, offerId);
 
   const offer = mayOffer ?? create<Offer>(Offer, offerId, {});
@@ -301,7 +303,7 @@ export async function handleOfferPlace(context: Context): Promise<void> {
   offer.createdAt = event.timestamp;
   offer.status = OfferStatus.ACTIVE;
 
-  if (!mayOffer) {
+  if (!mayOffer && entity) {
     offer.nft = entity;
   }
 
@@ -309,7 +311,7 @@ export async function handleOfferPlace(context: Context): Promise<void> {
   await context.store.save(offer);
 
   const meta = String(event.amount || '');
-  await createOfferEvent(offer, OfferInteraction.CREATE, event, meta, context.store, entity.currentOwner);
+  await createOfferEvent(offer, OfferInteraction.CREATE, event, meta, context.store, entity ? entity.currentOwner : '');
 }
 
 export async function handleOfferAccept(context: Context): Promise<void> {
@@ -346,7 +348,11 @@ export async function handleOfferWithdraw(context: Context): Promise<void> {
   const event = unwrap(context, getWithdrawOfferEvent);
   logger.debug(`offer no: ${JSON.stringify(event, null, 2)}`);
   const tokenId = tokenIdOf(event);
-  const id = createOfferId(tokenId, event.caller);
+  const { currentOwner } = ensure<NE>(await get(context.store, NE, tokenId));
+
+  const offerMaker = currentOwner === event.caller ? event.maker : event.caller;
+  const id = createOfferId(tokenId, offerMaker);
+
   const entity = ensure<Offer>(await get(context.store, Offer, id));
   plsBe(real, entity);
 
@@ -354,7 +360,6 @@ export async function handleOfferWithdraw(context: Context): Promise<void> {
   entity.updatedAt = event.timestamp;
 
   logger.success(`[WITHDRAW OFFER] for ${id} by ${event.caller} for ${String(entity.price)}`);
-  const { currentOwner } = ensure<NE>(await get(context.store, NE, tokenId));
 
   await context.store.save(entity);
   const meta = String(entity.price || '');
