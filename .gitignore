@@ -5,3 +5,8 @@
 
 # IDE files
 /.idea
+
+# MISC
+
+.DS_Store
+dump_*.sql
