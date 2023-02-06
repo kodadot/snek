@@ -2,6 +2,8 @@
 
 **Implementation of the best NFT marketplace with locked balances.**
 
+![image](https://user-images.githubusercontent.com/5887929/217077078-b0469706-1348-48ae-a4dc-9ee7598d8a3c.png)
+
 
 ## Prerequisites
 
