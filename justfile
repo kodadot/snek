@@ -6,8 +6,11 @@ process: build
 serve:
 	@npx squid-graphql-server
 
-up:
-  docker compose up
+up *FLAGS:
+  docker compose up {{FLAGS}}
+
+upd:
+	@just up -d
 
 pull:
   docker compose pull
@@ -35,13 +38,15 @@ explore:
 		--archive $ARCHIVE_URL \
 		--out kusamaVersions.jsonl
 
-bug: down up
+bug: down upd
 
 reset: migrate
 
 quickstart: migrate process
 
-new-schema: codegen build update-db
+quick: build reset process
+
+db: update-db migrate
 
 prod TAG:
 	gh pr create --base release-{{TAG}}
