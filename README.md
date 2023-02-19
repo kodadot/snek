@@ -40,7 +40,7 @@ make process
 #    and run
 make serve
 
-# 7. Now you can see the resuls by visiting the localhost:4350/graphql
+# 7. Now you can see the results by visiting the localhost:4350/graphql
 ```
 
 ## Dev flow
