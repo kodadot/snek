@@ -1,8 +1,11 @@
 import logger, { logError } from './logger';
-import { Series, Spotlight, CacheStatus } from '../../model/generated';
-import { EntityConstructor, Store } from './types';
-import { getOrCreate } from './entity';
+import {
+  Series, Spotlight, CacheStatus, MetadataEntity,
+} from '../../model/generated';
+import { EntityConstructor, Store, TokenMetadata } from './types';
+import { create, EntityWithId, getOrCreate } from './entity';
 import { camelCase } from './helper';
+import { fetchAllMetadata } from './metadata';
 
 const DELAY_MIN = 60; // every 60 minutes
 const STATUS_ID = '0';
@@ -69,6 +72,34 @@ enum Query {
 
 }
 
+enum MetadataQuery {
+  missing = `SELECT 
+    DISTINCT metadata as id
+  FROM nft_entity
+  WHERE metadata IS NOT NULL
+    AND meta_id IS NULL
+  UNION
+  SELECT
+    DISTINCT  metadata as id
+  FROM collection_entity
+  WHERE metadata IS NOT NULL
+    AND meta_id IS NULL;`,
+
+  nft = `UPDATE
+    nft_entity ne
+  SET meta_id = me.id
+  FROM metadata_entity me
+  WHERE ne.metadata = me.id
+  RETURNING ne.id, me.id;`,
+
+  collection = `UPDATE
+    collection_entity ce
+  SET meta_id = me.id
+  FROM metadata_entity me
+  WHERE ce.metadata = me.id
+  RETURNING ce.id, me.id;`,
+}
+
 export async function updateCache(timestamp: Date, store: Store): Promise<void> {
   const lastUpdate = await getOrCreate(store, CacheStatus, STATUS_ID, { id: STATUS_ID, lastBlockTimestamp: new Date(0) });
   const passedMins = (timestamp.getTime() - lastUpdate.lastBlockTimestamp.getTime()) / 60000;
@@ -78,6 +109,7 @@ export async function updateCache(timestamp: Date, store: Store): Promise<void> 
       await Promise.all([
         updateEntityCache(store, Series, Query.series),
         updateEntityCache(store, Spotlight, Query.spotlight),
+        updateMissingMetadata(store),
         // updateEntityCache(store, Collector, Query.collector_whale),
       ]);
       lastUpdate.lastBlockTimestamp = timestamp;
@@ -103,4 +135,30 @@ async function updateEntityCache<T>(
     return entity;
   });
   return store.save(entities);
+}
+
+async function updateMissingMetadata(store: Store) {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const missing: EntityWithId[] = await store.query(MetadataQuery.missing);
+    if (!missing.length) {
+      logger.info('[MISSING METADATA] - NONE');
+      return;
+    }
+
+    logger.info(`[MISSING METADATA] - ${missing.length}`);
+    const ids = missing.map((el) => el.id);
+    const results = await fetchAllMetadata<TokenMetadata>(ids);
+    const entities = results.map((el) => create(MetadataEntity, el.id, el));
+    logger.debug(`[MISSING METADATA] - FOUND ${entities.length}`);
+    await store.save(entities);
+    await store.query(MetadataQuery.nft);
+    await store.query(MetadataQuery.collection);
+    logger.success('[METADATA UPDATE]');
+  } catch (e) {
+    logError(e, (err) => logger.error(`[MISSING METADATA] ${err.message}`));
+  }
+  // const nft = await store.query(MetadataQuery.nft);
+  // const collection = await store.query(MetadataQuery.collection);
+  // logger.info(`[CACHE UPDATE] MISSING METADATA - ${missing.length} NFTs, ${nft.length} NFTs, ${collection.length} Collections`);
 }
