@@ -109,7 +109,7 @@ export async function updateCache(timestamp: Date, store: Store): Promise<void> 
       await Promise.all([
         updateEntityCache(store, Series, Query.series),
         updateEntityCache(store, Spotlight, Query.spotlight),
-        // updateMissingMetadata(store),
+        updateMissingMetadata(store),
         // updateEntityCache(store, Collector, Query.collector_whale),
       ]);
       lastUpdate.lastBlockTimestamp = timestamp;
@@ -150,10 +150,11 @@ async function updateMissingMetadata(store: Store) {
     const ids = missing.map((el) => el.id);
     const results = await fetchAllMetadata<TokenMetadata>(ids);
     const entities = results.map((el) => create(MetadataEntity, el.id, el));
-    logger.success(`[MISSING METADATA] - FOUND ${entities.length}`);
+    logger.debug(`[MISSING METADATA] - FOUND ${entities.length}`);
     await store.save(entities);
     await store.query(MetadataQuery.nft);
     await store.query(MetadataQuery.collection);
+    logger.success('[METADATA UPDATE]');
   } catch (e) {
     logError(e, (err) => logger.error(`[MISSING METADATA] ${err.message}`));
   }
