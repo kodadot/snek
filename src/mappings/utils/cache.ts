@@ -151,7 +151,7 @@ async function updateMissingMetadata(store: Store) {
     const results = await fetchAllMetadata<TokenMetadata>(ids);
     const entities = results.map((el) => create(MetadataEntity, el.id, el));
     logger.success(`[MISSING METADATA] - FOUND ${entities.length}`);
-    await store.upsert(MetadataEntity, entities);
+    await store.save(entities);
     await store.query(MetadataQuery.nft);
     await store.query(MetadataQuery.collection);
   } catch (e) {
