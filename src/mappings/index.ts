@@ -85,7 +85,7 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
   final.issuer = event.caller;
   final.currentOwner = event.caller;
   final.blockNumber = BigInt(event.blockNumber);
-  final.metadata = event.metadata || 'ipfs://ipfs/bafkreiazeqysfmeuzqcnjp6rijxfu5h7sj3t4h2rxehi7rlyegzfy7lxeq';
+  final.metadata = event.metadata || 'ipfs://ipfs/bafkreignxq5tnh2myt3gfa3neisd3uw36ap5kkcf5afxlrbuv45dzhs5ke';
   final.burned = false;
   final.createdAt = event.timestamp;
   final.updatedAt = event.timestamp;
@@ -140,7 +140,7 @@ export async function handleTokenCreate(context: Context): Promise<void> {
   final.blockNumber = BigInt(event.blockNumber);
   final.collection = collection;
   final.sn = event.sn;
-  final.metadata = event.metadata || 'ipfs://ipfs/bafkreiazeqysfmeuzqcnjp6rijxfu5h7sj3t4h2rxehi7rlyegzfy7lxeq';
+  final.metadata = event.metadata || 'ipfs://ipfs/bafkreignxq5tnh2myt3gfa3neisd3uw36ap5kkcf5afxlrbuv45dzhs5ke';
   final.price = BigInt(0);
   final.burned = false;
   final.createdAt = event.timestamp;
