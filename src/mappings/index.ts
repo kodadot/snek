@@ -31,7 +31,7 @@ import {
 } from './utils/getters';
 import { isEmpty } from './utils/helper';
 import logger, { logError } from './utils/logger';
-import { fetchMetadata } from './utils/metadata';
+import { ensureMetadataUri, fetchMetadata } from './utils/metadata';
 import {
   attributeFrom,
   BaseCall,
@@ -81,17 +81,19 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
   const final = await getOrCreate<CE>(context.store, CE, event.id, {});
   plsBe(remintable, final);
 
+  const type = event.type as CollectionType;
+
   final.id = event.id;
   final.issuer = event.caller;
   final.currentOwner = event.caller;
   final.blockNumber = BigInt(event.blockNumber);
-  final.metadata = event.metadata || 'ipfs://ipfs/bafkreignxq5tnh2myt3gfa3neisd3uw36ap5kkcf5afxlrbuv45dzhs5ke';
+  final.metadata = ensureMetadataUri(event.metadata, type);
   final.burned = false;
   final.createdAt = event.timestamp;
   final.updatedAt = event.timestamp;
   final.nftCount = 0;
   final.supply = 0;
-  final.type = event.type as CollectionType; // unsafe
+  final.type = type;
 
   logger.debug(`metadata: ${final.metadata}`);
 
@@ -140,7 +142,7 @@ export async function handleTokenCreate(context: Context): Promise<void> {
   final.blockNumber = BigInt(event.blockNumber);
   final.collection = collection;
   final.sn = event.sn;
-  final.metadata = event.metadata || 'ipfs://ipfs/bafkreignxq5tnh2myt3gfa3neisd3uw36ap5kkcf5afxlrbuv45dzhs5ke';
+  final.metadata = ensureMetadataUri(event.metadata, collection.type);
   final.price = BigInt(0);
   final.burned = false;
   final.createdAt = event.timestamp;
