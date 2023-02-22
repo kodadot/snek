@@ -29,6 +29,9 @@ export class CollectionEntity {
     @OneToMany_(() => CollectionEvent, e => e.collection)
     events!: CollectionEvent[]
 
+    @Column_("text", {nullable: true})
+    image!: string | undefined | null
+
     @Column_("text", {nullable: false})
     issuer!: string
 
@@ -38,6 +41,9 @@ export class CollectionEntity {
 
     @Column_("text", {nullable: true})
     metadata!: string | undefined | null
+
+    @Column_("text", {nullable: true})
+    media!: string | undefined | null
 
     @Index_()
     @Column_("text", {nullable: true})

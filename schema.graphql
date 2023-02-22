@@ -5,9 +5,11 @@ type CollectionEntity @entity {
   currentOwner: String!
   burned: Boolean!
   events: [CollectionEvent!] @derivedFrom(field: "collection")
+  image: String
   issuer: String!
   meta: MetadataEntity
   metadata: String
+  media: String
   name: String @index
   nfts: [NFTEntity!] @derivedFrom(field: "collection")
   updatedAt: DateTime!
@@ -26,8 +28,10 @@ type NFTEntity @entity {
   events: [Event!] @derivedFrom(field: "nft")
   offers: [Offer!] @derivedFrom(field: "nft")
   hash: String! @index
+  image: String
   issuer: String!
   meta: MetadataEntity
+  media: String
   metadata: String
   name: String @index
   price: BigInt
