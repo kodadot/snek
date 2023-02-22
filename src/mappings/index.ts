@@ -101,6 +101,8 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
     const metadata = await handleMetadata(final.metadata, context.store);
     final.meta = metadata;
     final.name = metadata?.name;
+    final.image = metadata?.image;
+    final.media = metadata?.animationUrl;
   }
 
   logger.success(`[COLLECTION] ${final.id}`);
@@ -158,6 +160,8 @@ export async function handleTokenCreate(context: Context): Promise<void> {
     const metadata = await handleMetadata(final.metadata, context.store);
     final.meta = metadata;
     final.name = metadata?.name;
+    final.image = metadata?.image;
+    final.media = metadata?.animationUrl;
   }
 
   logger.success(`[MINT] ${final.id}`);
