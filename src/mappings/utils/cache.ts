@@ -9,6 +9,9 @@ import { fetchAllMetadata } from './metadata';
 
 const DELAY_MIN = 60; // every 60 minutes
 const STATUS_ID = '0';
+const METADATA_STATUS_ID = '1';
+const METADATA_DELAY_MIN = 10; // every 24 hours
+const TO_MINUTES = 60000;
 
 enum Query {
 
@@ -100,16 +103,33 @@ enum MetadataQuery {
   RETURNING ce.id, me.id;`,
 }
 
+export async function updateMetadataCache(timestamp: Date, store: Store): Promise<void> {
+  const lastUpdate = await getOrCreate(store, CacheStatus, METADATA_STATUS_ID, { id: METADATA_STATUS_ID, lastBlockTimestamp: new Date(0) });
+  const passedMins = getPassedMinutes(timestamp, lastUpdate.lastBlockTimestamp);
+  logger.info(`[METADATA CACHE UPDATE] PASSED TIME - ${passedMins} MINS`);
+  if (passedMins >= METADATA_DELAY_MIN) {
+    try {
+      await updateMissingMetadata(store);
+      lastUpdate.lastBlockTimestamp = timestamp;
+      await store.save(lastUpdate);
+      logger.success('[METADATA CACHE UPDATE]');
+    } catch (e) {
+      logError(e, (err) => logger.error(`[METADATA CACHE UPDATE] ${err.message}`));
+    }
+  }
+}
+
 export async function updateCache(timestamp: Date, store: Store): Promise<void> {
   const lastUpdate = await getOrCreate(store, CacheStatus, STATUS_ID, { id: STATUS_ID, lastBlockTimestamp: new Date(0) });
-  const passedMins = (timestamp.getTime() - lastUpdate.lastBlockTimestamp.getTime()) / 60000;
+  const passedMins = (timestamp.getTime() - lastUpdate.lastBlockTimestamp.getTime()) / TO_MINUTES;
   logger.info(`[CACHE UPDATE] PASSED TIME - ${passedMins} MINS`);
+  await updateMetadataCache(timestamp, store);
   if (passedMins > DELAY_MIN) {
     try {
       await Promise.all([
         updateEntityCache(store, Series, Query.series),
         updateEntityCache(store, Spotlight, Query.spotlight),
-        updateMissingMetadata(store),
+        // updateMissingMetadata(store),
         // updateEntityCache(store, Collector, Query.collector_whale),
       ]);
       lastUpdate.lastBlockTimestamp = timestamp;
@@ -119,6 +139,10 @@ export async function updateCache(timestamp: Date, store: Store): Promise<void> 
       logError(e, (err) => logger.error(`[CACHE UPDATE] ${err.message}`));
     }
   }
+}
+
+function getPassedMinutes(timestamp: Date, lastBlockTimestamp: Date): number {
+  return (timestamp.getTime() - lastBlockTimestamp.getTime()) / TO_MINUTES;
 }
 
 async function updateEntityCache<T>(
