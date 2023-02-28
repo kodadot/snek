@@ -10,7 +10,7 @@ import { fetchAllMetadata } from './metadata';
 const DELAY_MIN = 60; // every 60 minutes
 const STATUS_ID = '0';
 const METADATA_STATUS_ID = '1';
-const METADATA_DELAY_MIN = 10; // every 24 hours
+const METADATA_DELAY_MIN = 5; // every 24 hours
 const TO_MINUTES = 60000;
 
 enum Query {
