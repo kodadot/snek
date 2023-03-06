@@ -64,9 +64,10 @@ export class SeriesResolver {
       LEFT JOIN nft_entity ne on ce.id = ne.collection_id 
       JOIN event e on ne.id = e.nft_id
       WHERE e.interaction = 'BUY' ${computedDateRange}
+      OR e.interaction = 'LIST' ${computedDateRange}
       GROUP BY ce.id, me.image, ce.name 
       ORDER BY ${orderBy} ${orderDirection}
-      LIMIT ${limit} OFFSET ${offset}`;
+      LIMIT ${limit} OFFSET ${offset}`
     const result: SeriesEntity[] = await makeQuery(this.tx, NFTEntity, query);
 
     return result;

@@ -36,6 +36,7 @@ enum Query {
       LEFT JOIN nft_entity ne on ce.id = ne.collection_id
       JOIN event e on ne.id = e.nft_id
   WHERE e.interaction = 'BUY'
+  OR e.interaction = 'LIST'
   GROUP BY ce.id, me.image, ce.name
   ORDER BY volume DESC
   LIMIT 100`,
