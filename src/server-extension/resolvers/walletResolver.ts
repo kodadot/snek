@@ -1,9 +1,9 @@
 import { Query, Resolver } from 'type-graphql';
 import type { EntityManager } from 'typeorm';
-import { activeWallets } from '../query/activeWallets';
 import { Event } from '../../model';
-import { makeQuery } from '../utils';
 import { CountEntity } from '../model/count.model';
+import { activeWallets } from '../query/activeWallets';
+import { makeQuery } from '../utils';
 
 @Resolver()
 export class WalletResolver {

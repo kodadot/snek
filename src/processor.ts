@@ -15,7 +15,6 @@ const processor = new SubstrateProcessor(database);
 const STARTING_BLOCK = 6000; // 6000 or 1790000 for Prod
 
 processor.setTypesBundle('basilisk');
-processor.setBatchSize(50);
 processor.setBlockRange({ from: STARTING_BLOCK });
 
 // Prod
@@ -41,11 +40,21 @@ processor.setDataSource({
   chain,
 });
 
+// NFT
 processor.addEventHandler(Event.createClass, mappings.handleCollectionCreate);
 processor.addEventHandler(Event.createInstance, mappings.handleTokenCreate);
 processor.addEventHandler(Event.transfer, mappings.handleTokenTransfer);
 processor.addEventHandler(Event.burn, mappings.handleTokenBurn);
 processor.addEventHandler(Event.destroy, mappings.handleCollectionDestroy);
+
+// New Uniques (NFT)
+processor.addEventHandler(Event.createCollection, mappings.handleCollectionCreate);
+processor.addEventHandler(Event.createItem, mappings.handleTokenCreate);
+processor.addEventHandler(Event.transferItem, mappings.handleTokenTransfer);
+processor.addEventHandler(Event.burnItem, mappings.handleTokenBurn);
+processor.addEventHandler(Event.destroyCollection, mappings.handleCollectionDestroy);
+
+// Marketplace
 processor.addEventHandler(Event.priceUpdate, mappings.handleTokenList);
 processor.addEventHandler(Event.sold, mappings.handleTokenBuy);
 processor.addEventHandler(Event.placeOffer, mappings.handleOfferPlace);

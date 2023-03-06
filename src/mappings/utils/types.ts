@@ -105,6 +105,11 @@ export type PayRoyaltyEvent = AddRoyaltyEvent & WithAmount;
 
 export type BaseOfferEvent = BaseTokenEvent & WithCaller;
 
+export type WithdrawOfferEvent = BaseTokenEvent & {
+  caller: string;
+  maker: string;
+};
+
 export type OfferWithAmountEvent = BaseOfferEvent & WithAmount;
 
 export type AcceptOfferEvent = OfferWithAmountEvent & {

@@ -31,7 +31,7 @@ import {
 } from './utils/getters';
 import { isEmpty } from './utils/helper';
 import logger, { logError } from './utils/logger';
-import { fetchMetadata } from './utils/metadata';
+import { ensureMetadataUri, fetchMetadata } from './utils/metadata';
 import {
   attributeFrom,
   BaseCall,
@@ -81,17 +81,19 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
   const final = await getOrCreate<CE>(context.store, CE, event.id, {});
   plsBe(remintable, final);
 
+  const type = event.type as CollectionType;
+
   final.id = event.id;
   final.issuer = event.caller;
   final.currentOwner = event.caller;
   final.blockNumber = BigInt(event.blockNumber);
-  final.metadata = event.metadata || 'ipfs://ipfs/bafkreiazeqysfmeuzqcnjp6rijxfu5h7sj3t4h2rxehi7rlyegzfy7lxeq';
+  final.metadata = ensureMetadataUri(event.metadata, type);
   final.burned = false;
   final.createdAt = event.timestamp;
   final.updatedAt = event.timestamp;
   final.nftCount = 0;
   final.supply = 0;
-  final.type = event.type as CollectionType; // unsafe
+  final.type = type;
 
   logger.debug(`metadata: ${final.metadata}`);
 
@@ -140,7 +142,7 @@ export async function handleTokenCreate(context: Context): Promise<void> {
   final.blockNumber = BigInt(event.blockNumber);
   final.collection = collection;
   final.sn = event.sn;
-  final.metadata = event.metadata || 'ipfs://ipfs/bafkreiazeqysfmeuzqcnjp6rijxfu5h7sj3t4h2rxehi7rlyegzfy7lxeq';
+  final.metadata = ensureMetadataUri(event.metadata, collection.type);
   final.price = BigInt(0);
   final.burned = false;
   final.createdAt = event.timestamp;
@@ -165,7 +167,7 @@ export async function handleTokenCreate(context: Context): Promise<void> {
 }
 
 export async function handleTokenTransfer(context: Context): Promise<void> {
-  if (context.event.call && [Extrinsic.acceptOffer, Extrinsic.buy].includes(context.event.call?.name as Extrinsic)) {
+  if (context.event.call && [Extrinsic.buy].includes(context.event.call?.name as Extrinsic)) {
     logger.info(`[SEND] SKIP: ${context.block.height}, because of ${context.event.call?.name}`);
     return;
   }
@@ -288,9 +290,11 @@ export async function handleOfferPlace(context: Context): Promise<void> {
   // logger.debug(`offer: ${JSON.stringify({ ...event, price: String(event.amount), expiresAt: String(event.expiresAt)  }, null, 2)}`)
   const id = createTokenId(event.collectionId, event.sn);
   const entity = ensure<NE>(await get(context.store, NE, id));
-  plsBe(real, entity);
 
-  const offerId = createOfferId(entity.id, event.caller);
+  // entity doesn't need to exist
+  // plsBe(real, entity);
+
+  const offerId = createOfferId(id, event.caller);
   const mayOffer = await get(context.store, Offer, offerId);
 
   const offer = mayOffer ?? create<Offer>(Offer, offerId, {});
@@ -301,7 +305,7 @@ export async function handleOfferPlace(context: Context): Promise<void> {
   offer.createdAt = event.timestamp;
   offer.status = OfferStatus.ACTIVE;
 
-  if (!mayOffer) {
+  if (!mayOffer && entity) {
     offer.nft = entity;
   }
 
@@ -309,7 +313,7 @@ export async function handleOfferPlace(context: Context): Promise<void> {
   await context.store.save(offer);
 
   const meta = String(event.amount || '');
-  await createOfferEvent(offer, OfferInteraction.CREATE, event, meta, context.store, entity.currentOwner);
+  await createOfferEvent(offer, OfferInteraction.CREATE, event, meta, context.store, entity ? entity.currentOwner : '');
 }
 
 export async function handleOfferAccept(context: Context): Promise<void> {
@@ -346,7 +350,11 @@ export async function handleOfferWithdraw(context: Context): Promise<void> {
   const event = unwrap(context, getWithdrawOfferEvent);
   logger.debug(`offer no: ${JSON.stringify(event, null, 2)}`);
   const tokenId = tokenIdOf(event);
-  const id = createOfferId(tokenId, event.caller);
+  const { currentOwner } = ensure<NE>(await get(context.store, NE, tokenId));
+
+  const offerMaker = currentOwner === event.caller ? event.maker : event.caller;
+  const id = createOfferId(tokenId, offerMaker);
+
   const entity = ensure<Offer>(await get(context.store, Offer, id));
   plsBe(real, entity);
 
@@ -354,7 +362,6 @@ export async function handleOfferWithdraw(context: Context): Promise<void> {
   entity.updatedAt = event.timestamp;
 
   logger.success(`[WITHDRAW OFFER] for ${id} by ${event.caller} for ${String(entity.price)}`);
-  const { currentOwner } = ensure<NE>(await get(context.store, NE, tokenId));
 
   await context.store.save(entity);
   const meta = String(entity.price || '');
