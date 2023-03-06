@@ -90,14 +90,22 @@ enum MetadataQuery {
 
   nft = `UPDATE
     nft_entity ne
-  SET meta_id = me.id
+  SET 
+    meta_id = me.id,
+    name = me.name,
+    image = me.image,
+    media = me.animation_url
   FROM metadata_entity me
   WHERE ne.metadata = me.id
   RETURNING ne.id, me.id;`,
 
   collection = `UPDATE
     collection_entity ce
-  SET meta_id = me.id
+  SET
+    meta_id = me.id,
+    name = me.name,
+    image = me.image,
+    media = me.animation_url
   FROM metadata_entity me
   WHERE ce.metadata = me.id
   RETURNING ce.id, me.id;`,

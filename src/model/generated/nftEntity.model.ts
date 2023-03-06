@@ -41,12 +41,18 @@ export class NFTEntity {
     @Column_("text", {nullable: false})
     hash!: string
 
+    @Column_("text", {nullable: true})
+    image!: string | undefined | null
+
     @Column_("text", {nullable: false})
     issuer!: string
 
     @Index_()
     @ManyToOne_(() => MetadataEntity, {nullable: true})
     meta!: MetadataEntity | undefined | null
+
+    @Column_("text", {nullable: true})
+    media!: string | undefined | null
 
     @Column_("text", {nullable: true})
     metadata!: string | undefined | null
