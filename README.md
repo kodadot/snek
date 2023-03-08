@@ -2,6 +2,8 @@
 
 **Implementation of the best NFT marketplace with locked balances.**
 
+![image](https://user-images.githubusercontent.com/5887929/217077078-b0469706-1348-48ae-a4dc-9ee7598d8a3c.png)
+
 
 ## Prerequisites
 
@@ -38,7 +40,7 @@ make process
 #    and run
 make serve
 
-# 7. Now you can see the resuls by visiting the localhost:4350/graphql
+# 7. Now you can see the results by visiting the localhost:4350/graphql
 ```
 
 ## Dev flow
