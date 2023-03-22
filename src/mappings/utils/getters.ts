@@ -12,18 +12,18 @@ export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
     const event = new NftCollectionCreatedEvent(ctx);
     if (event.isV81) {
       const {
-        collectionId: classId, owner, collectionType: classType,
+        collectionId: classId, owner, collectionType: classType, metadata,
       } = event.asV81;
       return {
-        id: classId.toString(), caller: addressOf(owner), metadata: undefined, type: classType.__kind,
+        id: classId.toString(), caller: addressOf(owner), metadata: metadata.toString(), type: classType.__kind,
       };
     }
 
     const {
-      collectionId: classId, owner, collectionType: classType,
+      collectionId: classId, owner, collectionType: classType, metadata,
     } = event.asV92;
     return {
-      id: classId.toString(), caller: addressOf(owner), metadata: undefined, type: classType.__kind,
+      id: classId.toString(), caller: addressOf(owner), metadata: metadata.toString(), type: classType.__kind,
     };
   }
 
