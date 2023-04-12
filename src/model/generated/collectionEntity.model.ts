@@ -63,4 +63,13 @@ export class CollectionEntity {
 
     @Column_("varchar", {length: 15, nullable: false})
     type!: CollectionType
+
+    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+    volume!: bigint
+
+    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+    highestSalePrice!: bigint
+
+    // @Column_("int", {nullable: true})
+    // total!: number
 }

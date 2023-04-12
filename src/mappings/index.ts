@@ -94,6 +94,8 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
   final.nftCount = 0;
   final.supply = 0;
   final.type = type;
+  final.volume = BigInt(0);
+  final.highestSalePrice = BigInt(0);
 
   logger.debug(`metadata: ${final.metadata}`);
 
@@ -248,6 +250,10 @@ export async function handleTokenBuy(context: Context): Promise<void> {
 
   const collection = ensure<CE>(await get<CE>(context.store, CE, event.collectionId));
   plsBe(real, collection);
+  collection.volume++;
+  if (event.price && collection.highestSalePrice < event.price) {
+    collection.highestSalePrice = event.price;
+  }
   collection.updatedAt = event.timestamp;
 
   logger.success(`[BUY] ${id} by ${event.caller}`);

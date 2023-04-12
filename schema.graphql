@@ -16,6 +16,8 @@ type CollectionEntity @entity {
   nftCount: Int!
   supply: Int!
   type: CollectionType!
+  volume: BigInt!
+  highestSalePrice: BigInt!
 }
 
 type NFTEntity @entity {
