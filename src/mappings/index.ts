@@ -159,15 +159,6 @@ export async function handleTokenCreate(context: Context): Promise<void> {
   collection.updatedAt = event.timestamp;
   collection.nftCount += 1;
   collection.supply += 1;
-
-  const { ownerCount, distribution } = await calculateCollectionOwnerCountAndDistribution(
-    context.store,
-    final.id,
-    final.currentOwner,
-  );
-  collection.ownerCount = ownerCount;
-  collection.distribution = distribution;
-
   logger.debug(`metadata: ${final.metadata}`);
 
   if (final.metadata) {
