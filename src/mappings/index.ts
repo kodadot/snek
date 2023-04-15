@@ -13,7 +13,9 @@ import {
 import { CollectionType } from '../model/generated/_collectionType';
 import { Extrinsic } from '../processable';
 import { plsBe, real, remintable } from './utils/consolidator';
-import { create, get, getOrCreate } from './utils/entity';
+import {
+  calculateCollectionOwnerCountAndDistribution, create, get, getOrCreate,
+} from './utils/entity';
 import { unwrap } from './utils/extract';
 import {
   getAcceptOfferEvent,
@@ -85,17 +87,19 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
 
   final.id = event.id;
   final.issuer = event.caller;
-  final.currentOwner = event.caller;
   final.blockNumber = BigInt(event.blockNumber);
-  final.metadata = ensureMetadataUri(event.metadata, type);
   final.burned = false;
+  final.currentOwner = event.caller;
+  final.distribution = 0;
+  final.floor = BigInt(0);
+  final.highestSale = BigInt(0);
+  final.metadata = ensureMetadataUri(event.metadata, type);
   final.createdAt = event.timestamp;
   final.updatedAt = event.timestamp;
   final.nftCount = 0;
   final.supply = 0;
   final.type = type;
   final.volume = BigInt(0);
-  final.highestSalePrice = BigInt(0);
 
   logger.debug(`metadata: ${final.metadata}`);
 
@@ -156,6 +160,14 @@ export async function handleTokenCreate(context: Context): Promise<void> {
   collection.nftCount += 1;
   collection.supply += 1;
 
+  const { ownerCount, distribution } = await calculateCollectionOwnerCountAndDistribution(
+    context.store,
+    final.id,
+    final.currentOwner,
+  );
+  collection.ownerCount = ownerCount;
+  collection.distribution = distribution;
+
   logger.debug(`metadata: ${final.metadata}`);
 
   if (final.metadata) {
@@ -189,10 +201,24 @@ export async function handleTokenTransfer(context: Context): Promise<void> {
   entity.currentOwner = event.to;
   entity.updatedAt = event.timestamp;
 
+  const collection = ensure<CE>(
+    await get<CE>(context.store, CE, event.collectionId),
+  );
+  plsBe(real, collection);
+  const { ownerCount, distribution } = await calculateCollectionOwnerCountAndDistribution(
+    context.store,
+    entity.id,
+    event.to,
+    currentOwner,
+  );
+  collection.ownerCount = ownerCount;
+  collection.distribution = distribution;
+
   logger.success(
     `[SEND] ${id} from ${event.caller} to ${event.to}`,
   );
   await context.store.save(entity);
+  await context.store.save(collection);
   await createEvent(entity, Interaction.SEND, event, event.to || '', context.store, currentOwner);
   await updateCache(event.timestamp, context.store);
 }
@@ -214,6 +240,15 @@ export async function handleTokenBurn(context: Context): Promise<void> {
   collection.updatedAt = event.timestamp;
   collection.supply -= 1;
 
+  const { ownerCount, distribution } = await calculateCollectionOwnerCountAndDistribution(
+    context.store,
+    entity.id,
+    undefined,
+    entity.currentOwner,
+  );
+  collection.ownerCount = ownerCount;
+  collection.distribution = distribution;
+
   await context.store.save(entity);
   await context.store.save(collection);
   const meta = entity.metadata ?? '';
@@ -230,8 +265,16 @@ export async function handleTokenList(context: Context): Promise<void> {
   plsBe(real, entity);
 
   entity.price = event.price;
+
+  const collection = ensure<CE>(await get<CE>(context.store, CE, event.collectionId));
+  plsBe(real, collection);
+  if (event.price && event.price < collection.floor) {
+    collection.floor = event.price;
+  }
+
   logger.success(`[LIST] ${id} by ${event.caller}} for ${String(event.price)}`);
   await context.store.save(entity);
+  await context.store.save(collection);
   const meta = String(event.price || '');
   const interaction = event.price ? Interaction.LIST : Interaction.UNLIST;
   await createEvent(entity, interaction, event, meta, context.store);
@@ -244,17 +287,27 @@ export async function handleTokenBuy(context: Context): Promise<void> {
   const id = createTokenId(event.collectionId, event.sn);
   const entity = ensure<NE>(await get(context.store, NE, id));
   plsBe(real, entity);
+  const { currentOwner } = entity;
   entity.price = BigInt(0);
   entity.currentOwner = event.caller;
   entity.updatedAt = event.timestamp;
 
   const collection = ensure<CE>(await get<CE>(context.store, CE, event.collectionId));
   plsBe(real, collection);
-  collection.volume++;
-  if (event.price && collection.highestSalePrice < event.price) {
-    collection.highestSalePrice = event.price;
+  collection.volume += event.price || BigInt(0);
+  if (event.price && collection.highestSale < event.price) {
+    collection.highestSale = event.price;
   }
   collection.updatedAt = event.timestamp;
+
+  const { ownerCount, distribution } = await calculateCollectionOwnerCountAndDistribution(
+    context.store,
+    entity.id,
+    event.caller,
+    currentOwner,
+  );
+  collection.ownerCount = ownerCount;
+  collection.distribution = distribution;
 
   logger.success(`[BUY] ${id} by ${event.caller}`);
   await context.store.save(entity);

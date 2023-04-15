@@ -1,10 +1,13 @@
 type CollectionEntity @entity {
   id: ID!
   blockNumber: BigInt
+  burned: Boolean!
   createdAt: DateTime!
   currentOwner: String!
-  burned: Boolean!
+  distribution: Int!
   events: [CollectionEvent!] @derivedFrom(field: "collection")
+  floor: BigInt!
+  highestSale: BigInt!
   image: String
   issuer: String!
   meta: MetadataEntity
@@ -12,12 +15,12 @@ type CollectionEntity @entity {
   media: String
   name: String @index
   nfts: [NFTEntity!] @derivedFrom(field: "collection")
+  ownerCount: Int!
   updatedAt: DateTime!
   nftCount: Int!
   supply: Int!
   type: CollectionType!
   volume: BigInt!
-  highestSalePrice: BigInt!
 }
 
 type NFTEntity @entity {

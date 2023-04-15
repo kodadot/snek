@@ -17,17 +17,26 @@ export class CollectionEntity {
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: true})
     blockNumber!: bigint | undefined | null
 
+    @Column_("bool", {nullable: false})
+    burned!: boolean
+
     @Column_("timestamp with time zone", {nullable: false})
     createdAt!: Date
 
     @Column_("text", {nullable: false})
     currentOwner!: string
 
-    @Column_("bool", {nullable: false})
-    burned!: boolean
+    @Column_("int4", {nullable: false})
+    distribution!: number
 
     @OneToMany_(() => CollectionEvent, e => e.collection)
     events!: CollectionEvent[]
+
+    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+    floor!: bigint
+
+    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+    highestSale!: bigint
 
     @Column_("text", {nullable: true})
     image!: string | undefined | null
@@ -52,6 +61,9 @@ export class CollectionEntity {
     @OneToMany_(() => NFTEntity, e => e.collection)
     nfts!: NFTEntity[]
 
+    @Column_("int4", {nullable: false})
+    ownerCount!: number
+
     @Column_("timestamp with time zone", {nullable: false})
     updatedAt!: Date
 
@@ -66,7 +78,4 @@ export class CollectionEntity {
 
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
     volume!: bigint
-
-    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
-    highestSalePrice!: bigint
 }
