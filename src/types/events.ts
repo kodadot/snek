@@ -5,6 +5,7 @@ import * as v55 from './v55'
 import * as v62 from './v62'
 import * as v71 from './v71'
 import * as v81 from './v81'
+import * as v92 from './v92'
 
 export class AssetRegistryMetadataSetEvent {
     private readonly _chain: Chain
@@ -709,6 +710,21 @@ export class NftCollectionCreatedEvent {
      */
     get asV81(): {owner: Uint8Array, collectionId: bigint, collectionType: v81.CollectionType, metadata: Uint8Array} {
         assert(this.isV81)
+        return this._chain.decodeEvent(this.event)
+    }
+
+    /**
+     * A collection was created
+     */
+    get isV92(): boolean {
+        return this._chain.getEventHash('NFT.CollectionCreated') === '801df79a18d00e56f22b9269f4ab884baab643358045e07fb2fd388ae577534f'
+    }
+
+    /**
+     * A collection was created
+     */
+    get asV92(): {owner: Uint8Array, collectionId: bigint, collectionType: v92.CollectionType, metadata: Uint8Array} {
+        assert(this.isV92)
         return this._chain.decodeEvent(this.event)
     }
 }
