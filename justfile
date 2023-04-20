@@ -1,3 +1,5 @@
+default := 'squid'
+
 set dotenv-load
 
 process: build
@@ -60,11 +62,11 @@ update-db:
 test:
   npm run test:unit
 
-improve TAG:
-	npx sqd squid:update snekk@{{TAG}} -e VERSION={{TAG}}
+improve TAG=default:
+	npx sqd deploy -m {{TAG}}.yaml .
 
-release TAG:
-	npx sqd squid:release snekk@{{TAG}}
+release TAG=default:
+	npx sqd deploy -m {{TAG}}.yaml .
 
 kill TAG:
 	npx sqd squid:kill snekk@{{TAG}}
@@ -72,8 +74,8 @@ kill TAG:
 exec:
 	docker exec -it snek-db-1 psql -U postgres -d squid
 
-brutal TAG:
-	npx sqd squid:update snekk@{{TAG}} --hardReset -e VERSION={{TAG}}
+brutal TAG=default:
+	npx sqd deploy —hard -m {{TAG}}.yaml .
 
 update-deps:
 	npx npm-check-updates -u
