@@ -198,7 +198,7 @@ export async function handleTokenTransfer(context: Context): Promise<void> {
   plsBe(real, collection);
   const { ownerCount, distribution } = await calculateCollectionOwnerCountAndDistribution(
     context.store,
-    entity.id,
+    event.collectionId,
     event.to,
     currentOwner,
   );
@@ -233,7 +233,7 @@ export async function handleTokenBurn(context: Context): Promise<void> {
 
   const { ownerCount, distribution } = await calculateCollectionOwnerCountAndDistribution(
     context.store,
-    entity.id,
+    event.collectionId,
     undefined,
     entity.currentOwner,
   );
@@ -259,7 +259,7 @@ export async function handleTokenList(context: Context): Promise<void> {
 
   const collection = ensure<CE>(await get<CE>(context.store, CE, event.collectionId));
   plsBe(real, collection);
-  if (event.price && event.price < collection.floor) {
+  if (event.price && (collection.floor === 0n || event.price < collection.floor)) {
     collection.floor = event.price;
   }
 
@@ -293,7 +293,7 @@ export async function handleTokenBuy(context: Context): Promise<void> {
 
   const { ownerCount, distribution } = await calculateCollectionOwnerCountAndDistribution(
     context.store,
-    entity.id,
+    event.collectionId,
     event.caller,
     currentOwner,
   );
