@@ -7,6 +7,9 @@ import {MetadataEntity} from "./metadataEntity.model"
 
 @Entity_()
 export class NFTEntity {
+    static createQueryBuilder(arg0: string) {
+      throw new Error('Method not implemented.')
+    }
     constructor(props?: Partial<NFTEntity>) {
         Object.assign(this, props)
     }

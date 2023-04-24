@@ -72,3 +72,43 @@ export function create<T extends EntityWithId>(
   Object.assign(entity, init);
   return entity;
 }
+
+export async function calculateCollectionOwnerCountAndDistribution(
+  store: Store,
+  collectionId: string,
+  newOwner?: string,
+  originalOwner?: string,
+): Promise<{ ownerCount: number; distribution: number }> {
+  let query;
+  if (newOwner && originalOwner) {
+    query = `SELECT 
+      COUNT(DISTINCT current_owner) AS distribution,
+      COUNT(current_owner) AS owner_count,
+      (
+        SELECT max(
+          CASE
+            WHEN current_owner = '${newOwner}' THEN 0
+            ELSE 1
+          END
+        )
+        FROM nft_entity
+      ) AS adjustment
+      FROM nft_entity
+      WHERE collection_id = '${collectionId}'
+      AND current_owner != '${originalOwner}'`;
+  }
+
+  query = `SELECT 
+      COUNT(DISTINCT current_owner) AS distribution,
+      COUNT(current_owner) AS owner_count
+      FROM nft_entity
+      WHERE collection_id = '${collectionId}'`;
+  const [result]: { owner_count: number; distribution: number; adjustment?: number }[] = await store.query(query);
+
+  const adjustedResults = {
+    ownerCount: result.owner_count - (result.adjustment ?? 0),
+    distribution: result.distribution - (result.adjustment ?? 0),
+  };
+
+  return adjustedResults;
+}
