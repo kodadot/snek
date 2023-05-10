@@ -5,7 +5,7 @@ const NODE_URL = 'wss://rpc.basilisk.cloud';
 
 // Rococo
 const DEV_ARCHIVE_URL = 'https://basilisk-rococo-firesquid.play.hydration.cloud/graphql';
-const DEV_NODE_URL = 'wss://rococo-basilisk-rpc.hydration.dev';
+const DEV_NODE_URL = 'wss://basilisk-rococo-rpc.play.hydration.cloud';
 
 const isProd = Number(VERSION) >= 5;
 
