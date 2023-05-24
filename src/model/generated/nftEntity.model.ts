@@ -7,9 +7,6 @@ import {MetadataEntity} from "./metadataEntity.model"
 
 @Entity_()
 export class NFTEntity {
-    static createQueryBuilder(arg0: string) {
-      throw new Error('Method not implemented.')
-    }
     constructor(props?: Partial<NFTEntity>) {
         Object.assign(this, props)
     }
@@ -49,6 +46,9 @@ export class NFTEntity {
 
     @Column_("text", {nullable: false})
     issuer!: string
+
+    @Column_("bool", {nullable: false})
+    lewd!: boolean
 
     @Index_()
     @ManyToOne_(() => MetadataEntity, {nullable: true})

@@ -76,6 +76,8 @@ async function handleMetadata(
   return final;
 }
 
+const isLewd = (metadata: Metadata): boolean => Boolean(metadata.attributes?.find((item) => item.trait === 'NSFW'));
+
 export async function handleCollectionCreate(context: Context): Promise<void> {
   logger.pending(`[COLECTTION++]: ${context.block.height}`);
   const event = unwrap(context, getCreateCollectionEvent);
@@ -93,6 +95,7 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
   final.distribution = 0;
   final.floor = BigInt(0);
   final.highestSale = BigInt(0);
+  final.lewd = false;
   final.metadata = ensureMetadataUri(event.metadata, type);
   final.createdAt = event.timestamp;
   final.updatedAt = event.timestamp;
@@ -109,6 +112,7 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
     final.name = metadata?.name;
     final.image = metadata?.image;
     final.media = metadata?.animationUrl;
+    final.lewd = metadata ? isLewd(metadata) : false;
   }
 
   logger.success(`[COLLECTION] ${final.id}`);
@@ -146,6 +150,7 @@ export async function handleTokenCreate(context: Context): Promise<void> {
   final.id = id;
   final.hash = md5(id);
   final.issuer = event.caller;
+  final.lewd = false;
   final.currentOwner = event.caller;
   final.blockNumber = BigInt(event.blockNumber);
   final.collection = collection;
@@ -167,6 +172,10 @@ export async function handleTokenCreate(context: Context): Promise<void> {
     final.name = metadata?.name;
     final.image = metadata?.image;
     final.media = metadata?.animationUrl;
+    if (metadata && isLewd(metadata)) {
+      final.lewd = true;
+      collection.lewd = true;
+    }
   }
 
   logger.success(`[MINT] ${final.id}`);
