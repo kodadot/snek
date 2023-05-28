@@ -3,7 +3,7 @@ import {
 } from '@subsquid/substrate-processor';
 import { FullTypeormDatabase as Database } from '@subsquid/typeorm-store';
 import 'dotenv/config';
-import { getArchiveUrl, getNodeUrl } from './environment';
+import { CHAIN, getArchiveUrl, getNodeUrl } from './environment';
 import * as mappings from './mappings';
 import * as assetMappings from './mappings/assetRegistry';
 import logger from './mappings/utils/logger';
@@ -17,23 +17,12 @@ const STARTING_BLOCK = 6000; // 6000 or 1790000 for Prod
 processor.setTypesBundle('basilisk');
 processor.setBlockRange({ from: STARTING_BLOCK });
 
-// Prod
-const ARCHIVE_URL = getArchiveUrl();
-const NODE_URL = getNodeUrl();
-
-// Rococo
-// const ARCHIVE_URL = 'https://basilisk-rococo-firesquid.play.hydration.cloud/graphql';
-// const NODE_URL = 'wss://basilisk-rococo-rpc.play.hydration.cloud';
-
-const archive = process.env.ARCHIVE_URL || ARCHIVE_URL;
-const chain = process.env.NODE_URL || NODE_URL;
+const archive = getArchiveUrl();
+const chain = getNodeUrl();
 
 if (!archive || !chain) {
   throw new Error('ARCHIVE_URL and NODE_URL must be set');
 }
-
-const network = /rococo/.test(archive) ? 'ROCOCO' : 'PRODUCTION';
-logger.note('Welcome to the Processor!', network);
 
 processor.setDataSource({
   archive,
@@ -67,6 +56,8 @@ processor.addPreHook({ range: { from: STARTING_BLOCK, to: STARTING_BLOCK } }, as
 processor.addEventHandler(Event.registerAsset, assetMappings.handleAssetRegister);
 processor.addEventHandler(Event.updateAsset, assetMappings.handleAssetUpdate);
 processor.addEventHandler(Event.setAssetMetadata, assetMappings.handleAssetMetadata);
+
+logger.info(`PROCESSING ~~ ${CHAIN.toUpperCase()} ~~ EVENTS`);
 
 processor.run();
 
