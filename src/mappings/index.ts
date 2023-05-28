@@ -30,7 +30,7 @@ import {
   getPlaceOfferEvent,
   getTransferTokenEvent,
   getWithdrawOfferEvent,
-} from './utils/getters';
+} from './nft/getters';
 import { isEmpty } from './utils/helper';
 import logger, { logError } from './utils/logger';
 import { ensureMetadataUri, fetchMetadata } from './utils/metadata';
