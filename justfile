@@ -1,4 +1,5 @@
 default := 'squid'
+types := 'typegen'
 
 set dotenv-load
 
@@ -30,8 +31,8 @@ build:
 codegen:
 	npx squid-typeorm-codegen
 
-typegen: ksmVersion
-	npx squid-substrate-typegen typegen.json
+typegen TAG=types:
+	npx squid-substrate-typegen {{TAG}}.json
 
 ksmVersion: explore
 
@@ -75,7 +76,7 @@ exec:
 	docker exec -it snek-db-1 psql -U postgres -d squid
 
 brutal TAG=default:
-	npx sqd deploy —hard -m {{TAG}}.yaml .
+	npx sqd deploy -r -m {{TAG}}.yaml .
 
 update-deps:
 	npx npm-check-updates -u

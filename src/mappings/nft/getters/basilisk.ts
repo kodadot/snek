@@ -1,11 +1,11 @@
-import { Event } from '../../processable';
+import { Event } from '../../../processable';
 import {
   MarketplaceOfferAcceptedEvent, MarketplaceOfferPlacedEvent, MarketplaceOfferWithdrawnEvent, MarketplaceRoyaltyAddedEvent, MarketplaceRoyaltyPaidEvent, MarketplaceTokenPriceUpdatedEvent, MarketplaceTokenSoldEvent, NftClassCreatedEvent, NftClassDestroyedEvent, NftCollectionCreatedEvent, NftCollectionDestroyedEvent, NftInstanceBurnedEvent, NftInstanceMintedEvent, NftInstanceTransferredEvent, NftItemBurnedEvent, NftItemMintedEvent, NftItemTransferredEvent,
-} from '../../types/events';
-import { addressOf, isNewUnique, toPercent } from './helper';
+} from '../../../types/basilisk/events';
+import { addressOf, isNewUnique, toPercent } from '../../utils/helper';
 import {
   BurnTokenEvent, CreateCollectionEvent, CreateTokenEvent, DestroyCollectionEvent, TransferTokenEvent, Context, ListTokenEvent, BuyTokenEvent, AddRoyaltyEvent, PayRoyaltyEvent, WithdrawOfferEvent, MakeOfferEvent, AcceptOfferEvent,
-} from './types';
+} from '../../utils/types';
 
 export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
   if (isNewUnique(ctx, Event.createCollection)) {
@@ -18,7 +18,6 @@ export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
         id: classId.toString(), caller: addressOf(owner), metadata: metadata.toString(), type: classType.__kind,
       };
     }
-
     const {
       collectionId: classId, owner, collectionType: classType, metadata,
     } = event.asV92;
@@ -28,20 +27,30 @@ export function getCreateCollectionEvent(ctx: Context): CreateCollectionEvent {
   }
 
   const event = new NftClassCreatedEvent(ctx);
-  // logger.debug('NftClassCreatedEvent', event.isV39)
-  if (event.isV42) {
+
+  if (event.isV38) {
+    const {
+      classId, owner, classType,
+    } = event.asV38;
+    return {
+      id: classId.toString(), caller: addressOf(owner), metadata: undefined, type: classType.__kind,
+    };
+  }
+
+  if (event.isV43) {
     const {
       classId, owner, metadata, classType,
-    } = event.asV42;
+    } = event.asV43;
     return {
       id: classId.toString(), caller: addressOf(owner), metadata: metadata.toString(), type: classType.__kind,
     };
   }
 
-  if (event.isV62) {
+  if (event.isV65) {
     const {
       classId, owner, classType,
-    } = event.asV62;
+    } = event.asV65;
+
     return {
       id: classId.toString(), caller: addressOf(owner), metadata: undefined, type: classType.__kind,
     };
@@ -99,7 +108,7 @@ export function getTransferTokenEvent(ctx: Context): TransferTokenEvent {
   const event = new NftInstanceTransferredEvent(ctx);
   const {
     classId, instanceId, from, to,
-  } = event.asV42;
+  } = event.asV38;
   return {
     collectionId: classId.toString(), caller: addressOf(from), sn: instanceId.toString(), to: addressOf(to),
   };
@@ -113,7 +122,7 @@ export function getBurnTokenEvent(ctx: Context): BurnTokenEvent {
   }
 
   const event = new NftInstanceBurnedEvent(ctx);
-  const { classId, instanceId, owner } = event.asV42;
+  const { classId, instanceId, owner } = event.asV38;
   return { collectionId: classId.toString(), caller: addressOf(owner), sn: instanceId.toString() };
 }
 
@@ -125,7 +134,7 @@ export function getDestroyCollectionEvent(ctx: Context): DestroyCollectionEvent 
   }
 
   const event = new NftClassDestroyedEvent(ctx);
-  const { classId, owner } = event.asV42;
+  const { classId, owner } = event.asV38;
   return { id: classId.toString(), caller: addressOf(owner) };
 }
 
@@ -150,6 +159,16 @@ export function getListTokenEvent(ctx: Context): ListTokenEvent {
 
 export function getBuyTokenEvent(ctx: Context): BuyTokenEvent {
   const event = new MarketplaceTokenSoldEvent(ctx);
+
+  if (event.isV43) {
+    const [
+      from, to, classId, instanceId, price,
+    ] = event.asV43;
+    return {
+      collectionId: classId.toString(), caller: addressOf(to), sn: instanceId.toString(), price: BigInt(price ?? 0), currentOwner: addressOf(from),
+    };
+  }
+
   if (event.isV55) {
     const {
       owner: from, buyer: to, class: classId, instance: instanceId, price,
@@ -168,10 +187,11 @@ export function getBuyTokenEvent(ctx: Context): BuyTokenEvent {
 
 export function getAddRoyaltyEvent(ctx: Context): AddRoyaltyEvent {
   const event = new MarketplaceRoyaltyAddedEvent(ctx);
-  if (event.isV55 || event.isV75) {
+
+  if (event.isV55 || event.isV76) {
     const {
       class: classId, instance: instanceId, author: recipient, royalty,
-    } = event.isV55 ? event.asV55 : event.asV75;
+    } = event.isV55 ? event.asV55 : event.asV76;
     return {
       collectionId: classId.toString(), sn: instanceId.toString(), recipient: addressOf(recipient), royalty: event.isV55 ? royalty : toPercent(royalty),
     };
@@ -187,10 +207,10 @@ export function getAddRoyaltyEvent(ctx: Context): AddRoyaltyEvent {
 
 export function getPayRoyaltyEvent(ctx: Context): PayRoyaltyEvent {
   const event = new MarketplaceRoyaltyPaidEvent(ctx);
-  if (event.isV55 || event.isV75) {
+  if (event.isV55 || event.isV76) {
     const {
       class: classId, instance: instanceId, author: recipient, royalty, royaltyAmount: amount,
-    } = event.isV55 ? event.asV55 : event.asV75;
+    } = event.isV55 ? event.asV55 : event.asV76;
     return {
       collectionId: classId.toString(), sn: instanceId.toString(), recipient: addressOf(recipient), royalty: event.isV55 ? royalty : toPercent(royalty), amount,
     };
@@ -233,11 +253,17 @@ export function getWithdrawOfferEvent(ctx: Context): WithdrawOfferEvent {
 
   if (event.isV55) {
     const { who: caller, class: classId, instance: instanceId } = event.asV55;
-    return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), maker: addressOf(ctx.event.call?.args.maker) };
+    return {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), maker: addressOf(ctx.event.call?.args.maker),
+    };
   }
 
   const { who: caller, collection: classId, item: instanceId } = event.asV81;
-  return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), maker: addressOf(ctx.event.call?.args.maker) };
+  return {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), maker: addressOf(ctx.event.call?.args.maker),
+  };
 }
 
 export function getAcceptOfferEvent(ctx: Context): AcceptOfferEvent {
@@ -246,11 +272,19 @@ export function getAcceptOfferEvent(ctx: Context): AcceptOfferEvent {
   //   const [caller, class: classId, instance: instanceId,, amount] = event.asV39;
   //   return { collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, maker: '' };
   // }
+  if (event.isV55) {
+    const {
+      who: caller, class: classId, instance: instanceId, amount,
+    } = event.asV55;
+    return {
+      collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, maker: addressOf(caller),
+    };
+  }
 
-  if (event.isV62) {
+  if (event.isV65) {
     const {
       who: caller, class: classId, instance: instanceId, amount, maker,
-    } = event.asV62;
+    } = event.asV65;
     return {
       collectionId: classId.toString(), sn: instanceId.toString(), caller: addressOf(caller), amount, maker: addressOf(maker),
     };

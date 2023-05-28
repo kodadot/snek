@@ -4,7 +4,6 @@ version: 1
 description: |-
   SubSquid indexer for Basilisk NFTs on Rococo by KodaDot
 build:
-
 deploy:
   addons:
     postgres:
@@ -12,6 +11,21 @@ deploy:
         statement_timeout: 30000
         log_min_duration_statement: 5000
   processor:
-    cmd: [ "node", "lib/processor" ]
+    cmd:
+      - node
+      - lib/processor
+    env:
+      CHAIN: snek
   api:
-    cmd: [ "npx", "squid-graphql-server", "--subscriptions", "--dumb-cache", "in-memory", "--dumb-cache-ttl", "1000", "--dumb-cache-size", "100", "--dumb-cache-max-age", "1000" ]
+    cmd:
+      - npx
+      - squid-graphql-server
+      - '--subscriptions'
+      - '--dumb-cache'
+      - in-memory
+      - '--dumb-cache-ttl'
+      - '1000'
+      - '--dumb-cache-size'
+      - '100'
+      - '--dumb-cache-max-age'
+      - '1000'
