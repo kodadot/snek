@@ -1,6 +1,6 @@
 {
-  "outDir": "src/types/basilisk",
-  "specVersions": "https://basilisk.archive.subsquid.io/graphql",
+  "outDir": "src/types/snek",
+  "specVersions": "https://basilisk-rococo-firesquid.play.hydration.cloud/graphql",
   "events": [
     "NFT.ClassCreated",
     "NFT.InstanceMinted",
