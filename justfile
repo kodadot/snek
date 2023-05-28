@@ -76,7 +76,7 @@ exec:
 	docker exec -it snek-db-1 psql -U postgres -d squid
 
 brutal TAG=default:
-	npx sqd deploy —hard -m {{TAG}}.yaml .
+	npx sqd deploy -r -m {{TAG}}.yaml .
 
 update-deps:
 	npx npm-check-updates -u
