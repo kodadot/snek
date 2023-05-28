@@ -1,6 +1,8 @@
+import { lookupArchive } from '@subsquid/archive-registry';
+
 export const CHAIN = process.env.CHAIN || 'basilisk';
 // Prod
-const ARCHIVE_URL = 'https://basilisk-firesquid.play.hydration.cloud/graphql';
+const ARCHIVE_URL = lookupArchive('basilisk', { release: 'FireSquid' });
 const NODE_URL = 'wss://rpc.basilisk.cloud';
 
 // Rococo
