@@ -1,6 +1,6 @@
-import { AssetRegistryMetadataSetEvent, AssetRegistryRegisteredEvent, AssetRegistryUpdatedEvent } from '../../types/events';
-import { Context } from '../utils/types';
-import { AssetMetadata, AssetRegisterEvent } from './types';
+import { AssetRegistryMetadataSetEvent, AssetRegistryRegisteredEvent, AssetRegistryUpdatedEvent } from '../../../types/snek/events';
+import { Context } from '../../utils/types';
+import { AssetMetadata, AssetRegisterEvent } from '../types';
 
 export function getAssetRegisterEvent(ctx: Context): AssetRegisterEvent {
   const event = new AssetRegistryRegisteredEvent(ctx);
