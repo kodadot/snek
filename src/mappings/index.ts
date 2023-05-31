@@ -33,7 +33,7 @@ import {
 } from './utils/getters';
 import { isEmpty } from './utils/helper';
 import logger, { logError } from './utils/logger';
-import { ensureMetadataUri, fetchMetadata } from './utils/metadata';
+import { ensureMetadataUri, fetchMetadata, isLewd } from './utils/metadata';
 import {
   attributeFrom,
   BaseCall,
@@ -75,8 +75,6 @@ async function handleMetadata(
   await store.save(final);
   return final;
 }
-
-const isLewd = (metadata: Metadata): boolean => Boolean(metadata.attributes?.find((item) => item.trait === 'NSFW'));
 
 export async function handleCollectionCreate(context: Context): Promise<void> {
   logger.pending(`[COLECTTION++]: ${context.block.height}`);
