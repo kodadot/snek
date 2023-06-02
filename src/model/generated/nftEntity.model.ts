@@ -47,6 +47,9 @@ export class NFTEntity {
     @Column_("text", {nullable: false})
     issuer!: string
 
+    @Column_("bool", {nullable: false})
+    lewd!: boolean
+
     @Index_()
     @ManyToOne_(() => MetadataEntity, {nullable: true})
     meta!: MetadataEntity | undefined | null

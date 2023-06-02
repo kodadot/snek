@@ -10,6 +10,7 @@ type CollectionEntity @entity {
   highestSale: BigInt!
   image: String
   issuer: String!
+  lewd: Boolean!
   meta: MetadataEntity
   metadata: String
   media: String
@@ -35,6 +36,7 @@ type NFTEntity @entity {
   hash: String! @index
   image: String
   issuer: String!
+  lewd: Boolean!
   meta: MetadataEntity
   media: String
   metadata: String

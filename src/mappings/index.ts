@@ -33,7 +33,7 @@ import {
 } from './nft/getters';
 import { isEmpty } from './utils/helper';
 import logger, { logError } from './utils/logger';
-import { ensureMetadataUri, fetchMetadata } from './utils/metadata';
+import { ensureMetadataUri, fetchMetadata, isLewd } from './utils/metadata';
 import {
   attributeFrom,
   BaseCall,
@@ -93,6 +93,7 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
   final.distribution = 0;
   final.floor = BigInt(0);
   final.highestSale = BigInt(0);
+  final.lewd = false;
   final.metadata = ensureMetadataUri(event.metadata, type);
   final.createdAt = event.timestamp;
   final.updatedAt = event.timestamp;
@@ -109,6 +110,7 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
     final.name = metadata?.name;
     final.image = metadata?.image;
     final.media = metadata?.animationUrl;
+    final.lewd = metadata ? isLewd(metadata) : false;
   }
 
   logger.success(`[COLLECTION] ${final.id}`);
@@ -146,6 +148,7 @@ export async function handleTokenCreate(context: Context): Promise<void> {
   final.id = id;
   final.hash = md5(id);
   final.issuer = event.caller;
+  final.lewd = false;
   final.currentOwner = event.caller;
   final.blockNumber = BigInt(event.blockNumber);
   final.collection = collection;
@@ -167,6 +170,10 @@ export async function handleTokenCreate(context: Context): Promise<void> {
     final.name = metadata?.name;
     final.image = metadata?.image;
     final.media = metadata?.animationUrl;
+    if (metadata && isLewd(metadata)) {
+      final.lewd = true;
+      collection.lewd = true;
+    }
   }
 
   logger.success(`[MINT] ${final.id}`);

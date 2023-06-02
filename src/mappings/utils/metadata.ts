@@ -57,3 +57,5 @@ export const ensureMetadataUri = (metadata: string | undefined, collectionType: 
       return 'ipfs://ipfs/bafkreignxq5tnh2myt3gfa3neisd3uw36ap5kkcf5afxlrbuv45dzhs5ke';
   }
 };
+
+export const isLewd = (metadata: MetadataEntity): boolean => Boolean(metadata.attributes?.find((item) => item.trait === 'NSFW'));
