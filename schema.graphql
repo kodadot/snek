@@ -161,6 +161,7 @@ type AssetEntity @entity {
   name: String
   symbol: String
   decimals: Int
+  deposit: BigInt
 }
 
 # Implement in the later stages 
