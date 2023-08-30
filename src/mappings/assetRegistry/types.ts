@@ -3,6 +3,7 @@ export type AssetRegisterEvent = {
   name: string;
   type: string;
   isToken: boolean;
+  deposit?: bigint;
 };
 
 export type AssetMetadata = {
