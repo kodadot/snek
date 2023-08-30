@@ -47,6 +47,7 @@ export async function handleAssetUpdate(context: Context): Promise<void> {
   }
 
   asset.name = event.name;
+  asset.deposit = event.deposit;
   logger.success(`[ASSET UPDATE]: by ${event.id} is ${event.name}`);
   await context.store.save<AssetEntity>(asset);
 }
