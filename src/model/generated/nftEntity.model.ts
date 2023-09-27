@@ -1,4 +1,4 @@
-import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, ManyToOne as ManyToOne_, Index as Index_, OneToMany as OneToMany_} from "typeorm"
+import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, Index as Index_, ManyToOne as ManyToOne_, OneToMany as OneToMany_} from "typeorm"
 import * as marshal from "./marshal"
 import {CollectionEntity} from "./collectionEntity.model"
 import {Event} from "./event.model"
@@ -14,6 +14,7 @@ export class NFTEntity {
     @PrimaryColumn_()
     id!: string
 
+    @Index_()
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: true})
     blockNumber!: bigint | undefined | null
 
@@ -64,6 +65,7 @@ export class NFTEntity {
     @Column_("text", {nullable: true})
     name!: string | undefined | null
 
+    @Index_()
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: true})
     price!: bigint | undefined | null
 
@@ -73,9 +75,11 @@ export class NFTEntity {
     @Column_("text", {nullable: true})
     recipient!: string | undefined | null
 
+    @Index_()
     @Column_("text", {nullable: false})
     sn!: string
 
+    @Index_()
     @Column_("timestamp with time zone", {nullable: false})
     updatedAt!: Date
 }

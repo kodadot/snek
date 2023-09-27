@@ -1,4 +1,4 @@
-import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, OneToMany as OneToMany_, ManyToOne as ManyToOne_, Index as Index_} from "typeorm"
+import {Entity as Entity_, Column as Column_, PrimaryColumn as PrimaryColumn_, Index as Index_, OneToMany as OneToMany_, ManyToOne as ManyToOne_} from "typeorm"
 import * as marshal from "./marshal"
 import {CollectionEvent} from "./collectionEvent.model"
 import {MetadataEntity} from "./metadataEntity.model"
@@ -14,12 +14,14 @@ export class CollectionEntity {
     @PrimaryColumn_()
     id!: string
 
+    @Index_()
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: true})
     blockNumber!: bigint | undefined | null
 
     @Column_("bool", {nullable: false})
     burned!: boolean
 
+    @Index_()
     @Column_("timestamp with time zone", {nullable: false})
     createdAt!: Date
 
@@ -32,9 +34,11 @@ export class CollectionEntity {
     @OneToMany_(() => CollectionEvent, e => e.collection)
     events!: CollectionEvent[]
 
+    @Index_()
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
     floor!: bigint
 
+    @Index_()
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
     highestSale!: bigint
 
@@ -67,18 +71,22 @@ export class CollectionEntity {
     @Column_("int4", {nullable: false})
     ownerCount!: number
 
+    @Index_()
     @Column_("timestamp with time zone", {nullable: false})
     updatedAt!: Date
 
+    @Index_()
     @Column_("int4", {nullable: false})
     nftCount!: number
 
+    @Index_()
     @Column_("int4", {nullable: false})
     supply!: number
 
     @Column_("varchar", {length: 15, nullable: false})
     type!: CollectionType
 
+    @Index_()
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
     volume!: bigint
 }

@@ -63,6 +63,9 @@ update-db:
 test:
   npm run test:unit
 
+squid TAG=default:
+	gh pr create --base release-{{TAG}}
+
 improve TAG=default:
 	npx sqd deploy -m {{TAG}}.yaml .
 

@@ -1,6 +1,6 @@
 manifestVersion: subsquid.io/v0.1
 name: snekk
-version: 6
+version: 7
 description: |-
   SubSquid indexer for Basilisk NFTs by KodaDot
 build:
@@ -32,4 +32,7 @@ deploy:
       - '1000'
 
 scale:
-  dedicated: true
+  addons:
+    postgres:
+      storage: 5G
+      profile: small

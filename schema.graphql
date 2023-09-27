@@ -1,13 +1,13 @@
 type CollectionEntity @entity {
   id: ID!
-  blockNumber: BigInt
+  blockNumber: BigInt @index
   burned: Boolean!
-  createdAt: DateTime!
+  createdAt: DateTime! @index
   currentOwner: String!
   distribution: Int!
   events: [CollectionEvent!] @derivedFrom(field: "collection")
-  floor: BigInt!
-  highestSale: BigInt!
+  floor: BigInt! @index
+  highestSale: BigInt! @index
   image: String
   issuer: String!
   lewd: Boolean!
@@ -17,16 +17,16 @@ type CollectionEntity @entity {
   name: String @index
   nfts: [NFTEntity!] @derivedFrom(field: "collection")
   ownerCount: Int!
-  updatedAt: DateTime!
-  nftCount: Int!
-  supply: Int!
+  updatedAt: DateTime! @index
+  nftCount: Int! @index
+  supply: Int! @index
   type: CollectionType!
-  volume: BigInt!
+  volume: BigInt! @index
 }
 
 type NFTEntity @entity {
   id: ID!
-  blockNumber: BigInt
+  blockNumber: BigInt @index
   burned: Boolean!
   collection: CollectionEntity!
   createdAt: DateTime!
@@ -41,11 +41,11 @@ type NFTEntity @entity {
   media: String
   metadata: String
   name: String @index
-  price: BigInt
+  price: BigInt @index
   royalty: Float
   recipient: String
-  sn: String!
-  updatedAt: DateTime!
+  sn: String! @index
+  updatedAt: DateTime! @index
   # type: ClassType!
 }
 
