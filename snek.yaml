@@ -1,6 +1,6 @@
 manifestVersion: subsquid.io/v0.1
 name: sneck
-version: 1
+version: 2
 description: |-
   SubSquid indexer for Basilisk NFTs on Rococo by KodaDot
 build:
