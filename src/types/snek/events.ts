@@ -6,6 +6,7 @@ import * as v62 from './v62'
 import * as v71 from './v71'
 import * as v81 from './v81'
 import * as v92 from './v92'
+import * as v97 from './v97'
 
 export class AssetRegistryMetadataSetEvent {
     private readonly _chain: Chain
@@ -135,6 +136,21 @@ export class AssetRegistryUpdatedEvent {
      */
     get asV55(): {assetId: number, assetName: Uint8Array, assetType: v55.AssetType} {
         assert(this.isV55)
+        return this._chain.decodeEvent(this.event)
+    }
+
+    /**
+     * Asset was updated.
+     */
+    get isV97(): boolean {
+        return this._chain.getEventHash('AssetRegistry.Updated') === 'b58db9ce20bc6b9cc05e7997f4401f70f34516fea867b05b4834f83da55a29a2'
+    }
+
+    /**
+     * Asset was updated.
+     */
+    get asV97(): {assetId: number, assetName: Uint8Array, assetType: v97.AssetType, existentialDeposit: bigint, xcmRateLimit: (bigint | undefined)} {
+        assert(this.isV97)
         return this._chain.decodeEvent(this.event)
     }
 }

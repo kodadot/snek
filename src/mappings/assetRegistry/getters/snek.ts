@@ -26,9 +26,18 @@ export function getAssetUpdateEvent(ctx: Context): AssetRegisterEvent {
     };
   }
 
-  const { assetId: id, assetName: name, assetType: type } = event.asV55;
+  if (event.isV55) {
+    const { assetId: id, assetName: name, assetType: type } = event.asV55;
+    return {
+      id: id.toString(), name: name.toString(), type: type.__kind, isToken: type.__kind === 'Token',
+    };
+  }
+
+  const {
+    assetId: id, assetName: name, assetType: type, existentialDeposit: deposit,
+  } = event.asV97;
   return {
-    id: id.toString(), name: name.toString(), type: type.__kind, isToken: type.__kind === 'Token',
+    id: id.toString(), name: name.toString(), type: type.__kind, deposit, isToken: type.__kind === 'Token',
   };
 }
 
