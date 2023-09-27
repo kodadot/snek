@@ -100,6 +100,7 @@ export async function handleCollectionCreate(context: Context): Promise<void> {
   final.nftCount = 0;
   final.supply = 0;
   final.type = type;
+  final.ownerCount = 0;
   final.volume = BigInt(0);
 
   logger.debug(`metadata: ${final.metadata}`);
