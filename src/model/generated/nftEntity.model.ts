@@ -14,7 +14,7 @@ export class NFTEntity {
     @PrimaryColumn_()
     id!: string
 
-    @Index_({unique: true})
+    @Index_()
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: true})
     blockNumber!: bigint | undefined | null
 
