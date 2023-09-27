@@ -14,7 +14,7 @@ export class CollectionEntity {
     @PrimaryColumn_()
     id!: string
 
-    @Index_({unique: true})
+    @Index_()
     @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: true})
     blockNumber!: bigint | undefined | null
 
@@ -68,7 +68,6 @@ export class CollectionEntity {
     @OneToMany_(() => NFTEntity, e => e.collection)
     nfts!: NFTEntity[]
 
-    @Index_()
     @Column_("int4", {nullable: false})
     ownerCount!: number
 
