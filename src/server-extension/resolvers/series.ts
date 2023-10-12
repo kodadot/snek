@@ -54,8 +54,8 @@ export class SeriesResolver {
         COUNT(distinct ne.current_owner) as unique_collectors, 
         COUNT(distinct ne.current_owner) as sold, 
         COUNT(ne.*) as total, 
-        AVG(ne.price) as average_price, 
-        MIN(NULLIF(ne.price, 0)) as floor_price, 
+        AVG(e.meta::bigint) as average_price, 
+        MIN(NULLIF(e.meta::bigint, 0)) as floor_price, 
         COALESCE(MAX(e.meta::bigint), 0) as highest_sale,
         COALESCE(SUM(e.meta::bigint), 0) as volume, 
         COUNT(e.*) as buys 
@@ -64,9 +64,10 @@ export class SeriesResolver {
       LEFT JOIN nft_entity ne on ce.id = ne.collection_id 
       JOIN event e on ne.id = e.nft_id
       WHERE e.interaction = 'BUY' ${computedDateRange}
+      OR e.interaction = 'LIST' ${computedDateRange}
       GROUP BY ce.id, me.image, ce.name 
       ORDER BY ${orderBy} ${orderDirection}
-      LIMIT ${limit} OFFSET ${offset}`;
+      LIMIT ${limit} OFFSET ${offset}`
     const result: SeriesEntity[] = await makeQuery(this.tx, NFTEntity, query);
 
     return result;
